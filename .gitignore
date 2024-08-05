@@ -19,3 +19,10 @@ out/
 
 # macOS
 .DS_Store
+
+# Logs
+*.log
+
+# Build files
+build/
+dist/
