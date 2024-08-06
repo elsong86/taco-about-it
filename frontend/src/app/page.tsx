@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../app/components/Header';
 import { Location } from '../../types';
 
 const HomePage: React.FC = () => {
-  const [location, setLocation] = useState<Location | null>(null);
   const router = useRouter();
 
   const handleLocationShare = (loc: Location) => {
-    setLocation(loc);
     console.log('Location shared:', loc);
     router.push(`/search?latitude=${loc.latitude}&longitude=${loc.longitude}`);
   };
@@ -31,7 +29,6 @@ const HomePage: React.FC = () => {
 
       const data = await response.json();
       const location: Location = { latitude: data.latitude, longitude: data.longitude };
-      setLocation(location);
       console.log('Address geocoded:', location);
       router.push(`/search?latitude=${location.latitude}&longitude=${location.longitude}`);
     } catch (error) {
