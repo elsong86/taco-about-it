@@ -1,31 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import google_places
+from app.routers import google_places, google_geocode
 
 app = FastAPI()
 
-# Define origins for development and production
-development_origins = [
-    "http://localhost:3000",  # Your frontend running on localhost
+origins = [
+    "http://localhost:3000",
 ]
 
-production_origins = [
-    "https://your-production-domain.com",  # Replace with your actual domain
-]
-
-# Combine both lists or choose based on environment
-origins = development_origins + production_origins
-
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=development_origins,  # Use the origins list defined above
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(google_places.router)
+app.include_router(google_geocode.router)
 
 # Run the app
 if __name__ == "__main__":
