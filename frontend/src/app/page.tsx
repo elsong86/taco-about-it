@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../app/components/Header';
-import { Location } from '../../types';
+import { Location } from './types';
 
 const HomePage: React.FC = () => {
   const router = useRouter();

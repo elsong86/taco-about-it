@@ -1,5 +1,5 @@
 import React from 'react';
-import { Location } from '../../../types'; // Adjust the import path as needed
+import { Location } from '../types'; // Adjust the import path as needed
 
 interface HeaderProps {
   onLocationShare: (location: Location) => void;
