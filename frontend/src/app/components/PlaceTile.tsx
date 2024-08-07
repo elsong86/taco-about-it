@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Place } from '../types';
@@ -17,9 +15,9 @@ const PlaceTile: React.FC<PlaceTileProps> = ({ place }) => {
       displayName: place.displayName.text,
       formattedAddress: place.formattedAddress,
       rating: place.rating?.toString() || '',
-      userRatingCount: place.userRatingCount?.toString() || ''
+      userRatingCount: place.userRatingCount?.toString() || '',
     }).toString();
-
+  
     router.push(`/restaurant/${place.id}?${query}`);
   };
 

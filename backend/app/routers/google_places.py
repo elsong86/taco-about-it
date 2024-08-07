@@ -27,7 +27,7 @@ def get_places(request: PlacesRequest):
     headers = {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": api_key,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.userRatingCount,places.rating"
+        "X-Goog-FieldMask": "places.id,places.displayName.text,places.formattedAddress,places.location,places.types,places.userRatingCount,places.rating"
     }
 
     data = {

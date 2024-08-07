@@ -12,7 +12,11 @@ const SearchPage: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  console.log('Component rendered');
+
+
   useEffect(() => {
+    console.log('useEffect triggered');
     const latitude = searchParams.get('latitude');
     const longitude = searchParams.get('longitude');
 
@@ -24,6 +28,8 @@ const SearchPage: React.FC = () => {
   }, [searchParams]);
 
   const fetchPlaces = async (loc: Location) => {
+    console.log('Fetching places');
+    if (!loc) return;
     const params = {
       location: loc,
       radius: 1000,

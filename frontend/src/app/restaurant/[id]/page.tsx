@@ -18,7 +18,7 @@ const RestaurantPage: React.FC = () => {
     if (id && displayName && formattedAddress) {
       setPlace({
         id,
-        displayName: { text: displayName, languageCode: 'en' }, // Assuming languageCode is 'en'
+        displayName: { text: displayName }, // Only text, since languageCode is not needed
         formattedAddress,
         location: { latitude: 0, longitude: 0 }, // Dummy location, replace if available
         types: [], // Dummy types, replace if available

@@ -8,7 +8,6 @@ export interface Place {
   formattedAddress: string;
   displayName: {
     text: string;
-    languageCode: string;
   };
   location: Location;
   types: string[];
