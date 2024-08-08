@@ -6,6 +6,7 @@ click==8.1.7
 fastapi==0.112.0
 h11==0.14.0
 idna==3.7
+outscraper==5.2.1
 pydantic==2.8.2
 pydantic_core==2.20.1
 python-dotenv==1.0.1
