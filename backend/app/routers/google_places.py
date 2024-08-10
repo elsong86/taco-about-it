@@ -3,10 +3,14 @@ from pydantic import BaseModel
 import requests 
 import os
 from dotenv import load_dotenv
+import redis 
+import json
 
 load_dotenv()
 
 api_key = os.getenv("GOOGLE_API_KEY")
+
+redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 router = APIRouter()
 
@@ -22,6 +26,11 @@ class PlacesRequest(BaseModel):
 
 @router.post("/places")
 def get_places(request: PlacesRequest): 
+    cache_key = f"places:{json.dumps(request.model_dump(), sort_keys=True)}"
+    cached_places = redis_client.get(cache_key)
+    if cached_places: 
+        return json.loads(cached_places)
+
     url = "https://places.googleapis.com/v1/places:searchText"
     
     headers = {
@@ -47,6 +56,7 @@ def get_places(request: PlacesRequest):
     try:
         response = requests.post(url, json=data, headers=headers)
         response.raise_for_status()
+        redis_client.setex(cache_key, 3600, json.dumps(response.json()))
         return response.json()
     except requests.RequestException as e:
         print(f"Error response: {e.response.text if e.response else 'No response'}")

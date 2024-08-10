@@ -3,7 +3,9 @@ from outscraper import ApiClient
 from textblob import TextBlob
 import os
 from dotenv import load_dotenv
+import redis
 import logging
+import json
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -16,10 +18,19 @@ load_dotenv()
 api_key = os.getenv("OUTSCRAPER_API_KEY")
 client = ApiClient(api_key)
 
+# Initialize Redis client
+redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
+
 # Initialize the FastAPI router
 router = APIRouter()
 
 def fetch_reviews(place_id: str):
+    cache_key = f"reviews:{place_id}"
+    cached_reviews = redis_client.get(cache_key)
+    if cached_reviews:
+        logger.info(f"Cache hit for place_id: {place_id}")
+        return json.loads(cached_reviews)
+
     try:
         results = client.google_maps_reviews(
             place_id,
@@ -32,6 +43,10 @@ def fetch_reviews(place_id: str):
             reviews = results[0].get('reviews_data', [])
             # Filter out reviews with empty text
             non_empty_reviews = [review for review in reviews if review.get('review_text') and review['review_text'].strip()]
+
+            redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))
+            logger.info(f"Cached reviews for place_id: {place_id}")
+
             return non_empty_reviews
         return []
     except Exception as e:
