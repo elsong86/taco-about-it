@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-function trackVisit() {
+export function trackVisit() {
     // Retrieve the 'visits' cookie, which might be a string or undefined
     let visits = Cookies.get('visits');
 
@@ -14,4 +14,3 @@ function trackVisit() {
     Cookies.set('visits', visitCount.toString(), { expires: 365 });
 }
 
-trackVisit();
