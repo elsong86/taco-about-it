@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import google_places, google_geocode, outscraper_reviews
 
+
 app = FastAPI()
 
 origins = [

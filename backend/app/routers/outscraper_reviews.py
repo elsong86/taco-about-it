@@ -3,9 +3,9 @@ from outscraper import ApiClient
 from textblob import TextBlob
 import os
 from dotenv import load_dotenv
-import redis
 import logging
 import json
+from app.utils.redis_utils import redis_client
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -17,9 +17,6 @@ load_dotenv()
 # Initialize the API client with the API key from environment variable
 api_key = os.getenv("OUTSCRAPER_API_KEY")
 client = ApiClient(api_key)
-
-# Initialize Redis client
-redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 # Initialize the FastAPI router
 router = APIRouter()
