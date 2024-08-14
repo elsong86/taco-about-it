@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request, Depends  # Import Request and Depends
 from pydantic import BaseModel
 import requests
 import os
 from dotenv import load_dotenv
+from typing import Callable  # Import Callable
+from ..utils.rate_limiter import rate_limiter
+from ..utils.redis_utils import redis_client
 
 load_dotenv()
 
@@ -14,7 +17,10 @@ class AddressRequest(BaseModel):
     address: str
 
 @router.post("/geocode")
-def get_geocode(request: AddressRequest):
+def get_geocode(
+    request: AddressRequest, 
+    limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))
+):
     geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={requests.utils.quote(request.address)}&key={api_key}"
 
     try:
