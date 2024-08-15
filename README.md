@@ -31,6 +31,19 @@ To automate the installation of dependencies for both the frontend and backend, 
      ```bash
      ./setup.sh
      ```
+3. **Update the `.env` File:**
+   - After the setup script runs, navigate to the `backend` directory and open the `.env` file.
+   - Replace the placeholder values `your_google_api_key_here` and `your_outscraper_api_key_here` with your actual `GOOGLE_API_KEY` and `OUTSCRAPER_API_KEY`.
+   - Example:
+     ```plaintext
+     GOOGLE_API_KEY=your_actual_google_api_key
+     OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
+     ```
+
+4. **Environment Variables:**
+   - These keys are necessary for the application to function correctly. Ensure the `.env` file is updated before running the backend.
+
+This script will handle the setup process for you, but you must manually update the `.env` file with your actual API keys to ensure the application works correctly.
 
 ## Usage
 
