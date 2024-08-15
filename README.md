@@ -78,6 +78,8 @@ Once the setup is complete, you can start both the frontend and backend of the a
   - Python
   - FastAPI 
   - Redis
+- **Sentiment Analysis:**
+  - TextBlob
 - **APIs:**
   - Google Places API
   - Outscraper API
