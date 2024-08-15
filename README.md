@@ -22,15 +22,17 @@ Before setting up the project, ensure you have the following installed:
 
 To set up the project using Docker, follow these steps:
 
-1. **Clone the Repository:**
-   - Clone the project repository to your local machine:
+1. **Fork and clone the Repository:**
+   - Fork the project repository to your GitHub account by clicking the "Fork" button at the top right of the repository page.
+   - Clone the forked repository to your local machine:
      ```bash
-     git clone https://github.com/elsong86/taco-tracker.git
+     git clone https://github.com/your-username/taco-tracker.git
      cd taco-tracker
      ```
 
 2. **Update the `.env` File:**
-   - Ensure the `.env` file is in the root directory of the project. This file should contain the following variables:
+   - Create a .env file at the root of the project. 
+   - This file should contain the following variables:
      ```plaintext
      GOOGLE_API_KEY=your_actual_google_api_key
      OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
