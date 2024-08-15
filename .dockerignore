@@ -1,0 +1,11 @@
+# Exclude the .env file
+.env
+
+# Other potential exclusions
+.git
+.gitignore
+node_modules
+__pycache__
+*.pyc
+*.pyo
+*.pyd

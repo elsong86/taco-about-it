@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npx next dev\" \"cd ../backend && source .venv/bin/activate && uvicorn app.main:app --reload\"",
+    "dev": "npx next dev",  
     "build": "npx next build",
     "start": "npx next start",
     "lint": "npx next lint"
@@ -20,7 +20,7 @@
     "@types/node": "^22.1.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "concurrently": "^8.2.2",
+    "concurrently": "^8.2.2",  
     "eslint": "^9.8.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",

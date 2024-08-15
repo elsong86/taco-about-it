@@ -10,6 +10,8 @@ from ..utils.redis_utils import redis_client
 load_dotenv()
 
 api_key = os.getenv("GOOGLE_API_KEY")
+print(f"GOOGLE_API_KEY: {api_key}")  # Debugging line to check if the key is loaded
+
 
 router = APIRouter()
 

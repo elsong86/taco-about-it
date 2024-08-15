@@ -3,6 +3,7 @@
 A taco restaurant locator app that helps users find the best tacos in their area using geolocation and sentiment analysis.
 
 ## Table of Contents
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
@@ -10,56 +11,60 @@ A taco restaurant locator app that helps users find the best tacos in their area
 - [License](#license)
 - [Contact](#contact)
 
+## Prerequisites
+
+Before setting up the project, ensure you have the following installed:
+
+- **Docker:** [Install Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose:** [Install Docker Compose](https://docs.docker.com/compose/install/)
+
 ## Installation
 
-To automate the installation of dependencies for both the frontend and backend, you can use the provided `setup.sh` script. This script will:
+To set up the project using Docker, follow these steps:
 
-1. Navigate to the `frontend` directory and run `npm install`.
-2. Navigate back to the root directory.
-3. Navigate to the `backend` directory and install the Python dependencies listed in `requirements.txt`.
-
-### Steps to Run the Setup Script
-
-1. **Ensure the Script is Executable:**
-   - Before running the script, make sure it is executable by running the following command in the terminal:
+1. **Clone the Repository:**
+   - Clone the project repository to your local machine:
      ```bash
-     chmod +x setup.sh
+     git clone https://github.com/elsong86/taco-tracker.git
+     cd taco-tracker
      ```
 
-2. **Run the Script:**
-   - Execute the script from the root of your project directory by running:
-     ```bash
-     ./setup.sh
-     ```
-3. **Update the `.env` File:**
-   - After the setup script runs, navigate to the `backend` directory and open the `.env` file.
-   - Replace the placeholder values `your_google_api_key_here` and `your_outscraper_api_key_here` with your actual `GOOGLE_API_KEY` and `OUTSCRAPER_API_KEY`.
-   - Example:
+2. **Update the `.env` File:**
+   - Ensure the `.env` file is in the root directory of the project. This file should contain the following variables:
      ```plaintext
      GOOGLE_API_KEY=your_actual_google_api_key
      OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
      ```
+   - Replace `your_actual_google_api_key` and `your_actual_outscraper_api_key` with your actual API keys.
 
-4. **Environment Variables:**
-   - These keys are necessary for the application to function correctly. Ensure the `.env` file is updated before running the backend.
+3. **Build and Start the Docker Containers:**
+   - Use Docker Compose to build and start the containers for the frontend, backend, and Redis services:
+     ```bash
+     docker compose up --build
+     ```
+   - This will build the necessary Docker images and start the services.
 
-This script will handle the setup process for you, but you must manually update the `.env` file with your actual API keys to ensure the application works correctly.
+4. **Access the Application:**
+   - Once the containers are up and running, open your web browser and go to:
+     ```plaintext
+     http://localhost:3000
+     ```
+   - The application should be running, and you can start using it.
 
 ## Usage
 
-Once the setup is complete, you can start both the frontend and backend of the application concurrently by running:
+Once the Docker containers are running, the application is accessible at `http://localhost:3000`. You can use the app as follows:
 
-1. **Start the Application:**
-   - Navigate to the `frontend` directory and run:
+1. **Using the App:**
+   - On the homepage, you can either share your location or enter an address to find nearby taco restaurants.
+   - Browse the list of restaurants and view sentiment analysis of user reviews to help you find the best tacos in your area.
+
+2. **Stopping the Application:**
+   - To stop the Docker containers, run:
      ```bash
-     npm run dev
+     docker compose down
      ```
-   - This command will utilize `concurrently` to run both the frontend and backend servers at the same time.
-   - Open your web browser and go to `http://localhost:3000` to view the app.
-
-2. **Using the App:**
-   - On the homepage, share your location or enter an address to find nearby taco restaurants.
-   - Browse the list of restaurants, and view sentiment analysis of user reviews to find the best tacos in your area.
+   - This will stop and remove the containers.
 
 ## Features
 

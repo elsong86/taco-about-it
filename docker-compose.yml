@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+    volumes:
+      - ./frontend:/frontend
+    ports:
+      - "3000:3000"
+    command: npm run dev  # Ensure this command starts the frontend server
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8000:8000"
+    command: python app/main.py  # Ensure this command starts the backend server
+    depends_on:
+      - redis
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
+      # Add other environment variables as needed
+
+  redis:
+    image: "redis:7.4.0"
+    ports:
+      - "6379:6379"
