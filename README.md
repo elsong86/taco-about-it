@@ -9,6 +9,7 @@ A taco restaurant locator app that helps users find the best tacos in their area
 - [Features](#features)
 - [Technologies](#technologies)
 - [License](#license)
+- [Contributors](#contributors)
 - [Contact](#contact)
 
 ## Prerequisites
@@ -30,7 +31,7 @@ To set up the project using Docker, follow these steps:
      cd taco-tracker
      ```
 
-2. **Update the `.env` File:**
+2. **Create the `.env` File:**
    - Create a .env file at the root of the project. 
    - This file should contain the following variables:
      ```plaintext
@@ -95,8 +96,7 @@ Once the Docker containers are running, the application is accessible at `http:/
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Contact
+## Contributors
+- [Ellis Song](https://github.com/elsong86)
+- [Sofia Sarhiri](https://github.com/sarhiri)
 
-If you have any questions, feel free to reach out:
-
-- **GitHub:** [elsong86](https://github.com/elsong86)
