@@ -16,13 +16,16 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className='flex flex-col items-center justify-center min-h-screen'>
+      <div className='border border-gray-300  shadow-2xl p-20 rounded-lg flex flex-col items-center text-center'>
+      <h1 className="text-3xl font-bold mb-6">Welcome to Taco Finder</h1>
       <Header
         onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
         onAddressSubmit={(address: string) => handleAddressSubmit(address, router)}
       />
-      <h1 className="text-3xl font-bold mb-6">Welcome to Taco Finder</h1>
+      
       <p>This is the landing page. Use the search functionality to find tacos!</p>
+      </div>
     </div>
   );
 };
