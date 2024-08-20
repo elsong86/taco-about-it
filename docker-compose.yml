@@ -31,3 +31,17 @@ services:
     image: "redis:7.4.0"
     ports:
       - "6379:6379"
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tests
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
+      # Add other environment variables as needed
+    command: ["python", "-m", "unittest", "discover", "-s", "tests"]

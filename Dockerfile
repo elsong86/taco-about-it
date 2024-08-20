@@ -37,6 +37,17 @@ COPY backend/ .
 # Expose the backend port
 EXPOSE 8000
 
-# Run the backend server
+# Command to run the backend server
 CMD ["python", "app/main.py"]
 
+# Testing stage
+FROM backend AS tests
+
+# Install additional testing dependencies
+RUN pip install httpx  # Remove 'unittest' as it's part of Python's standard library
+
+# Set environment variables for testing, if needed
+ENV REDIS_HOST=redis
+
+# Command to run unit tests
+CMD ["python", "-m", "unittest", "discover", "-s", "tests"]

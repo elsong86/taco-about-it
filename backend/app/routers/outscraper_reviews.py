@@ -1,11 +1,15 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends, Request
 from outscraper import ApiClient
 from textblob import TextBlob
 import os
 from dotenv import load_dotenv
 import logging
 import json
-from app.utils.redis_utils import redis_client
+from ..utils.rate_limiter import rate_limiter
+from ..utils.redis_utils import redis_client
+from typing import Callable  # Import Callable
+
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -59,7 +63,10 @@ def analyze_sentiments(reviews):
     return average_sentiment
 
 @router.get("/reviews")
-def get_reviews(place_id: str = Query(..., description="The Place ID of the business")):
+def get_reviews(place_id: str = Query(..., description="The Place ID of the business"), 
+                limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))
+):
+
     logger.info(f"Received request for place_id: {place_id}")
     try:
         reviews = fetch_reviews(place_id)
