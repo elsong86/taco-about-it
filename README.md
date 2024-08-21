@@ -1,4 +1,5 @@
 # Taco Tracker App
+![CI](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg)
 
 A taco restaurant locator app that helps users find the best tacos in their area using geolocation and sentiment analysis.
 
@@ -62,9 +63,6 @@ This project uses GitHub Actions for Continuous Integration (CI). The CI pipelin
 - **Builds Docker Images:** Builds Docker images for the frontend, backend, and test environments.
 - **Runs Tests:** Executes unit tests within Docker containers to ensure consistent behavior across environments.
 - **Uses Docker Compose:** Orchestrates the services (frontend, backend, Redis) using Docker Compose to replicate a production-like environment.
-
-### Status Badge
-![CI](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg)
 
 ## Usage
 
