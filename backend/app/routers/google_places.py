@@ -3,14 +3,12 @@ from pydantic import BaseModel
 import requests 
 import os
 from dotenv import load_dotenv
-import redis 
+from ..utils.redis_utils import redis_client
 import json
 
 load_dotenv()
 
 api_key = os.getenv("GOOGLE_API_KEY")
-
-redis_client = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 router = APIRouter()
 

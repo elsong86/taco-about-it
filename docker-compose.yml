@@ -40,7 +40,6 @@ services:
     depends_on:
       - redis
     environment:
-      - REDIS_HOST=redis
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
       # Add other environment variables as needed

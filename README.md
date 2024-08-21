@@ -37,7 +37,6 @@ To set up the project using Docker, follow these steps:
      ```plaintext
      GOOGLE_API_KEY=your_actual_google_api_key
      OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
-     REDIS_HOST=redis
      ```
    - Replace `your_actual_google_api_key` and `your_actual_outscraper_api_key` with your actual API keys.
 
