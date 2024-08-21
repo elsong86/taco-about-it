@@ -54,6 +54,18 @@ To set up the project using Docker, follow these steps:
      ```
    - The application should be running, and you can start using it.
 
+## GitHub Actions
+
+This project uses GitHub Actions for Continuous Integration (CI). The CI pipeline is triggered on every push to the `main` branch and on pull requests. It ensures that the code is automatically tested and built using Docker Compose.
+
+### What the CI Pipeline Does
+- **Builds Docker Images:** Builds Docker images for the frontend, backend, and test environments.
+- **Runs Tests:** Executes unit tests within Docker containers to ensure consistent behavior across environments.
+- **Uses Docker Compose:** Orchestrates the services (frontend, backend, Redis) using Docker Compose to replicate a production-like environment.
+
+### Status Badge
+![CI](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg)
+
 ## Usage
 
 Once the Docker containers are running, the application is accessible at `http://localhost:3000`. You can use the app as follows:
