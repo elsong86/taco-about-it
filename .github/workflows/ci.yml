@@ -25,6 +25,14 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Wait for Redis to be ready
+      run: |
+        for i in {1..10}; do
+          nc -z redis 6379 && break
+          echo "Waiting for Redis..."
+          sleep 2
+        done
+
     - name: Build and test backend Docker image
       run: |
         docker build --target backend -t backend -f Dockerfile .
