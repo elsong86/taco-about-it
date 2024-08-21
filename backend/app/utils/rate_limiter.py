@@ -35,20 +35,16 @@ class RedisTokenBucket:
         now = time.time()
         time_passed = now - last_checked
 
-        # Add tokens based on the time passed
         tokens = min(self.capacity, tokens + time_passed * self.rate)
 
         if tokens >= 1:
-            # Allow the request and consume a token
             tokens -= 1
             self._set_tokens(tokens, now)
             return True
         else:
-            # Reject the request
             self._set_tokens(tokens, last_checked)
             return False
 
-# Dependency injection for FastAPI
 def rate_limiter(
     redis_client: redis.Redis, rate: float, capacity: int
 ) -> Callable[[Request], None]:

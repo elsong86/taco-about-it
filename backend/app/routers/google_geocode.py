@@ -1,16 +1,15 @@
-from fastapi import APIRouter, HTTPException, Request, Depends  # Import Request and Depends
+from fastapi import APIRouter, HTTPException, Request, Depends  
 from pydantic import BaseModel
 import requests
 import os
 from dotenv import load_dotenv
-from typing import Callable  # Import Callable
+from typing import Callable  
 from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
 
 load_dotenv()
 
 api_key = os.getenv("GOOGLE_API_KEY")
-print(f"GOOGLE_API_KEY: {api_key}")  # Debugging line to check if the key is loaded
 
 
 router = APIRouter()

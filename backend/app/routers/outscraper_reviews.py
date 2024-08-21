@@ -9,20 +9,14 @@ from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
 from typing import Callable  # Import Callable
 
-
-
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Initialize the API client with the API key from environment variable
 api_key = os.getenv("OUTSCRAPER_API_KEY")
 client = ApiClient(api_key)
 
-# Initialize the FastAPI router
 router = APIRouter()
 
 def fetch_reviews(place_id: str):
@@ -42,7 +36,6 @@ def fetch_reviews(place_id: str):
         )
         if results and isinstance(results, list) and len(results) > 0:
             reviews = results[0].get('reviews_data', [])
-            # Filter out reviews with empty text
             non_empty_reviews = [review for review in reviews if review.get('review_text') and review['review_text'].strip()]
 
             redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))

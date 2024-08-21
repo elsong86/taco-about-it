@@ -1,9 +1,9 @@
 import { Location } from '../types';
-import { useRouter } from 'next/navigation'; // Ensure this is the correct import
+import { useRouter } from 'next/navigation'; 
 
 export async function handleAddressSubmit(
   address: string,
-  router: ReturnType<typeof useRouter> // Use ReturnType to infer the correct type
+  router: ReturnType<typeof useRouter> 
 ): Promise<void> {
   try {
     const response = await fetch('http://localhost:8000/geocode', {
