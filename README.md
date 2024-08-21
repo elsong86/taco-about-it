@@ -1,8 +1,7 @@
 # Taco Tracker App
 ![CI](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg) 
-![Build Status](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg)
-![Coverage Status](https://coveralls.io/repos/github/elsong86/taco-tracker/badge.svg?branch=main)
 ![Last Commit](https://img.shields.io/github/last-commit/elsong86/taco-tracker)
+![Dependencies](https://david-dm.org/elsong86/taco-tracker.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 
