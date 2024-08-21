@@ -12,12 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      redis:
-        image: redis:7.4.0
-        ports:
-          - 6379:6379
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -25,25 +19,6 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Wait for Redis to be ready
+    - name: Build and run with Docker Compose
       run: |
-        for i in {1..30}; do
-          if nc -zv redis 6379; then
-            echo "Redis is ready!"
-            break
-          fi
-          echo "Waiting for Redis to be ready..."
-          sleep 3
-        done
-
-    - name: Build and test backend Docker image
-      run: |
-        docker build --target backend -t backend -f Dockerfile .
-        docker build --target tests -t tests -f Dockerfile .
-        docker run --rm tests
-
-    - name: Build frontend Docker image
-      run: docker build --target frontend -t frontend -f Dockerfile .
-
-    - name: Run frontend build in Docker
-      run: docker run --rm frontend npm run build
+        docker-compose up --build --abort-on-container-exit --exit-code-from tests
