@@ -19,6 +19,9 @@ EXPOSE 3000
 # Backend service
 FROM python:3.12-slim AS backend
 
+# Update system packages to ensure we have the latest versions, including zlib1g
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+
 # Set the working directory
 WORKDIR /backend
 
