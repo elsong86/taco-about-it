@@ -8,7 +8,7 @@ services:
       - ./frontend:/frontend
     ports:
       - "3000:3000"
-    command: npm run dev  # Ensure this command starts the frontend server
+    command: npm run dev 
 
   backend:
     build:
@@ -19,7 +19,7 @@ services:
       - ./backend:/backend
     ports:
       - "8000:8000"
-    command: python app/main.py  
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - redis
     environment:

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -12,19 +12,23 @@ const HomePage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    trackVisit(); 
+    trackVisit();
   }, []);
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen'>
-      <div className='border border-gray-300  shadow-2xl p-20 rounded-lg flex flex-col items-center text-center'>
-      <h1 className="text-3xl font-bold mb-6">Welcome to Taco Finder</h1>
-      <Header
-        onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
-        onAddressSubmit={(address: string) => handleAddressSubmit(address, router)}
-      />
-      
-      <p>This is the landing page. Use the search functionality to find tacos!</p>
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <div className="flex flex-col items-center rounded-lg border border-gray-300 p-20 text-center shadow-2xl">
+        <h1 className="mb-6 text-3xl font-bold">Welcome to Taco Finder</h1>
+        <Header
+          onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
+          onAddressSubmit={(address: string) =>
+            handleAddressSubmit(address, router)
+          }
+        />
+
+        <p>
+          This is the landing page. Use the search functionality to find tacos!
+        </p>
       </div>
     </div>
   );

@@ -17,12 +17,15 @@ const PlaceTile: React.FC<PlaceTileProps> = ({ place }) => {
       rating: place.rating?.toString() || '',
       userRatingCount: place.userRatingCount?.toString() || '',
     }).toString();
-  
+
     router.push(`/restaurant/${place.id}?${query}`);
   };
 
   return (
-    <div onClick={handleClick} className="border p-4 m-2 rounded shadow-lg cursor-pointer">
+    <div
+      onClick={handleClick}
+      className="m-2 cursor-pointer rounded border p-4 shadow-lg"
+    >
       <h2 className="text-xl font-bold">{place.displayName.text}</h2>
       <p>{place.formattedAddress}</p>
       {place.rating && <p>Rating: {place.rating}</p>}

@@ -1,12 +1,15 @@
 import React from 'react';
-import { Location } from '../types'; 
+import { Location } from '../types';
 
 interface HeaderProps {
   onLocationShare: (location: Location) => void;
   onAddressSubmit: (address: string) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLocationShare, onAddressSubmit }) => {
+const Header: React.FC<HeaderProps> = ({
+  onLocationShare,
+  onAddressSubmit,
+}) => {
   const handleLocationShare = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -16,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ onLocationShare, onAddressSubmit }) => 
         },
         (error) => {
           console.error('Error getting location:', error);
-        }
+        },
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
@@ -32,8 +35,11 @@ const Header: React.FC<HeaderProps> = ({ onLocationShare, onAddressSubmit }) => 
   };
 
   return (
-    <header className="flex flex-col md:flex-row items-center justify-between mb-4">
-      <button onClick={handleLocationShare} className="p-2 bg-blue-500 text-white rounded mb-2 md:mb-0 md:mr-2">
+    <header className="mb-4 flex flex-col items-center justify-between md:flex-row">
+      <button
+        onClick={handleLocationShare}
+        className="mb-2 rounded bg-blue-500 p-2 text-white md:mb-0 md:mr-2"
+      >
         Share Location
       </button>
       <form onSubmit={handleAddressSubmit} className="flex items-center">
@@ -42,9 +48,9 @@ const Header: React.FC<HeaderProps> = ({ onLocationShare, onAddressSubmit }) => 
           type="text"
           placeholder="Enter address"
           required
-          className="p-2 mr-2 border rounded"
+          className="mr-2 rounded border p-2"
         />
-        <button type="submit" className="p-2 bg-green-500 text-white rounded">
+        <button type="submit" className="rounded bg-green-500 p-2 text-white">
           Search
         </button>
       </form>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -8,7 +8,7 @@ const RestaurantPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [place, setPlace] = useState<Place | null>(null);
   const [reviews, setReviews] = useState<any[]>([]);
-  const [averageSentiment, setAverageSentiment] = useState<number | null>(null); 
+  const [averageSentiment, setAverageSentiment] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -26,7 +26,9 @@ const RestaurantPage: React.FC = () => {
         location: { latitude: 0, longitude: 0 },
         types: [],
         rating: rating ? parseFloat(rating) : undefined,
-        userRatingCount: userRatingCount ? parseInt(userRatingCount, 10) : undefined,
+        userRatingCount: userRatingCount
+          ? parseInt(userRatingCount, 10)
+          : undefined,
       });
 
       fetchReviews(id);
@@ -36,7 +38,9 @@ const RestaurantPage: React.FC = () => {
   const fetchReviews = async (placeId: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/reviews?place_id=${placeId}`);
+      const response = await fetch(
+        `http://localhost:8000/reviews?place_id=${placeId}`,
+      );
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -68,33 +72,31 @@ const RestaurantPage: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">{place.displayName.text}</h1>
+      <h1 className="mb-4 text-3xl font-bold">{place.displayName.text}</h1>
       <p>{place.formattedAddress}</p>
       {place.rating && <p>Rating: {place.rating}</p>}
       {place.userRatingCount && <p>Reviews: {place.userRatingCount}</p>}
-      
-      <h2 className="text-2xl font-bold mt-4">Average Sentiment</h2>
+
+      <h2 className="mt-4 text-2xl font-bold">Average Sentiment</h2>
       {averageSentiment !== null ? (
         <p>{averageSentiment.toFixed(2)} / 10</p>
       ) : (
         <p>No sentiment data available.</p>
       )}
-      
-      <h2 className="text-2xl font-bold mt-4">Reviews</h2>
+
+      <h2 className="mt-4 text-2xl font-bold">Reviews</h2>
       {loading ? (
         <div>Loading reviews...</div>
+      ) : reviews.length > 0 ? (
+        <ul>
+          {reviews.map((review, index) => (
+            <li key={index} className="mb-2">
+              <p>- {review.review_text}</p>
+            </li>
+          ))}
+        </ul>
       ) : (
-        reviews.length > 0 ? (
-          <ul>
-            {reviews.map((review, index) => (
-              <li key={index} className="mb-2">
-                <p>- {review.review_text}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>No reviews available.</div>
-        )
+        <div>No reviews available.</div>
       )}
     </div>
   );

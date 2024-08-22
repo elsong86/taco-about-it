@@ -1,12 +1,11 @@
 import Cookies from 'js-cookie';
 
 export function trackVisit() {
-    let visits = Cookies.get('visits');
+  let visits = Cookies.get('visits');
 
-    let visitCount = parseInt(visits || '0', 10);
+  let visitCount = parseInt(visits || '0', 10);
 
-    visitCount++;
+  visitCount++;
 
-    Cookies.set('visits', visitCount.toString(), { expires: 365 });
+  Cookies.set('visits', visitCount.toString(), { expires: 365 });
 }
-

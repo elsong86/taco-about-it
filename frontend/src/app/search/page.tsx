@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,14 +14,16 @@ const SearchPage: React.FC = () => {
 
   console.log('Component rendered');
 
-
   useEffect(() => {
     console.log('useEffect triggered');
     const latitude = searchParams.get('latitude');
     const longitude = searchParams.get('longitude');
 
     if (latitude && longitude) {
-      const loc: Location = { latitude: parseFloat(latitude), longitude: parseFloat(longitude) };
+      const loc: Location = {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+      };
       setLocation(loc);
       fetchPlaces(loc);
     }
@@ -34,7 +36,7 @@ const SearchPage: React.FC = () => {
       location: loc,
       radius: 1000,
       max_results: 20,
-      text_query: "tacos",
+      text_query: 'tacos',
     };
 
     try {
@@ -78,20 +80,28 @@ const SearchPage: React.FC = () => {
       }
 
       const data = await response.json();
-      const location: Location = { latitude: data.latitude, longitude: data.longitude };
+      const location: Location = {
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
       setLocation(location);
       console.log('Address geocoded:', location);
-      router.push(`/search?latitude=${location.latitude}&longitude=${location.longitude}`);
+      router.push(
+        `/search?latitude=${location.latitude}&longitude=${location.longitude}`,
+      );
     } catch (error) {
       console.error('Error geocoding address:', error);
     }
   };
 
   return (
-    <main className="flex flex-col min-h-screen items-left p-4">
-      <Header onLocationShare={handleLocationShare} onAddressSubmit={handleAddressSubmit} />
-      <h1 className="text-2xl font-bold mb-4">Search Results</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <main className="items-left flex min-h-screen flex-col p-4">
+      <Header
+        onLocationShare={handleLocationShare}
+        onAddressSubmit={handleAddressSubmit}
+      />
+      <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {places.map((place) => (
           <PlaceTile key={place.id} place={place} />
         ))}
