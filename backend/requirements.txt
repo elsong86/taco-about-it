@@ -7,7 +7,7 @@ fastapi==0.112.0
 h11==0.14.0
 idna==3.7
 joblib==1.4.2
-nltk==3.8.1
+nltk==3.8.2
 outscraper==5.2.1
 pydantic==2.8.2
 pydantic_core==2.20.1
@@ -22,3 +22,4 @@ tqdm==4.66.5
 typing_extensions==4.12.2
 urllib3==2.2.2
 uvicorn==0.30.5
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
