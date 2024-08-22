@@ -7,7 +7,7 @@ fastapi==0.112.0
 h11==0.14.0
 idna==3.7
 joblib==1.4.2
-nltk==3.8.1
+nltk==3.9.1
 outscraper==5.2.1
 pydantic==2.8.2
 pydantic_core==2.20.1
