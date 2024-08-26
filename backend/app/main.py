@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import google_places, google_geocode, outscraper_reviews
+from app.routers import google_places, google_geocode, outscraper_reviews, auth
 
 
 app = FastAPI()
@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(google_places.router)
 app.include_router(google_geocode.router)
 app.include_router(outscraper_reviews.router)
+app.include_router(auth.router)
 
 # Run the app
 if __name__ == "__main__":
