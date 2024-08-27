@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr, UUID4
 class UserBase(BaseModel):
     email: EmailStr
     class Config:
-        orm_mode = True
+        form_attributes = True
 
 class UserCreate(UserBase):
     password: str

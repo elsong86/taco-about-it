@@ -14,10 +14,6 @@ key: str = os.getenv("SUPABASE_KEY")
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Ensure URL and Key are available
-if not url or not key:
-    raise ValueError("Supabase URL or Key is missing in environment variables.")
-
 class SupabaseService:
     def __init__(self, url, key):
         self.supabase = create_client(
