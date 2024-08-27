@@ -8,6 +8,8 @@ certifi==2024.7.4
 charset-normalizer==3.3.2
 click==8.1.7
 deprecation==2.1.0
+dnspython==2.6.1
+email_validator==2.2.0
 fastapi==0.112.0
 frozenlist==1.4.1
 gotrue==2.7.0
