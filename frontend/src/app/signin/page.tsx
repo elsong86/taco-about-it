@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 
-const SignupPage: React.FC = () => {
+const SignInPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,11 +15,11 @@ const SignupPage: React.FC = () => {
     setIsClient(true);
   }, []);
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+  
     try {
-      const response = await fetch('http://localhost:8000/signup', {
+      const response = await fetch('http://localhost:8000/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,10 +36,10 @@ const SignupPage: React.FC = () => {
       }
   
       const result = await response.json();
-      console.log('Signup successful:', result);
+      console.log('Sign in successful:', result);
       router.push('/');
     } catch (error) {
-      console.error('Signup failed:', error);
+      console.error('Sign in failed:', error);
       // Display an error message to the user
     }
   };
@@ -52,8 +52,8 @@ const SignupPage: React.FC = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div className="flex flex-col items-center rounded-lg border border-gray-300 p-20 text-center shadow-2xl">
-        <h1 className="mb-6 text-3xl font-bold">Sign Up</h1>
-        <form onSubmit={handleSignup} className="w-full max-w-sm">
+        <h1 className="mb-6 text-3xl font-bold">Sign In</h1>
+        <form onSubmit={handleSignin} className="w-full max-w-sm">
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -93,17 +93,17 @@ const SignupPage: React.FC = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Sign Up
+              Sign In
             </button>
           </div>
         </form>
         <p className="mt-6">
-          Already have an account?{' '}
+          Don't have an account?{' '}
           <Link
-            href="/signin"
+            href="/signup"
             className="text-blue-500 hover:text-blue-700 font-bold"
           >
-            Sign In
+            Sign Up
           </Link>
         </p>
       </div>
@@ -111,4 +111,4 @@ const SignupPage: React.FC = () => {
   );
 };
 
-export default SignupPage;
+export default SignInPage;
