@@ -22,3 +22,6 @@ jobs:
     - name: Build and run with Docker Compose
       run: |
         docker compose up --build --abort-on-container-exit --exit-code-from tests
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
