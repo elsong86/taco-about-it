@@ -25,6 +25,8 @@ services:
     environment:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
       # Add other environment variables as needed
 
   redis:
@@ -42,5 +44,7 @@ services:
     environment:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
       # Add other environment variables as needed
     command: ["python", "-m", "unittest", "discover", "-s", "tests"]
