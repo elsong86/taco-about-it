@@ -42,8 +42,11 @@ To set up the project using Docker, follow these steps:
      ```plaintext
      GOOGLE_API_KEY=your_actual_google_api_key
      OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
+     REDIS_HOST=redis
+     SUPABASE_URL=your_supabase_url
+     SUPABASE_KEY=your_supabase_key
      ```
-   - Replace `your_actual_google_api_key` and `your_actual_outscraper_api_key` with your actual API keys.
+   - Replace `your_actual_google_api_key`,`your_actual_outscraper_api_key`,`your_supabase_ulr`, and `your_supabase_key` with your appropriate values. 
 
 3. **Build and Start the Docker Containers:**
    - Use Docker Compose to build and start the containers for the frontend, backend, and Redis services:
@@ -100,6 +103,7 @@ Once the Docker containers are running, the application is accessible at `http:/
   - Python
   - FastAPI 
   - Redis
+  - Supabase
 - **Sentiment Analysis:**
   - TextBlob
 - **APIs:**
