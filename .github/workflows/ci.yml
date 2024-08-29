@@ -21,7 +21,16 @@ jobs:
 
     - name: Build and run with Docker Compose
       run: |
-        docker compose up --build
+        docker compose up --build -d
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+    - name: Wait for services to be ready
+      run: sleep 10
+
+    - name: Print Docker logs
+      run: docker compose logs
+
+    - name: Stop and remove Docker containers
+      run: docker compose down
