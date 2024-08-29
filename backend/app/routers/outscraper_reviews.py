@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
 from ..services.supabase_service import SupabaseService
-from typing import Callable  # Import Callable
+from typing import Callable  
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,13 +24,15 @@ supabase_service = SupabaseService(url=os.getenv("SUPABASE_URL"), key=os.getenv(
 
 router = APIRouter()
 
-def fetch_reviews(place_id: str):
+def check_cache(place_id: str):
     cache_key = f"reviews:{place_id}"
     cached_reviews = redis_client.get(cache_key)
     if cached_reviews:
         logger.info(f"Cache hit for place_id: {place_id}")
         return json.loads(cached_reviews)
+    return None
 
+def fetch_reviews_from_api(place_id: str):
     try:
         results = client.google_maps_reviews(
             place_id,
@@ -43,13 +45,15 @@ def fetch_reviews(place_id: str):
             reviews = results[0].get('reviews_data', [])
             non_empty_reviews = [review for review in reviews if review.get('review_text') and review['review_text'].strip()]
 
+            # Cache the fetched reviews
+            cache_key = f"reviews:{place_id}"
             redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))
             logger.info(f"Cached reviews for place_id: {place_id}")
 
             return non_empty_reviews
         return []
     except Exception as e:
-        logger.error(f"Error fetching reviews: {str(e)}")
+        logger.error(f"Error fetching reviews from API: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 def analyze_sentiments(reviews):
@@ -66,7 +70,12 @@ def get_stored_reviews(place_id: str):
     now = datetime.now(timezone.utc)
 
     # Query the Supabase database for reviews related to place_id
-    response = supabase_service.supabase.table("reviews").select("*").eq("place_id", place_id).execute()
+    response = supabase_service.supabase.table("reviews")\
+        .select("*")\
+        .eq("place_id", place_id)\
+        .order("created_at", desc=True)\
+        .limit(30)\
+        .execute()
     reviews = response.data
 
     if reviews:
@@ -81,6 +90,7 @@ def get_stored_reviews(place_id: str):
     logger.info(f"No recent reviews found in the database for place_id: {place_id}")
     return None
 
+
 @router.get("/reviews")
 def get_reviews(place_id: str = Query(..., description="The Place ID of the business"), 
                 limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))):
@@ -88,22 +98,22 @@ def get_reviews(place_id: str = Query(..., description="The Place ID of the busi
     logger.info(f"Received request for place_id: {place_id}")
 
     try:
-        # Check the Redis cache first
-        cached_reviews = fetch_reviews(place_id)
+        # Step 1: Check the Redis cache first
+        cached_reviews = check_cache(place_id)
         if cached_reviews:
             # Calculate the average sentiment for reviews from the cache
             average_sentiment = analyze_sentiments(cached_reviews)
             return {"average_sentiment": average_sentiment, "reviews": cached_reviews, "source": "cache"}
 
-        # If not found in Redis, check the database
+        # Step 2: If not found in Redis, check the database
         stored_reviews = get_stored_reviews(place_id)
         if stored_reviews:
             # Calculate the average sentiment for reviews from the database
             average_sentiment = analyze_sentiments(stored_reviews)
             return {"average_sentiment": average_sentiment, "reviews": stored_reviews, "source": "database"}
 
-        # If not found in Redis or database, fetch from Outscraper API
-        reviews = fetch_reviews(place_id)
+        # Step 3: If not found in Redis or database, fetch from Outscraper API
+        reviews = fetch_reviews_from_api(place_id)
         
         # Store fetched reviews in the database without sentiment
         for review in reviews:
