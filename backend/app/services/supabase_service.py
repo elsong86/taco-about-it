@@ -55,3 +55,17 @@ class SupabaseService:
         except Exception as e:
             logging.error("Sign in failed for %s: %s", email, str(e))
             return {"error": str(e)}
+
+    def store_review(self, place_id: str, review_text: str, sentiment: float = None):
+        try:
+            data = {
+                "place_id": place_id,
+                "review_text": review_text,
+            }
+            response = self.supabase.table("reviews").insert(data).execute()
+            logging.info("Review stored successfully: %s", review_text)
+            return response
+        except Exception as e:
+            logging.error("Failed to store review: %s", str(e))
+            return {"error": str(e)}
+

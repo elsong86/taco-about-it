@@ -42,12 +42,3 @@ EXPOSE 8000
 
 # Command to run the backend server
 CMD ["python", "app/main.py"]
-
-# Testing stage
-FROM backend AS tests
-
-# Install additional testing dependencies
-RUN pip install httpx  # Remove 'unittest' as it's part of Python's standard library
-
-# Command to run unit tests
-CMD ["python", "-m", "unittest", "discover", "-s", "tests"]
