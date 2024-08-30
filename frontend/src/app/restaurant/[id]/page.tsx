@@ -19,52 +19,55 @@ const RestaurantPage: React.FC = () => {
     const userRatingCount = searchParams.get('userRatingCount');
 
     if (id && displayName && formattedAddress) {
-      setPlace({
-        id,
-        displayName: { text: displayName },
-        formattedAddress,
-        location: { latitude: 0, longitude: 0 },
-        types: [],
-        rating: rating ? parseFloat(rating) : undefined,
-        userRatingCount: userRatingCount
-          ? parseInt(userRatingCount, 10)
-          : undefined,
-      });
+        setPlace({
+            id,
+            displayName: { text: displayName },
+            formattedAddress,
+            location: { latitude: 0, longitude: 0 },
+            types: [],
+            rating: rating ? parseFloat(rating) : undefined,
+            userRatingCount: userRatingCount
+                ? parseInt(userRatingCount, 10)
+                : undefined,
+        });
 
-      fetchReviews(id);
+        // Pass displayName and formattedAddress to fetchReviews
+        fetchReviews(id, displayName, formattedAddress);
     }
-  }, [searchParams]);
+}, [searchParams]);
 
-  const fetchReviews = async (placeId: string) => {
+
+  const fetchReviews = async (placeId: string, displayName: string, formattedAddress: string) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:8000/reviews?place_id=${placeId}`,
-      );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      const data = await response.json();
-      console.log('Fetched reviews data:', data);
+        const response = await fetch(
+            `http://localhost:8000/reviews?place_id=${placeId}&displayName=${encodeURIComponent(displayName)}&formattedAddress=${encodeURIComponent(formattedAddress)}`,
+        );
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log('Fetched reviews data:', data);
 
-      if (data.reviews && Array.isArray(data.reviews)) {
-        setReviews(data.reviews);
-      } else {
-        setReviews([]);
-      }
+        if (data.reviews && Array.isArray(data.reviews)) {
+            setReviews(data.reviews);
+        } else {
+            setReviews([]);
+        }
 
-      if (data.average_sentiment !== undefined) {
-        const scaledSentiment = ((data.average_sentiment + 1) / 2) * 10;
-        setAverageSentiment(scaledSentiment);
-      } else {
-        setAverageSentiment(null);
-      }
+        if (data.average_sentiment !== undefined) {
+            const scaledSentiment = ((data.average_sentiment + 1) / 2) * 10;
+            setAverageSentiment(scaledSentiment);
+        } else {
+            setAverageSentiment(null);
+        }
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+        console.error('Failed to fetch reviews:', error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   if (!place) {
     return <div>Loading...</div>;

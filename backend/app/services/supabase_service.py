@@ -1,30 +1,13 @@
-import os
 import logging
-from supabase import create_client, Client
-from supabase.client import ClientOptions
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Retrieve URL and Key from environment variables
-url: str = os.getenv("SUPABASE_URL")
-key: str = os.getenv("SUPABASE_KEY")
+from ..utils.supabase_utils import get_supabase_client
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
 class SupabaseService:
-    def __init__(self, url, key):
-        self.supabase = create_client(
-            url, 
-            key,
-            options=ClientOptions(
-                postgrest_client_timeout=10,
-                storage_client_timeout=10,
-                schema="public"
-            )
-        )
+    def __init__(self):
+        # Get the Supabase client using the utility function
+        self.supabase = get_supabase_client()
 
     def validate_credentials(self, email, password):
         if '@' not in email or len(password) < 8:
@@ -68,4 +51,3 @@ class SupabaseService:
         except Exception as e:
             logging.error("Failed to store review: %s", str(e))
             return {"error": str(e)}
-

@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from ..models.user import UserCreate  
 from ..services.supabase_service import SupabaseService
-import os
 
-supabase_service = SupabaseService(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+# Instantiate SupabaseService without arguments
+supabase_service = SupabaseService()
 
 router = APIRouter()
 

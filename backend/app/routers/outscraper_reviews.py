@@ -1,10 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query, Depends, Request
 from outscraper import ApiClient
 from textblob import TextBlob
-import os
-from dotenv import load_dotenv
 import logging
 import json
+import os
 from datetime import datetime, timezone, timedelta
 from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
@@ -14,13 +13,12 @@ from typing import Callable
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
-
-api_key = os.getenv("OUTSCRAPER_API_KEY")
+# Initialize Outscraper API client
+api_key = os.getenv("OUTSCRAPER_API_KEY")  # Make sure this is set up in your environment variables
 client = ApiClient(api_key)
 
-# Instantiate the SupabaseService
-supabase_service = SupabaseService(url=os.getenv("SUPABASE_URL"), key=os.getenv("SUPABASE_KEY"))
+# Instantiate the SupabaseService using the modularized Supabase client
+supabase_service = SupabaseService()
 
 router = APIRouter()
 
@@ -47,13 +45,37 @@ def fetch_reviews_from_api(place_id: str):
 
             # Cache the fetched reviews
             cache_key = f"reviews:{place_id}"
-            redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))
+            redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))  # Cache for 1 hour
             logger.info(f"Cached reviews for place_id: {place_id}")
 
             return non_empty_reviews
         return []
     except Exception as e:
         logger.error(f"Error fetching reviews from API: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+def store_restaurant(place_id: str, name: str, address: str):
+    try:
+        # Check if the restaurant already exists
+        existing_restaurant = supabase_service.supabase.table("restaurants")\
+            .select("*")\
+            .eq("place_id", place_id)\
+            .execute()
+
+        if not existing_restaurant.data:
+            # Insert the new restaurant if it doesn't exist
+            data = {
+                "place_id": place_id,
+                "name": name,
+                "address": address,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            response = supabase_service.supabase.table("restaurants").insert(data).execute()
+            logging.info(f"Restaurant stored successfully: {name}")
+        else:
+            logging.info(f"Restaurant already exists: {name}")
+    except Exception as e:
+        logger.error(f"Failed to store restaurant: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 def analyze_sentiments(reviews):
@@ -67,7 +89,7 @@ def analyze_sentiments(reviews):
 def get_stored_reviews(place_id: str):
     # Define your freshness criteria (e.g., 24 hours)
     freshness_limit = timedelta(hours=24)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc)  # Ensure `now` is timezone-aware
 
     # Query the Supabase database for reviews related to place_id
     response = supabase_service.supabase.table("reviews")\
@@ -79,12 +101,18 @@ def get_stored_reviews(place_id: str):
     reviews = response.data
 
     if reviews:
-        # Check if the reviews are recent enough
-        latest_review = max(reviews, key=lambda r: r['created_at'])
-        review_age = now - datetime.fromisoformat(latest_review['created_at'].replace('Z', '+00:00'))
+        # Convert `created_at` to an offset-aware datetime
+        latest_review = max(reviews, key=lambda r: datetime.fromisoformat(r['created_at'].replace('Z', '+00:00')).replace(tzinfo=timezone.utc))
+        review_age = now - datetime.fromisoformat(latest_review['created_at'].replace('Z', '+00:00')).replace(tzinfo=timezone.utc)
 
         if review_age < freshness_limit:
             logger.info(f"Found recent reviews in the database for place_id: {place_id}")
+
+            # Cache the fetched reviews from the database
+            cache_key = f"reviews:{place_id}"
+            redis_client.setex(cache_key, 3600, json.dumps(reviews))  # Cache for 1 hour
+            logger.info(f"Cached reviews from database for place_id: {place_id}")
+
             return reviews
     
     logger.info(f"No recent reviews found in the database for place_id: {place_id}")
@@ -92,36 +120,40 @@ def get_stored_reviews(place_id: str):
 
 
 @router.get("/reviews")
-def get_reviews(place_id: str = Query(..., description="The Place ID of the business"), 
-                limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))):
-
-    logger.info(f"Received request for place_id: {place_id}")
-
+def get_reviews(
+    place_id: str = Query(..., alias="place_id", description="The Place ID of the business"), 
+    name: str = Query(..., alias="displayName", description="The name of the restaurant"),
+    address: str = Query(..., alias="formattedAddress", description="The address of the restaurant"),
+    limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))
+):
+    logger.info(f"Received place_id: {place_id}")
+    logger.info(f"Received displayName: {name}")
+    logger.info(f"Received formattedAddress: {address}")
+    
     try:
         # Step 1: Check the Redis cache first
         cached_reviews = check_cache(place_id)
         if cached_reviews:
-            # Calculate the average sentiment for reviews from the cache
             average_sentiment = analyze_sentiments(cached_reviews)
             return {"average_sentiment": average_sentiment, "reviews": cached_reviews, "source": "cache"}
 
         # Step 2: If not found in Redis, check the database
         stored_reviews = get_stored_reviews(place_id)
         if stored_reviews:
-            # Calculate the average sentiment for reviews from the database
             average_sentiment = analyze_sentiments(stored_reviews)
             return {"average_sentiment": average_sentiment, "reviews": stored_reviews, "source": "database"}
 
         # Step 3: If not found in Redis or database, fetch from Outscraper API
         reviews = fetch_reviews_from_api(place_id)
         
+        # Store the restaurant details before storing reviews
+        store_restaurant(place_id, name, address)
+
         # Store fetched reviews in the database without sentiment
         for review in reviews:
-            supabase_service.store_review(place_id, review['review_text'], None)  # Sentiment is not stored
+            supabase_service.store_review(place_id, review['review_text'], None)
 
-        # Calculate the average sentiment
         average_sentiment = analyze_sentiments(reviews)
-        
         return {"average_sentiment": average_sentiment, "reviews": reviews, "source": "api"}
     except HTTPException as e:
         raise e
