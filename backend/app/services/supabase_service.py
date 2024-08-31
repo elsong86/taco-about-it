@@ -44,6 +44,7 @@ class SupabaseService:
             data = {
                 "place_id": place_id,
                 "review_text": review_text,
+                "source": "outscraper_api",  # Ensure the source is set here
             }
             response = self.supabase.table("reviews").insert(data).execute()
             logging.info("Review stored successfully: %s", review_text)
@@ -51,3 +52,4 @@ class SupabaseService:
         except Exception as e:
             logging.error("Failed to store review: %s", str(e))
             return {"error": str(e)}
+

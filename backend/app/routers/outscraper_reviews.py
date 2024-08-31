@@ -68,8 +68,10 @@ def store_restaurant(place_id: str, name: str, address: str):
                 "place_id": place_id,
                 "name": name,
                 "address": address,
+                "source": "outscraper_api",  # Ensure this field is correctly set
                 "created_at": datetime.now(timezone.utc).isoformat()
             }
+            logger.info(f"Data to be inserted: {data}")  # Log the data
             response = supabase_service.supabase.table("restaurants").insert(data).execute()
             logging.info(f"Restaurant stored successfully: {name}")
         else:
@@ -77,6 +79,7 @@ def store_restaurant(place_id: str, name: str, address: str):
     except Exception as e:
         logger.error(f"Failed to store restaurant: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 def analyze_sentiments(reviews):
     sentiments = [TextBlob(review['review_text']).sentiment.polarity for review in reviews]
