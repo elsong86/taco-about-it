@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'
+import Link from 'next/link';
 
 const SignInPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Indicate that the component has mounted on the client
@@ -17,7 +18,7 @@ const SignInPage: React.FC = () => {
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     try {
       const response = await fetch('http://localhost:8000/signin', {
         method: 'POST',
@@ -25,22 +26,23 @@ const SignInPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
+        credentials: 'include',  // This ensures cookies are sent with the request
       });
-  
+
       if (response.status === 429) {
         throw new Error('Too many requests. Please try again later.');
       }
-  
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Sign in failed');
       }
-  
-      const result = await response.json();
-      console.log('Sign in successful:', result);
+
+      // On success, redirect to home or dashboard
       router.push('/');
-    } catch (error) {
-      console.error('Sign in failed:', error);
-      // Display an error message to the user
+    } catch (error: any) {
+      console.error('Sign in failed:', error.message);
+      setError(error.message);  // Display an error message to the user
     }
   };
 
@@ -88,6 +90,9 @@ const SignInPage: React.FC = () => {
               required
             />
           </div>
+          {error && (
+            <p className="text-red-500 text-sm mb-4">{error}</p>
+          )}
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

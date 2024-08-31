@@ -37,7 +37,7 @@ const SignupPage: React.FC = () => {
   
       const result = await response.json();
       console.log('Signup successful:', result);
-      router.push('/');
+      router.push('/signin');
     } catch (error) {
       console.error('Signup failed:', error);
       // Display an error message to the user

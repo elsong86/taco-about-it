@@ -27,6 +27,9 @@ services:
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
       # Add other environment variables as needed
 
   redis:
