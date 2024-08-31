@@ -1,6 +1,7 @@
 # Taco About It App
 ![CI](https://github.com/elsong86/taco-tracker/actions/workflows/ci.yml/badge.svg) 
 ![Last Commit](https://img.shields.io/github/last-commit/elsong86/taco-tracker)
+![Known Vulnerabilities](https://snyk.io/test/github/elsong86/taco-tracker/main/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 
