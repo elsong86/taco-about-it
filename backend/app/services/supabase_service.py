@@ -1,12 +1,10 @@
 import logging
 from ..utils.supabase_utils import get_supabase_client
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 
 class SupabaseService:
     def __init__(self):
-        # Get the Supabase client using the utility function
         self.supabase = get_supabase_client()
 
     def validate_credentials(self, email, password):
@@ -39,12 +37,12 @@ class SupabaseService:
             logging.error("Sign in failed for %s: %s", email, str(e))
             return {"error": str(e)}
 
-    def store_review(self, place_id: str, review_text: str, sentiment: float = None):
+    def store_review(self, place_id: str, review_text: str):
         try:
             data = {
                 "place_id": place_id,
                 "review_text": review_text,
-                "source": "outscraper_api",  # Ensure the source is set here
+                "source": "outscraper_api",
             }
             response = self.supabase.table("reviews").insert(data).execute()
             logging.info("Review stored successfully: %s", review_text)

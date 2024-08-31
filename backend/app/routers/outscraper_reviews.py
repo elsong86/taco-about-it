@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
 from ..services.supabase_service import SupabaseService
+from pydantic import BaseModel, Field
 from typing import Callable  
 
 logging.basicConfig(level=logging.INFO)
@@ -121,14 +122,20 @@ def get_stored_reviews(place_id: str):
     logger.info(f"No recent reviews found in the database for place_id: {place_id}")
     return None
 
+class ReviewQueryParams(BaseModel):
+    place_id: str = Field(..., alias="place_id", pattern=r"^[A-Za-z0-9_\-]+$")
+    name: str = Field(..., alias="displayName", min_length=1, max_length=100)
+    address: str = Field(..., alias="formattedAddress", min_length=5, max_length=255)
 
 @router.get("/reviews")
 def get_reviews(
-    place_id: str = Query(..., alias="place_id", description="The Place ID of the business"), 
-    name: str = Query(..., alias="displayName", description="The name of the restaurant"),
-    address: str = Query(..., alias="formattedAddress", description="The address of the restaurant"),
+    query_params: ReviewQueryParams = Depends(),
     limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))
 ):
+    place_id = query_params.place_id
+    name = query_params.name
+    address = query_params.address
+    
     logger.info(f"Received place_id: {place_id}")
     logger.info(f"Received displayName: {name}")
     logger.info(f"Received formattedAddress: {address}")
@@ -154,7 +161,7 @@ def get_reviews(
 
         # Store fetched reviews in the database without sentiment
         for review in reviews:
-            supabase_service.store_review(place_id, review['review_text'], None)
+            supabase_service.store_review(place_id, review['review_text'])
 
         average_sentiment = analyze_sentiments(reviews)
         return {"average_sentiment": average_sentiment, "reviews": reviews, "source": "api"}
