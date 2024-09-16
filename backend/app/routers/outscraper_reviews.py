@@ -91,8 +91,8 @@ def analyze_sentiments(reviews):
     return average_sentiment
 
 def get_stored_reviews(place_id: str):
-    # Define your freshness criteria (e.g., 24 hours)
-    freshness_limit = timedelta(hours=24)
+    # Define your freshness criteria (e.g., 1 week)
+    freshness_limit = timedelta(weeks=1)
     now = datetime.now(timezone.utc)  # Ensure `now` is timezone-aware
 
     # Query the Supabase database for reviews related to place_id
