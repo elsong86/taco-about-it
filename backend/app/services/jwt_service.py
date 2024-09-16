@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-import jwt  # Import PyJWT instead of jose
+import jwt  
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os

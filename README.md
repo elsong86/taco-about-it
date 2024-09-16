@@ -68,7 +68,6 @@ This project uses GitHub Actions for Continuous Integration (CI). The CI pipelin
 
 ### What the CI Pipeline Does
 - **Builds Docker Images:** Builds Docker images for the frontend, backend, and test environments.
-- **Runs Tests:** Executes unit tests within Docker containers to ensure consistent behavior across environments.
 - **Uses Docker Compose:** Orchestrates the services (frontend, backend, Redis) using Docker Compose to replicate a production-like environment.
 
 ## Usage
@@ -99,6 +98,7 @@ Once the Docker containers are running, the application is accessible at `http:/
   - React
   - TypeScript
   - Next.js
+  - Tailwind CSS
 - **Backend:**
   - Python
   - FastAPI 
