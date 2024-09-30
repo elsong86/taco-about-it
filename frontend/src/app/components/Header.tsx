@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({
         </form>
       </div>
       <div className="flex justify-end w-full md:w-auto mt-2 md:mt-0">
-        <Link
+        {/* <Link
           href="/signin"
           className="text-blue-500 hover:text-blue-700 font-bold mr-4"
         >
@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({
           className="text-blue-500 hover:text-blue-700 font-bold"
         >
           Sign up
-        </Link>
+        </Link> */}
       </div>
     </header>
   );

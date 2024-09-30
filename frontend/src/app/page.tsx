@@ -8,6 +8,10 @@ import { handleAddressSubmit } from './services/geocodeService';
 import { trackVisit } from './services/analytics';
 import { Location } from './types';
 
+// import ripSvg from '../../public/rip.svg'
+import backgroundImage from '../../public/images/tacos5.jpg'
+import image from '../../public/images/copilottacos.jpeg'
+
 const HomePage: React.FC = () => {
   const router = useRouter();
 
@@ -16,24 +20,42 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center relative bg-white">
+
+
+    <div className="flex min-h-screen flex-col items-center justify-center relative"
+    style={{
+      backgroundImage: `url(${image.src})`,
+      backgroundSize: "cover",
+      backgroundPosition: "contain", 
+      backgroundRepeat: "no-repeat", 
+    }}
+    >
+
     {/* Triangle Background */}
-    <div className="absolute inset-0">
+    {/* <div className="absolute inset-0">
       <div className="absolute top-0 left-0 w-0 h-0 border-t-[100vh] border-t-[#eece30] border-r-[100vw] border-r-transparent"></div>
-    </div>
+
+    </div> */}
+      
+    
+
 
     {/* Content */}
-    <div className="relative z-10 flex flex-col items-center rounded-lg border border-gray-300 p-20 text-center shadow-2xl bg-white">
-      <h1 className="mb-6 text-6xl font-brothers">Welcome to Taco Finder</h1>
+    <div className="relative z-10 flex flex-col items-center rounded-lg border border-gray-300 p-10 text-center shadow-2xl bg-transparent mt-10">
+    <p className="font-thirsty text-3xl pb-0 ">
+       ~ Anywhere, Anytime ~
+          </p>
+      <h1 className="mb-6 text-6xl font-brothers">FIND YOUR NEW FAVORITE <br />TACO SPOT</h1>
+      <p className=' '>
+            Enter your location to get started. 
+          </p>
       <Header
         onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
         onAddressSubmit={(address: string) =>
           handleAddressSubmit(address, router)
         }
       />
-      <p>
-        This is the landing page. Use the search functionality to find tacos!
-      </p>
+      
     </div>
   </div>
   );
