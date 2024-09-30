@@ -7,7 +7,7 @@ const MainHead: React.FC = () => {
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md h-30 z-10"
     
     >
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center text-center p-4">
         <div className="flex-1 text-center text-7xl font-bold font-hustlers">
           Taco About it
         </div>

@@ -8,10 +8,9 @@ import { handleAddressSubmit } from './services/geocodeService';
 import { trackVisit } from './services/analytics';
 import { Location } from './types';
 
-// import ripSvg from '../../public/rip.svg'
-import backgroundImage from '../../public/images/tacos5.jpg'
 import image from '../../public/images/copilottacos.jpeg'
 import MainHead from '../../src/app/components/LandingHeader'
+import Footer from './components/Footer';
 
 const HomePage: React.FC = () => {
   const router = useRouter();
@@ -59,6 +58,7 @@ const HomePage: React.FC = () => {
         </div>
 
       </div>
+      <Footer />
     </div>
   );
 };
