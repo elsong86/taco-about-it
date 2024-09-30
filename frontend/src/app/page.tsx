@@ -11,6 +11,7 @@ import { Location } from './types';
 // import ripSvg from '../../public/rip.svg'
 import backgroundImage from '../../public/images/tacos5.jpg'
 import image from '../../public/images/copilottacos.jpeg'
+import MainHead from '../../src/app/components/LandingHeader'
 
 const HomePage: React.FC = () => {
   const router = useRouter();
@@ -21,7 +22,8 @@ const HomePage: React.FC = () => {
 
   return (
 
-
+    <div>
+      <MainHead />
     <div className="flex min-h-screen flex-col items-center justify-center relative"
     style={{
       backgroundImage: `url(${image.src})`,
@@ -30,6 +32,7 @@ const HomePage: React.FC = () => {
       backgroundRepeat: "no-repeat", 
     }}
     >
+      
 
     {/* Triangle Background */}
     {/* <div className="absolute inset-0">
@@ -37,16 +40,14 @@ const HomePage: React.FC = () => {
 
     </div> */}
       
-    
-
 
     {/* Content */}
     <div className="relative z-10 flex flex-col items-center rounded-lg border border-gray-300 p-10 text-center shadow-2xl bg-transparent mt-10">
     <p className="font-thirsty text-3xl pb-0 ">
        ~ Anywhere, Anytime ~
           </p>
-      <h1 className="mb-6 text-6xl font-brothers">FIND YOUR NEW FAVORITE <br />TACO SPOT</h1>
-      <p className=' '>
+      <h1 className=" text-6xl font-brothers textShadow-lg" >FIND YOUR NEW FAVORITE <br />TACO SPOT</h1>
+      <p className='font-semibold '>
             Enter your location to get started. 
           </p>
       <Header
@@ -57,6 +58,7 @@ const HomePage: React.FC = () => {
       />
       
     </div>
+  </div>
   </div>
   );
 };
