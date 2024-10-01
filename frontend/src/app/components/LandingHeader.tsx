@@ -1,33 +1,49 @@
 import React from "react";
 import Link from "next/link";
 import rip from '../../../public/rip.svg';
+import sombrero from '../../../public/images/sombrero.png'
 
 const MainHead: React.FC = () => {
   return (
     <header
       className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center"
-      style={{ backgroundColor: '#f4f2e7' }}
+      style={{ backgroundColor: '#E8E4D9' }}
     >
+        
 
-
-      {/* Centered Text */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-8xl text-shadow-md font-hustlers ">
-        Taco About it
+      {/* Title */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-8xl text-bold  font-hustlers "
+      style={{ textShadow: "2px 2px 0px black" }}
+      >
+        {/* Taco About it */}
+        <span className="text-rose-800">T</span>
+        <span className="text-emerald-800">A</span>
+        <span className="text-yellow-600">C</span>
+        <span className="text-orange-700">O</span>
+        <span> </span>
+        <span className="text-rose-800">A</span>
+        <span className="text-emerald-800">B</span>
+        <span className="text-yellow-600">O</span>
+        <span className="text-orange-700">U</span>
+        <span className="text-rose-800">T</span>
+        <span> </span>
+        <span className="text-emerald-800">I</span>
+        <span className="text-yellow-600">T</span>
       </div>
 
-      {/* Links Section */}
+      {/* Buttons Section */}
       <div className="flex space-x-4 ml-auto p-4">
         <Link
           href="/signin"
-          className="inline-block px-4 py-2 text-white bg-yellow-500 hover:bg-red-800 font-bold font-avenir rounded"
+          className="inline-block px-4 py-2 text-white bg-yellow-500 border border-yellow-500 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
         >
-          Sign in
+          Sign In
         </Link>
         <Link
           href="/signup"
-          className="inline-block px-4 py-2 text-white bg-green-700 hover:bg-red-800 hover:text-white font-bold font-avenir rounded"
+          className="inline-block px-4 py-2 text-white bg-green-700 hover:bg-red-800 hover:text-white font-bold font-thirsty text-lg rounded shadow"
         >
-          Sign up
+          Sign Up
         </Link>
       </div>
 

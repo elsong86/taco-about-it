@@ -17,7 +17,8 @@ const config: Config = {
         'hustlers': ['Hustlers Rough', 'sans-serif'],
         'brothers': ['Brothers', 'sans-serif'],
         'thirsty': ['Thirsty', 'sans-serif'],
-        'avenir': ['Avenir', 'sans-serif']
+        'avenir': ['Avenir', 'sans-serif'],
+        'cactus':['Cactus Tequila', 'sans-serif']
       },
       textShadow: {
         sm: '1px 1px 2px rgba(0, 0, 0, 0.25)',
