@@ -40,25 +40,26 @@ const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center w-full md:w-auto">
         <button
           onClick={handleLocationShare}
-          className="mb-2 rounded bg-blue-500 p-2 text-white md:mb-0 md:mr-2"
+          className="mb-2 rounded bg-sky-700 p-2 text-white md:mb-0 md:mr-2 font-bold text-lg hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg"
         >
           Share Location
         </button>
+
         <form onSubmit={handleAddressSubmit} className="flex items-center">
           <input
             name="address"
             type="text"
             placeholder="Enter address"
             required
-            className="mr-2 rounded border p-2"
+            className="mr-2 rounded border bg-opacity-50 bg-white text-neutral-900 p-2"
           />
-          <button type="submit" className="rounded bg-green-500 p-2 text-white">
+          <button type="submit" className="rounded bg-yellow-600 p-2 text-white hover:text-black text-lg font-bold hover:bg-white hover:bg-opacity-50 hover:shadow-lg">
             Search
           </button>
         </form>
       </div>
       <div className="flex justify-end w-full md:w-auto mt-2 md:mt-0">
-        <Link
+        {/* <Link
           href="/signin"
           className="text-blue-500 hover:text-blue-700 font-bold mr-4"
         >
@@ -69,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({
           className="text-blue-500 hover:text-blue-700 font-bold"
         >
           Sign up
-        </Link>
+        </Link> */}
       </div>
     </header>
   );
