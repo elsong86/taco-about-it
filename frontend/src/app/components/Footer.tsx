@@ -4,6 +4,7 @@ import rip from '../../../public/footer.svg'
 import github from '../../../public/github.svg'
 import linkedin from '../../../public/linkedin.svg'
 import backgroundImg from '../../../public/images.svg'
+import pinata from '../../../public/images/pinata.png'
 
 
 const Footer: React.FC = () => {
@@ -30,17 +31,23 @@ const Footer: React.FC = () => {
             <img
               src={github.src}
               alt="GitHub Icon"
-              className="h-10 w-10 border bg-white rounded-md" 
+              className="h-10 w-10  bg-rose-600 rounded-md p-1" 
             />
           </Link>
           <Link href="https://linkedin.com/in/your-linkedin-profile" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
-              className="h-10 w-10 border bg-white rounded-md" 
+              className="h-10 w-10 bg-orange-700 rounded-md" 
             />
           </Link>
-          <span className="text-5xl font-hustlers">ELLIS</span>
+          <div className="text-5xl font-hustlers">
+            <span className="text-rose-600">E</span>
+            <span className="text-emerald-600">L</span>
+            <span className="text-yellow-600">L</span>
+            <span className="text-orange-700">I</span>
+            <span className="text-rose-800">S</span>
+          </div>
         </div>
 
         {/* Sofia's Icons and Name */}
@@ -49,20 +56,29 @@ const Footer: React.FC = () => {
             <img
               src={github.src}
               alt="GitHub Icon"
-              className="h-10 w-10 border bg-white rounded-md" 
+              className="h-10 w-10 bg-yellow-600 rounded-md p-1" 
             />
           </Link>
           <Link href="https://linkedin.com/in/sofia-linkedin-profile" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
-              className="h-10 w-10 border bg-white rounded-md" 
+              className="h-10 w-10  bg-emerald-600 rounded-md" 
             />
           </Link>
-          <span className="text-5xl font-hustlers">Sofia</span>
+          <div className="text-5xl font-hustlers">
+            <span className="text-emerald-600">S</span>
+            <span className="text-rose-600">O</span>
+            <span className="text-yellow-600">F</span>
+            <span className="text-orange-700">I</span>
+            <span className="text-rose-800">A</span>
+          </div>
         </div>
       </div>
 
+      <div className="absolute left-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
+        <img src={pinata.src} alt="Pinata" className="h-40 w-40 shadow-lg" /> {/* Adjust size as needed */}
+      </div>
 
       <div className='py-6 font-thirsty'>
         <p>Made with ♡ in 2024</p>
