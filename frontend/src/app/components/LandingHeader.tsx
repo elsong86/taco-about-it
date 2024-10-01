@@ -1,17 +1,22 @@
 import React from "react";
 import Link from "next/link";
-import rip from '../../../public/rip.svg'
+import rip from '../../../public/rip.svg';
 
 const MainHead: React.FC = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-md h-30 z-10"
-    
+    <header
+      className="fixed top-0 left-0 right-0 shadow-md h-35 z-10 py-2 flex items-center"
+      style={{ backgroundColor: '#f4f2e7' }}
     >
-      <div className="flex justify-between items-center text-center p-4">
-        <div className="flex-1 text-center text-7xl font-bold font-hustlers">
-          Taco About it
-        </div>
-        <div className="flex space-x-4">
+
+
+      {/* Centered Text */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-7xl text-shadow-md font-hustlers ">
+        Taco About it
+      </div>
+
+      {/* Links Section */}
+      <div className="flex space-x-4 ml-auto p-4">
         <Link
           href="/signin"
           className="inline-block px-4 py-2 text-white bg-blue-500 hover:bg-blue-700 font-bold rounded"
@@ -24,10 +29,10 @@ const MainHead: React.FC = () => {
         >
           Sign up
         </Link>
-        </div>
       </div>
+
       {/* Ripped Paper SVG at the bottom */}
-      <div className="absolute inset-x-0 w-full z-10 rotate-180">
+      <div className="absolute inset-x-0 bottom-[-20px] w-full h-auto z-10 rotate-180 hidden md:block">
         <img src={rip.src} alt="Ripped Paper Effect" className="w-full" />
       </div>
     </header>
