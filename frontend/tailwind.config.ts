@@ -13,8 +13,23 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      fontFamily: {
+        'hustlers': ['Hustlers Rough', 'sans-serif'],
+        'brothers': ['Brothers', 'sans-serif'],
+        'thirsty': ['Thirsty', 'sans-serif'],
+        'avenir': ['Avenir', 'sans-serif'],
+        'cactus':['Cactus Tequila', 'sans-serif']
+      },
+      textShadow: {
+        sm: '1px 1px 2px rgba(0, 0, 0, 0.25)',
+        DEFAULT: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+        lg: '3px 3px 6px rgba(0, 0, 0, 0.75)',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+
+    require('tailwindcss-textshadow'),
+  ],
 };
 export default config;

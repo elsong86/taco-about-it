@@ -16,6 +16,41 @@
   }
 }
 
+@font-face {
+  font-family: 'Hustlers Rough';
+  src: url('/fonts/Hustlersroughdemo-A9p7.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Brothers';
+  src: url('/fonts/Brothers Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Thirsty';
+  src: url('/fonts/ThirstyRoughRegular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/AvenirLTStd-Book.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cactus Tequila';
+  src: url('/fonts/CactusTequila.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body {
   height: 100%;
