@@ -3,6 +3,7 @@ import Link from "next/link";
 import rip from '../../../public/footer.svg'
 import github from '../../../public/github.svg'
 import linkedin from '../../../public/linkedin.svg'
+import backgroundImg from '../../../public/images.svg'
 
 
 const Footer: React.FC = () => {
@@ -16,44 +17,46 @@ const Footer: React.FC = () => {
       </div>
 
       <div>
-        <p className="text-2xl py-5">Connect with us:</p>
+        <p className="text-2xl py-5 ">Connect with us:</p>
       </div>
 
     {/* Flex container for icons and names */}
     <div className="flex flex-col space-y-4"> {/* Space between rows */}
         {/* Ellis's */}
-        <div className="flex items-center space-x-4"> {/* Space between icons and name */}
+        <div className="flex items-center space-x-4"
+        
+        > 
           <Link href="https://github.com/your-username" target="_blank">
             <img
               src={github.src}
               alt="GitHub Icon"
-              className="h-10 w-10 border bg-white rounded-md" // Added rounded-full for circular icon
+              className="h-10 w-10 border bg-white rounded-md" 
             />
           </Link>
           <Link href="https://linkedin.com/in/your-linkedin-profile" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
-              className="h-10 w-10 border bg-white rounded-md" // Added rounded-full for circular icon
+              className="h-10 w-10 border bg-white rounded-md" 
             />
           </Link>
           <span className="text-5xl font-hustlers">ELLIS</span>
         </div>
 
         {/* Sofia's Icons and Name */}
-        <div className="flex items-center space-x-4"> {/* Space between icons and name */}
-          <Link href="https://github.com/sofia-username" target="_blank">
+        <div className="flex items-center space-x-4"> 
+          <Link href="https://github.com/sarhiri" target="_blank">
             <img
               src={github.src}
               alt="GitHub Icon"
-              className="h-10 w-10 border bg-white rounded-md" // Added rounded-full for circular icon
+              className="h-10 w-10 border bg-white rounded-md" 
             />
           </Link>
           <Link href="https://linkedin.com/in/sofia-linkedin-profile" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
-              className="h-10 w-10 border bg-white rounded-md" // Added rounded-full for circular icon
+              className="h-10 w-10 border bg-white rounded-md" 
             />
           </Link>
           <span className="text-5xl font-hustlers">Sofia</span>
@@ -61,7 +64,7 @@ const Footer: React.FC = () => {
       </div>
 
 
-      <div className='py-6'>
+      <div className='py-6 font-thirsty'>
         <p>Made with ♡ in 2024</p>
       </div>
 

@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
             required
             className="mr-2 rounded border bg-opacity-50 bg-white text-neutral-900 p-2"
           />
-          <button type="submit" className="rounded bg-yellow-600 p-2 text-white hover:text-black text-lg font-bold hover:bg-white hover:bg-opacity-50">
+          <button type="submit" className="rounded bg-yellow-600 p-2 text-white hover:text-black text-lg font-bold hover:bg-white hover:bg-opacity-50 hover:shadow-lg">
             Search
           </button>
         </form>
