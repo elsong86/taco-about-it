@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center w-full md:w-auto">
         <button
           onClick={handleLocationShare}
-          className="mb-2 rounded bg-blue-500 p-2 text-white md:mb-0 md:mr-2 font-avenir font-xl"
+          className="mb-2 rounded bg-blue-500 p-2 text-white md:mb-0 md:mr-2 font-avenir font-bold text-lg"
         >
           Share Location
         </button>
@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({
             required
             className="mr-2 rounded border bg-opacity-50 bg-white text-neutral-900 p-2"
           />
-          <button type="submit" className="rounded bg-green-500 p-2 text-white font-thirsty text-xl">
+          <button type="submit" className="rounded bg-green-500 p-2 text-black font-cactus text-xl">
             Search
           </button>
         </form>

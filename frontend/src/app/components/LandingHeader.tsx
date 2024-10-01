@@ -6,13 +6,16 @@ import sombrero from '../../../public/images/sombrero.png'
 const MainHead: React.FC = () => {
   return (
     <header
-      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center"
+      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center text-center"
       style={{ backgroundColor: '#E8E4D9' }}
     >
-        
+         {/* Sombrero Image */}
+      <div className="flex-shrink-0 ml-6">
+        <img src={sombrero.src} alt="Sombrero logo" className="h-30 w-20" />
+      </div>
 
       {/* Title */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-8xl text-bold  font-hustlers "
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-center text-8xl text-bold  font-hustlers "
       style={{ textShadow: "2px 2px 0px black" }}
       >
         {/* Taco About it */}
@@ -35,13 +38,13 @@ const MainHead: React.FC = () => {
       <div className="flex space-x-4 ml-auto p-4">
         <Link
           href="/signin"
-          className="inline-block px-4 py-2 text-white bg-yellow-500 border border-yellow-500 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
+          className="inline-block px-4 py-2 text-white bg-rose-700 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
         >
           Sign In
         </Link>
         <Link
           href="/signup"
-          className="inline-block px-4 py-2 text-white bg-green-700 hover:bg-red-800 hover:text-white font-bold font-thirsty text-lg rounded shadow"
+          className="inline-block px-4 py-2 text-white bg-yellow-600 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
         >
           Sign Up
         </Link>
