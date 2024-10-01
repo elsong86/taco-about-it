@@ -49,8 +49,8 @@ const HomePage: React.FC = () => {
               </p>
 
           <h1 className=" text-6xl font-brothers text-shadow-md py-4 text-neutral-950" >FIND YOUR NEW FAVORITE <br />TACO SPOT!</h1>
-          <p className='font-avenir font-bold text-xl pb-5'>
-                Enter your location to get started. 
+          <p className='font-mono font-bold text-xl pb-5'>
+                Share or enter your location to get started. 
               </p>
           <Header
             onLocationShare={(loc: Location) => handleLocationShare(loc, router)}

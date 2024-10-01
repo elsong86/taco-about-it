@@ -40,10 +40,11 @@ const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center w-full md:w-auto">
         <button
           onClick={handleLocationShare}
-          className="mb-2 rounded bg-blue-500 p-2 text-white md:mb-0 md:mr-2 font-avenir font-bold text-lg"
+          className="mb-2 rounded bg-sky-700 p-2 text-white md:mb-0 md:mr-2 font-mono text-lg hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg"
         >
           Share Location
         </button>
+        
         <form onSubmit={handleAddressSubmit} className="flex items-center">
           <input
             name="address"
@@ -52,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
             required
             className="mr-2 rounded border bg-opacity-50 bg-white text-neutral-900 p-2"
           />
-          <button type="submit" className="rounded bg-green-500 p-2 text-black font-cactus text-xl">
+          <button type="submit" className="rounded bg-lime-500 p-2 text-black font-thirsty text-lg  hover:bg-white hover:bg-opacity-50">
             Search
           </button>
         </form>

@@ -38,13 +38,13 @@ const MainHead: React.FC = () => {
       <div className="flex space-x-4 ml-auto p-4">
         <Link
           href="/signin"
-          className="inline-block px-4 py-2 text-white bg-rose-700 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
+          className="inline-block px-4 py-2 text-amber-50 bg-rose-700 hover:bg-red-800 hover:shadow-lg font-bold font-thirsty text-lg rounded shadow"
         >
           Sign In
         </Link>
         <Link
           href="/signup"
-          className="inline-block px-4 py-2 text-white bg-yellow-600 hover:bg-red-800 font-bold font-thirsty text-lg rounded shadow"
+          className="inline-block px-4 py-2 text-amber-50 bg-sky-700 hover:bg-red-800 hover:shadow-lg font-bold font-thirsty text-lg rounded shadow"
         >
           Sign Up
         </Link>
