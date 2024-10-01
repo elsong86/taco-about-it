@@ -12,6 +12,8 @@ import image from '../../public/images/copilottacos.jpeg'
 import MainHead from '../../src/app/components/LandingHeader'
 import Footer from './components/Footer';
 
+
+
 const HomePage: React.FC = () => {
   const router = useRouter();
 
