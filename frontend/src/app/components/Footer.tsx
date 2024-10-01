@@ -3,7 +3,7 @@ import Link from "next/link";
 import rip from '../../../public/footer.svg'
 import github from '../../../public/github.svg'
 import linkedin from '../../../public/linkedin.svg'
-import backgroundImg from '../../../public/images.svg'
+import taco from '../../../public/images/taco.png'
 import pinata from '../../../public/images/pinata.png'
 
 
@@ -27,14 +27,14 @@ const Footer: React.FC = () => {
         <div className="flex items-center space-x-4"
         
         > 
-          <Link href="https://github.com/your-username" target="_blank">
+          <Link href="https://github.com/elsong86" target="_blank">
             <img
               src={github.src}
               alt="GitHub Icon"
               className="h-10 w-10  bg-rose-600 rounded-md p-1" 
             />
           </Link>
-          <Link href="https://linkedin.com/in/your-linkedin-profile" target="_blank">
+          <Link href="https://www.linkedin.com/in/ellissong/" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
               className="h-10 w-10 bg-yellow-600 rounded-md p-1" 
             />
           </Link>
-          <Link href="https://linkedin.com/in/sofia-linkedin-profile" target="_blank">
+          <Link href="https://www.linkedin.com/in/sofia-sarhiri/" target="_blank">
             <img
               src={linkedin.src}
               alt="LinkedIn Icon"
@@ -78,6 +78,10 @@ const Footer: React.FC = () => {
 
       <div className="absolute left-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
         <img src={pinata.src} alt="Pinata" className="h-40 w-40 shadow-lg" /> {/* Adjust size as needed */}
+      </div>
+
+      <div className="absolute right-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
+        <img src={taco.src} alt="Pinata" className="h-40 w-40 " /> {/* Adjust size as needed */}
       </div>
 
       <div className='py-6 font-thirsty'>
