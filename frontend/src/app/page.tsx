@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
 
     <div>
       <MainHead />
-      <div className="flex min-h-screen flex-col items-center justify-center relative py-10"
+      <div className="flex min-h-screen flex-col items-center justify-center relative "
         style={{
           backgroundImage: `url(${image.src})`,
           backgroundSize: "cover",
@@ -32,6 +32,14 @@ const HomePage: React.FC = () => {
         }}
         >
           
+{/* Transparent black gradient div */}
+    <div
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2))",
+          opacity: 0.7, // You can adjust this value for more or less transparency
+        }}
+      ></div>
 
         {/* Content */}
       <div className="relative z-5 flex flex-col items-center rounded-lg border border-gray-300 border-opacity-50 text-center shadow-2xl bg-gray-200 bg-opacity-50 my-10 pt-20 pb-10 px-10">

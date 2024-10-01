@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({
             type="text"
             placeholder="Enter address"
             required
-            className="mr-2 rounded border p-2"
+            className="mr-2 rounded border bg-opacity-50 bg-white p-2"
           />
           <button type="submit" className="rounded bg-green-500 p-2 text-white">
             Search

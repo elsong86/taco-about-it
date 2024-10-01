@@ -5,13 +5,13 @@ import rip from '../../../public/rip.svg';
 const MainHead: React.FC = () => {
   return (
     <header
-      className="fixed top-0 left-0 right-0 shadow-md h-35 z-10 py-2 flex items-center"
+      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center"
       style={{ backgroundColor: '#f4f2e7' }}
     >
 
 
       {/* Centered Text */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-7xl text-shadow-md font-hustlers ">
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-8xl text-shadow-md font-hustlers ">
         Taco About it
       </div>
 
@@ -19,13 +19,13 @@ const MainHead: React.FC = () => {
       <div className="flex space-x-4 ml-auto p-4">
         <Link
           href="/signin"
-          className="inline-block px-4 py-2 text-white bg-blue-500 hover:bg-blue-700 font-bold rounded"
+          className="inline-block px-4 py-2 text-white bg-yellow-500 hover:bg-red-800 font-bold font-avenir rounded"
         >
           Sign in
         </Link>
         <Link
           href="/signup"
-          className="inline-block px-4 py-2 text-blue-500 bg-white border border-blue-500 hover:bg-blue-500 hover:text-white font-bold rounded"
+          className="inline-block px-4 py-2 text-white bg-green-700 hover:bg-red-800 hover:text-white font-bold font-avenir rounded"
         >
           Sign up
         </Link>
