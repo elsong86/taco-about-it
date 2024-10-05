@@ -105,7 +105,9 @@ Once the Docker containers are running, the application is accessible at `http:/
   - Redis
   - Supabase
 - **Sentiment Analysis:**
-  - TextBlob
+  - VADER
+  - spaCy
+  - Lingua
 - **APIs:**
   - Google Places API
   - Outscraper API
