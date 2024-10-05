@@ -1,73 +1,58 @@
-'use client';
+import React from "react";
+import Link from "next/link";
+import rip from '../../../public/rip.svg';
+import sombrero from '../../../public/images/sombrero.png'
 
-import React from 'react';
-import { Location } from '../types';
-
-interface HeaderProps {
-  onLocationShare: (location: Location) => void;
-  onAddressSubmit: (address: string) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({
-  onLocationShare,
-  onAddressSubmit,
-}) => {
-  const handleLocationShare = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          onLocationShare({ latitude, longitude });
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          // Optionally, provide user feedback here (e.g., toast notifications)
-        }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-      // Optionally, provide user feedback here
-    }
-  };
-
-  const handleAddressSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const address = formData.get('address') as string;
-    onAddressSubmit(address);
-  };
-
+const Header: React.FC = () => {
   return (
-    <header className="mb-4 flex flex-col items-center justify-center md:flex-row w-full">
-      {/* Container for Share Location Button and Search Form */}
-      <div className="flex items-center space-x-4">
-        {/* Share Location Button */}
-        <button
-          onClick={handleLocationShare}
-          aria-label="Share your current location"
-          className="rounded bg-sky-700 p-2 text-white font-bold text-lg hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg transition"
-        >
-          Share Location
-        </button>
+    <header
+      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center text-center"
+      style={{ backgroundColor: '#E8E4D9' }}
+    >
+         {/* Sombrero Image */}
+      <div className="flex-shrink-0 ml-6">
+        <img src={sombrero.src} alt="Sombrero logo" className="h-30 w-20" />
+      </div>
 
-        {/* Search Form */}
-        <form onSubmit={handleAddressSubmit} className="flex items-center">
-          <input
-            name="address"
-            type="text"
-            placeholder="Enter address"
-            aria-label="Address"
-            required
-            className="mr-2 rounded border border-gray-300 bg-opacity-50 bg-white text-neutral-900 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500 transition w-48"
-          />
-          <button
-            type="submit"
-            className="rounded bg-yellow-600 p-2 text-white font-bold text-lg hover:text-black hover:bg-white hover:bg-opacity-50 hover:shadow-lg transition"
-          >
-            Search
-          </button>
-        </form>
+      {/* Title */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 text-center text-8xl text-bold  font-hustlers "
+      style={{ textShadow: "2px 2px 0px black" }}
+      >
+        {/* Taco About it */}
+        <span className="text-rose-800">T</span>
+        <span className="text-emerald-800">A</span>
+        <span className="text-yellow-600">C</span>
+        <span className="text-orange-700">O</span>
+        <span> </span>
+        <span className="text-rose-800">A</span>
+        <span className="text-emerald-800">B</span>
+        <span className="text-yellow-600">O</span>
+        <span className="text-orange-700">U</span>
+        <span className="text-rose-800">T</span>
+        <span> </span>
+        <span className="text-emerald-800">I</span>
+        <span className="text-yellow-600">T</span>
+      </div>
+
+      {/* Buttons Section */}
+      <div className="flex space-x-4 ml-auto p-4">
+        <Link
+          href="/signin"
+          className="inline-block px-4 py-2 text-amber-50 bg-yellow-600 hover:bg-white hover:bg-opacity-50 hover:shadow-lg hover:text-yellow-600 font-bold text-md rounded shadow"
+        >
+          Sign In
+        </Link>
+        <Link
+          href="/signup"
+          className="inline-block px-4 py-2 text-amber-50 bg-sky-700 hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg font-bold  text-md rounded shadow"
+        >
+          Sign Up
+        </Link>
+      </div>
+
+      {/* Ripped Paper SVG at the bottom */}
+      <div className="absolute inset-x-0 bottom-[-20px] w-full h-auto z-10 rotate-180 hidden md:block">
+        <img src={rip.src} alt="Ripped Paper Effect" className="w-full" />
       </div>
     </header>
   );

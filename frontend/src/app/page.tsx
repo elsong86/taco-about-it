@@ -1,15 +1,15 @@
 // app/page.tsx
 
 import React from 'react';
-import MainHead from './components/LandingHeader';
+import Header from './components/Header';
 import Footer from './components/Footer';
-import InteractiveSection from './components/InteractiveSection';
+import SearchContainer from './components/SearchContainer';
 import Image from 'next/image';
 
 const HomePage: React.FC = () => {
   return (
     <div>
-      <MainHead />
+      <Header />
       <div
         className="flex min-h-screen flex-col items-center justify-center relative"
         style={{
@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
         ></div>
 
         {/* Interactive Content */}
-        <InteractiveSection />
+        <SearchContainer />
       </div>
       <Footer />
     </div>

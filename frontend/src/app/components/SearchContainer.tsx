@@ -2,13 +2,13 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from './Header';
+import Search from './Search';
 import { handleLocationShare } from '../services/locationService';
 import { handleAddressSubmit } from '../services/geocodeService';
 import { trackVisit } from '../services/analytics';
 import { Location } from '../types';
 
-const InteractiveSection: React.FC = () => {
+const SearchContainer: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const InteractiveSection: React.FC = () => {
         Share or enter your location to get started.
       </p>
 
-      <Header
+      <Search
         onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
         onAddressSubmit={(address: string) =>
           handleAddressSubmit(address, router)
@@ -39,4 +39,4 @@ const InteractiveSection: React.FC = () => {
   );
 };
 
-export default InteractiveSection;
+export default SearchContainer;

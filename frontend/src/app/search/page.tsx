@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PlaceTile from '../components/PlaceTile';
-import Header from '../components/Header';
+import Header from '../components/Search';
 import { Location, Place } from '../types';
 
 const SearchPage: React.FC = () => {
