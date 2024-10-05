@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query, Depends, Request
 from outscraper import ApiClient
-from textblob import TextBlob
 import logging
 import json
 import os
@@ -8,8 +7,10 @@ from datetime import datetime, timezone, timedelta
 from ..utils.rate_limiter import rate_limiter
 from ..utils.redis_utils import redis_client
 from ..services.supabase_service import SupabaseService
+from ..utils.sentiment_analysis import analyze_sentiments
+from lingua import Language, LanguageDetectorBuilder
 from pydantic import BaseModel, Field
-from typing import Callable  
+from typing import Callable
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,6 +21,19 @@ client = ApiClient(api_key)
 
 # Instantiate the SupabaseService using the modularized Supabase client
 supabase_service = SupabaseService()
+
+# Initialize Lingua language detector with English enabled
+detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.SPANISH).build()
+
+# Define the is_english function
+def is_english(text):
+    try:
+        # Detect language using Lingua
+        detected_language = detector.detect_language_of(text)
+        return detected_language == Language.ENGLISH
+    except Exception as e:
+        logger.error(f"Error detecting language: {e}")
+        return False
 
 router = APIRouter()
 
@@ -42,7 +56,11 @@ def fetch_reviews_from_api(place_id: str):
         )
         if results and isinstance(results, list) and len(results) > 0:
             reviews = results[0].get('reviews_data', [])
-            non_empty_reviews = [review for review in reviews if review.get('review_text') and review['review_text'].strip()]
+            
+            # Filter out non-English reviews using is_english
+            english_reviews = [review for review in reviews if is_english(review['review_text'])]
+
+            non_empty_reviews = [review for review in english_reviews if review.get('review_text') and review['review_text'].strip()]
 
             # Cache the fetched reviews
             cache_key = f"reviews:{place_id}"
@@ -54,6 +72,7 @@ def fetch_reviews_from_api(place_id: str):
     except Exception as e:
         logger.error(f"Error fetching reviews from API: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 def store_restaurant(place_id: str, name: str, address: str):
     try:
@@ -80,15 +99,6 @@ def store_restaurant(place_id: str, name: str, address: str):
     except Exception as e:
         logger.error(f"Failed to store restaurant: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-
-
-def analyze_sentiments(reviews):
-    sentiments = [TextBlob(review['review_text']).sentiment.polarity for review in reviews]
-    if sentiments:
-        average_sentiment = sum(sentiments) / len(sentiments)
-    else:
-        average_sentiment = 0.0
-    return average_sentiment
 
 def get_stored_reviews(place_id: str):
     # Define your freshness criteria (e.g., 1 week)
