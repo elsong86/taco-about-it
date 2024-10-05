@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PlaceTile from '../components/PlaceTile';
-import Header from '../components/Search';
+import Search from '../components/Search';
 import { Location, Place } from '../types';
 
 const SearchPage: React.FC = () => {
@@ -96,7 +96,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <main className="items-left flex min-h-screen flex-col p-4">
-      <Header
+      <Search
         onLocationShare={handleLocationShare}
         onAddressSubmit={handleAddressSubmit}
       />
