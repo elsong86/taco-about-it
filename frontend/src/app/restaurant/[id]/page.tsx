@@ -56,11 +56,11 @@ const RestaurantPage: React.FC = () => {
         }
 
         if (data.average_sentiment !== undefined) {
-            const scaledSentiment = ((data.average_sentiment + 1) / 2) * 10;
-            setAverageSentiment(scaledSentiment);
-        } else {
-            setAverageSentiment(null);
-        }
+          setAverageSentiment(data.average_sentiment);  // No additional scaling needed
+      } else {
+          setAverageSentiment(null);
+      }
+      
     } catch (error) {
         console.error('Failed to fetch reviews:', error);
     } finally {
