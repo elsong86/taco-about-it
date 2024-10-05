@@ -1,6 +1,7 @@
+'use client';
+
 import React from 'react';
 import { Location } from '../types';
-import Link from 'next/link';
 
 interface HeaderProps {
   onLocationShare: (location: Location) => void;
@@ -20,10 +21,12 @@ const Header: React.FC<HeaderProps> = ({
         },
         (error) => {
           console.error('Error getting location:', error);
-        },
+          // Optionally, provide user feedback here (e.g., toast notifications)
+        }
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
+      // Optionally, provide user feedback here
     }
   };
 
@@ -36,41 +39,35 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="mb-4 flex flex-col items-center justify-between md:flex-row">
-      <div className="flex items-center w-full md:w-auto">
+    <header className="mb-4 flex flex-col items-center justify-center md:flex-row w-full">
+      {/* Container for Share Location Button and Search Form */}
+      <div className="flex items-center space-x-4">
+        {/* Share Location Button */}
         <button
           onClick={handleLocationShare}
-          className="mb-2 rounded bg-sky-700 p-2 text-white md:mb-0 md:mr-2 font-bold text-lg hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg"
+          aria-label="Share your current location"
+          className="rounded bg-sky-700 p-2 text-white font-bold text-lg hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg transition"
         >
           Share Location
         </button>
 
+        {/* Search Form */}
         <form onSubmit={handleAddressSubmit} className="flex items-center">
           <input
             name="address"
             type="text"
             placeholder="Enter address"
+            aria-label="Address"
             required
-            className="mr-2 rounded border bg-opacity-50 bg-white text-neutral-900 p-2"
+            className="mr-2 rounded border border-gray-300 bg-opacity-50 bg-white text-neutral-900 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500 transition w-48"
           />
-          <button type="submit" className="rounded bg-yellow-600 p-2 text-white hover:text-black text-lg font-bold hover:bg-white hover:bg-opacity-50 hover:shadow-lg">
+          <button
+            type="submit"
+            className="rounded bg-yellow-600 p-2 text-white font-bold text-lg hover:text-black hover:bg-white hover:bg-opacity-50 hover:shadow-lg transition"
+          >
             Search
           </button>
         </form>
-      </div>
-      <div className="flex justify-end w-full md:w-auto mt-2 md:mt-0">
-        {/* <Link
-          href="/signin"
-          className="text-blue-500 hover:text-blue-700 font-bold mr-4"
-        >
-          Sign in
-        </Link>
-        <Link
-          href="/signup"
-          className="text-blue-500 hover:text-blue-700 font-bold"
-        >
-          Sign up
-        </Link> */}
       </div>
     </header>
   );
