@@ -4,7 +4,7 @@ FROM node:22.6.0 AS frontend
 # Set the working directory
 WORKDIR /frontend
 
-# Copy the frontend package.json and package-lock.json files
+# Copy only package.json and package-lock.json to install dependencies
 COPY frontend/package*.json ./
 
 # Install frontend dependencies
@@ -17,7 +17,7 @@ COPY frontend/ .
 EXPOSE 3000
 
 # Backend service
-FROM python:3.12-slim AS backend
+FROM python:3.11-slim AS backend
 
 # Update system packages and install necessary dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
@@ -29,7 +29,7 @@ ENV PYTHONUNBUFFERED=1
 # Set the working directory
 WORKDIR /backend
 
-# Copy the backend requirements.txt file
+# Copy only requirements.txt to install dependencies
 COPY backend/requirements.txt .
 
 # Upgrade pip and install dependencies globally
@@ -44,4 +44,3 @@ EXPOSE 8000
 
 # Command to run the backend server using uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
