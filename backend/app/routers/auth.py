@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response, Depends
 from ..models.user import UserCreate  
 from ..services.supabase_service import SupabaseService
-from ..services.jwt_service import create_access_token, verify_access_token
 
 supabase_service = SupabaseService()
 router = APIRouter()
@@ -23,7 +22,14 @@ async def signin(user_details: UserCreate, response: Response):
     jwt_token = result.session.access_token
 
     # Set the JWT token in an HTTP-only cookie
-    response.set_cookie(key="access_token", value=f"Bearer {jwt_token}", httponly=True, secure=True, samesite="Lax")
+    response.set_cookie(
+        key="access_token", 
+        value=jwt_token, 
+        httponly=True, 
+        secure=True,        # Ensure HTTPS in production
+        samesite="Lax",     # Adjust based on your CSRF strategy
+        max_age=60*60        # 1 hour in seconds
+    )
 
     return {"message": "Signin successful"}
 

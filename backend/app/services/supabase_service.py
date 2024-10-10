@@ -51,3 +51,28 @@ class SupabaseService:
             logging.error("Failed to store review: %s", str(e))
             return {"error": str(e)}
 
+    def fetch_user(self, jwt: str = None):
+        try:
+            logging.info(f"Fetching user with JWT: {jwt}")
+
+            # Fetch the user data using the provided JWT
+            if jwt:
+                response = self.supabase.auth.get_user(jwt)
+            else:
+                response = self.supabase.auth.get_user()
+
+            # Log the response for debugging purposes
+            logging.info(f"Supabase get_user response: {response}")
+
+            # Check if 'response' has the 'user' attribute, which is now an object, not a dict
+            if not hasattr(response, "user"):
+                logging.error("User not found in response")
+                return {"error": "Error retrieving user profile"}
+
+            return response
+
+        except Exception as e:
+            logging.error(f"Failed to fetch user: {str(e)}")
+            return {"error": str(e)}
+
+
