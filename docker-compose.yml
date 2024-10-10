@@ -31,7 +31,6 @@ services:
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
-      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
     networks:
       - app-network
 
