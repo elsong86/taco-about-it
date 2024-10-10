@@ -9,7 +9,9 @@ services:
       - frontend_node_modules:/frontend/node_modules
     ports:
       - "3000:3000"
-    command: npm run dev 
+    command: npm run dev
+    networks:
+      - app-network
 
   backend:
     build:
@@ -29,15 +31,20 @@ services:
       - OUTSCRAPER_API_KEY=${OUTSCRAPER_API_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
-      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-      - SECRET_KEY=${SECRET_KEY}
-      - ALGORITHM=${ALGORITHM}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    networks:
+      - app-network
 
   redis:
     image: "redis:7.4.0"
     ports:
       - "6379:6379"
+    networks:
+      - app-network
 
 volumes:
   frontend_node_modules:
   backend_python_env:
+
+networks:
+  app-network:
