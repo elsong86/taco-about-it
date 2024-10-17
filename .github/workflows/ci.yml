@@ -22,9 +22,6 @@ jobs:
     - name: Build and run with Docker Compose
       run: |
         docker compose up --build -d
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
     - name: Wait for services to be ready
       run: sleep 10
