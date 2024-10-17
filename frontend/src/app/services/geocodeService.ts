@@ -6,7 +6,7 @@ export async function handleAddressSubmit(
   router: ReturnType<typeof useRouter>,
 ): Promise<void> {
   try {
-    const response = await fetch('http://localhost:8000/geocode', {
+    const response = await fetch('http://backend:8000/geocode', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

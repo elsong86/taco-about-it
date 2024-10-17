@@ -19,7 +19,7 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:8000/signup', {
+      const response = await fetch('http://backend:8000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

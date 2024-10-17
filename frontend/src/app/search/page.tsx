@@ -55,7 +55,7 @@ const SearchPage: React.FC = () => {
     : null;
 
     const { data: placesData, error } = useSWR(
-      location ? ['http://localhost:8000/places', params] : null, 
+      location ? ['http://backend:8000/places', params] : null, 
       usePlacesFetcher, 
       {
         dedupingInterval: 86400000,  
@@ -72,7 +72,7 @@ const SearchPage: React.FC = () => {
 
   const useAddressSubmit = async (address: string) => {
     try {
-      const response = await fetch('http://localhost:8000/geocode', {
+      const response = await fetch('http://backend:8000/geocode', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

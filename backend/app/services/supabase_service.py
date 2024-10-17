@@ -39,7 +39,7 @@ class SupabaseService:
 
     def store_review(self, place_id: str, review_text: str):
         try:
-            data = {
+0            data = {
                 "place_id": place_id,
                 "review_text": review_text,
                 "source": "outscraper_api",
