@@ -41,7 +41,7 @@ const RestaurantPage: React.FC = () => {
     setLoading(true);
     try {
         const response = await fetch(
-            `http://backend:8000/reviews?place_id=${placeId}&displayName=${encodeURIComponent(displayName)}&formattedAddress=${encodeURIComponent(formattedAddress)}`,
+            `http://localhost:8000/reviews?place_id=${placeId}&displayName=${encodeURIComponent(displayName)}&formattedAddress=${encodeURIComponent(formattedAddress)}`,
         );
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);

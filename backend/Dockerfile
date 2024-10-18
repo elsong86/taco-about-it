@@ -1,4 +1,3 @@
-# backend/Dockerfile
 FROM python:3.11-slim AS backend
 
 # Set the working directory
@@ -8,8 +7,12 @@ WORKDIR /backend
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install any system dependencies (optional, only if needed)
-# RUN apt-get update && apt-get install -y build-essential
+# Install gcc, g++, and libc-dev
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libc-dev \
+    && apt-get clean
 
 # Copy only requirements.txt first to leverage Docker layer caching
 COPY requirements.txt .
@@ -25,4 +28,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the backend server using uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "debug"]

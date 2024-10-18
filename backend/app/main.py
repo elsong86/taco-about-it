@@ -3,28 +3,21 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from utils.database import get_database_client, test_connection
+from app.utils.database import engine, test_connection
 from app.models.tables import Base
 from app.routers import google_places, google_geocode, outscraper_reviews, auth, profile
 
-# Global variables for engine and session factory
-engine = None
-SessionLocal = None
+# Global session factory
+SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global engine, SessionLocal
-
-    # Startup logic: Create the database engine and session factory
-    engine = get_database_client()
-    SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
-
-    # Optionally, create the database tables on startup
+    # Startup logic: Create the database tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     # Test the connection (optional)
-    await test_connection(engine)
+    await test_connection()
 
     # Yield control to the application
     yield

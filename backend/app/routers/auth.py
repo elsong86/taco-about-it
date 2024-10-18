@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Response, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import UserCreate
 from app.services.database_service import DatabaseService
-from utils.database import get_database_client
+from app.utils.database import get_database_client
 
 # Constants for JWT expiration (1 hour in this case)
 ACCESS_TOKEN_EXPIRE_MINUTES = 60

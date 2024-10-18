@@ -4,8 +4,8 @@ import requests
 import os
 from dotenv import load_dotenv
 from typing import Callable  
-from ..utils.rate_limiter import rate_limiter
-from ..utils.redis_utils import redis_client
+from app.utils.rate_limiter import rate_limiter
+from app.utils.redis_utils import redis_client
 
 load_dotenv()
 

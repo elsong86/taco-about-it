@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.tables import UserTable
-from utils.database import get_database_client
+from app.utils.database import get_database_client
 from app.utils.jwt_utils import decode_jwt  # JWT decoding utility we'll define below
 from sqlalchemy.future import select
 import logging

@@ -20,7 +20,7 @@ const SignInPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://backend:8000/signin', {
+      const response = await fetch('http://localhost:8000/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

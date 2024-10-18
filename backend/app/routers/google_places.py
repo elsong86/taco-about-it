@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import requests 
 import os
 from dotenv import load_dotenv
-from ..utils.redis_utils import redis_client
+from app.utils.redis_utils import redis_client
 import json
 
 load_dotenv()

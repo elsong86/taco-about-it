@@ -15,7 +15,7 @@ from lingua import Language, LanguageDetectorBuilder
 from pydantic import BaseModel, Field
 from typing import Callable
 from app.models.tables import Restaurant, Review
-from utils.database import get_database_client
+from app.utils.database import get_database_client
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ async def fetch_reviews_from_api(place_id: str):
 
 async def store_restaurant(place_id: str, name: str, address: str, db: AsyncSession):
     try:
-        # Check if the restaurant already exists in the database
+        # Use the provided AsyncSession `db` to execute the query
         result = await db.execute(select(Restaurant).where(Restaurant.place_id == place_id))
         existing_restaurant = result.scalar_one_or_none()
 
@@ -100,28 +100,26 @@ async def store_restaurant(place_id: str, name: str, address: str, db: AsyncSess
         raise HTTPException(status_code=500, detail=str(e))
 
 async def get_stored_reviews(place_id: str, db: AsyncSession):
-    # Define your freshness criteria (e.g., 1 week)
     freshness_limit = timedelta(weeks=1)
-    now = datetime.now(timezone.utc)  # Ensure `now` is timezone-aware
+    now = datetime.now(timezone.utc)
 
-    # Query the database for reviews related to place_id
     try:
+        # Use the provided AsyncSession `db` to execute the query
         result = await db.execute(
             select(Review).where(Review.place_id == place_id).order_by(Review.created_at.desc()).limit(30)
         )
         reviews = result.scalars().all()
 
         if reviews:
-            # Check if the most recent review is fresh
             latest_review = max(reviews, key=lambda r: r.created_at)
             review_age = now - latest_review.created_at
 
             if review_age < freshness_limit:
                 logger.info(f"Found recent reviews in the database for place_id: {place_id}")
 
-                # Cache the fetched reviews from the database
+                # Cache the fetched reviews
                 cache_key = f"reviews:{place_id}"
-                redis_client.setex(cache_key, 3600, json.dumps([review.__dict__ for review in reviews]))  # Cache for 1 hour
+                redis_client.setex(cache_key, 3600, json.dumps([review.__dict__ for review in reviews]))
                 logger.info(f"Cached reviews from database for place_id: {place_id}")
 
                 return reviews
@@ -170,14 +168,15 @@ async def get_reviews(
         await store_restaurant(place_id, name, address, db)
 
         # Store fetched reviews in the database
-        for review in reviews:
-            new_review = Review(
-                place_id=place_id,
-                review_text=review['review_text'],
-                source="outscraper_api",
-                created_at=datetime.now(timezone.utc)
-            )
-            db.add(new_review)
+        async with db.begin():
+            for review in reviews:
+                new_review = Review(
+                    place_id=place_id,
+                    review_text=review['review_text'],
+                    source="outscraper_api",
+                    created_at=datetime.now(timezone.utc)
+                )
+                db.add(new_review)
             await db.commit()
 
         average_sentiment = analyze_sentiments(reviews)

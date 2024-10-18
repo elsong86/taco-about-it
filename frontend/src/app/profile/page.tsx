@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('http://backend:8000/profile', {
+        const response = await fetch('http://localhost:8000/profile', {
           credentials: 'include',  // Make sure cookies are sent with the request
         });
         

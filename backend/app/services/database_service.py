@@ -3,20 +3,25 @@ import jwt  # For JWT creation
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.tables import UserTable, ReviewTable  # Assuming you have these models
-from utils.database import get_database_client
+from app.models.tables import UserTable, Review  # Assuming you have these models
+from app.utils.database import get_database_client
 from passlib.context import CryptContext
 from fastapi import Depends
 from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
+
+# Fetch the required values from .env
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")  # Default to HS256 if not provided
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 15))  # Default to 15 minutes
 
 logging.basicConfig(level=logging.INFO)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Secret key for JWT (you should store this in an environment variable)
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 class DatabaseService:
     def __init__(self, db: AsyncSession = Depends(get_database_client)):
@@ -64,6 +69,10 @@ class DatabaseService:
             if user and pwd_context.verify(password, user.hashed_password):
                 logging.info(f"User signed in successfully: {email}")
                 
+                # Update last_sign_in timestamp
+                user.last_sign_in = datetime.now(timezone.utc)
+                await self.db.commit()  # Commit the changes to the database
+                
                 # Generate a JWT token for the user
                 access_token = self.create_access_token(data={"sub": str(user.id)})
                 
@@ -81,16 +90,16 @@ class DatabaseService:
             return {"error": "Error during sign in"}
 
     # Create a JWT token
-    def create_access_token(data: dict, expires_delta: timedelta = None):
+    def create_access_token(self, data: dict, expires_delta: timedelta = None):
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + (expires_delta if expires_delta else timedelta(minutes=15))
+        expire = datetime.now(timezone.utc) + (expires_delta if expires_delta else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
     # Store a review in the PostgreSQL database
     async def store_review(self, place_id: str, review_text: str):
-        new_review = ReviewTable(place_id=place_id, review_text=review_text, source="outscraper_api")
+        new_review = Review(place_id=place_id, review_text=review_text, source="outscraper_api")
 
         try:
             self.db.add(new_review)
