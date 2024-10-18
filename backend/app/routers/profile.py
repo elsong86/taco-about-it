@@ -1,36 +1,39 @@
-from fastapi import APIRouter, HTTPException, Request
-from ..services.supabase_service import SupabaseService
+from fastapi import APIRouter, HTTPException, Request, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.tables import UserTable
+from app.utils.database import get_database_client
+from app.utils.jwt_utils import decode_jwt  # JWT decoding utility we'll define below
+from sqlalchemy.future import select
+import logging
 
 router = APIRouter()
-supabase_service = SupabaseService()  # Instantiate the SupabaseService
 
 @router.get("/profile")
-def get_profile(request: Request):
+async def get_profile(request: Request, db: AsyncSession = Depends(get_database_client)):
     # Extract the JWT token from the 'access_token' cookie
-    jwt = request.cookies.get("access_token")
+    jwt_token = request.cookies.get("access_token")
     
-    if not jwt:
+    if not jwt_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
     try:
-        # Use the SupabaseService's fetch_user method with the JWT
-        user_response = supabase_service.fetch_user(jwt)
+        # Decode the JWT token to get the user ID
+        payload = decode_jwt(jwt_token)
+        user_id = payload.get("sub")
         
-        # If there's an error in the response, return it
-        if "error" in user_response:
-            raise HTTPException(status_code=400, detail=user_response["error"])
+        if not user_id:
+            raise HTTPException(status_code=400, detail="Invalid token payload")
+
+        # Fetch the user from the database using the user ID from the JWT token
+        result = await db.execute(select(UserTable).where(UserTable.id == user_id))
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
         
-        # Access the 'user' attribute of the 'user_response'
-        user_data = user_response.user
-        
-        # Extract user ID and email from the 'user_data' object
-        user_id = user_data.id
-        email = user_data.email
-        
-        if not user_id or not email:
-            raise HTTPException(status_code=404, detail="User ID or email not found")
-        
-        return {"user_id": user_id, "email": email}
+        # Return the user's profile information
+        return {"user_id": user.id, "email": user.email}
     
     except Exception as e:
+        logging.error(f"Failed to retrieve profile: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to retrieve profile: {str(e)}")

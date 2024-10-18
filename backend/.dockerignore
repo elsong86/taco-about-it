@@ -1,0 +1,23 @@
+# Ignore Python virtual environment
+venv
+backend/venv
+
+# Ignore local environment files
+.env
+.env.local
+.env.development
+.env.test
+
+# Ignore compiled Python files
+*.pyc
+__pycache__
+
+# Ignore Dockerfile and Docker-compose files if they’re not needed in the image
+Dockerfile
+docker-compose.yml
+
+# Ignore logs
+*.log
+
+# Ignore test directories
+tests/
