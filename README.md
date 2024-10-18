@@ -32,8 +32,8 @@ To set up the project using Docker, follow these steps:
    - Fork the project repository to your GitHub account by clicking the "Fork" button at the top right of the repository page.
    - Clone the forked repository to your local machine:
      ```bash
-     git clone https://github.com/your-username/taco-tracker.git
-     cd taco-tracker
+     git clone https://github.com/your-username/taco-about-it.git
+     cd taco-about-it
      ```
 
 2. **Create the `.env` File:**
@@ -43,8 +43,14 @@ To set up the project using Docker, follow these steps:
      GOOGLE_API_KEY=your_actual_google_api_key
      OUTSCRAPER_API_KEY=your_actual_outscraper_api_key
      REDIS_HOST=redis
+     POSTGRES_USER=your_username      
+     POSTGRES_PASSWORD=your_password 
+     POSTGRES_DB=your_database   
+     DATABASE_URL=postgresql+asyncpg://your_username:your_password@postgres:5432/your_database
+     SECRET_KEY=your_secret
+     ALGORITHM=HS256
+     ACCESS_TOKEN_EXPIRE_MINUTES=60
      ```
-   - Replace `your_actual_google_api_key` and `your_actual_outscraper_api_key` with your appropriate values. 
 
 3. **Build and Start the Docker Containers:**
    - Use Docker Compose to build and start the containers for the frontend, backend, and Redis services:
