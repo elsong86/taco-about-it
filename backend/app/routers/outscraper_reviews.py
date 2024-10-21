@@ -117,17 +117,30 @@ async def get_stored_reviews(place_id: str, db: AsyncSession):
             if review_age < freshness_limit:
                 logger.info(f"Found recent reviews in the database for place_id: {place_id}")
 
+                # Convert ORM instances to dictionaries before caching and returning
+                review_dicts = [
+                    {
+                        "id": str(review.id),  # Convert UUID to string
+                        "place_id": review.place_id,
+                        "review_text": review.review_text,
+                        "source": review.source,
+                        "created_at": review.created_at.isoformat()  # Convert datetime to string
+                    }
+                    for review in reviews
+                ]
+
                 # Cache the fetched reviews
                 cache_key = f"reviews:{place_id}"
-                redis_client.setex(cache_key, 3600, json.dumps([review.__dict__ for review in reviews]))
+                redis_client.setex(cache_key, 3600, json.dumps(review_dicts))
                 logger.info(f"Cached reviews from database for place_id: {place_id}")
 
-                return reviews
+                return review_dicts
         logger.info(f"No recent reviews found in the database for place_id: {place_id}")
         return None
     except SQLAlchemyError as e:
         logger.error(f"Error fetching reviews from database: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 class ReviewQueryParams(BaseModel):
     place_id: str = Field(..., alias="place_id", pattern=r"^[A-Za-z0-9_\-]+$")
