@@ -5,7 +5,7 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.tables import UserTable, Review  # Assuming you have these models
 from app.utils.database import get_database_client
-from passlib.context import CryptContext
+import bcrypt  # Using bcrypt directly for password hashing
 from fastapi import Depends
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
@@ -21,15 +21,22 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 15)) 
 
 logging.basicConfig(level=logging.INFO)
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class DatabaseService:
     def __init__(self, db: AsyncSession = Depends(get_database_client)):
         self.db = db
 
-    # Password hashing utility
+    # Password hashing utility using bcrypt directly
     def hash_password(self, password: str) -> str:
-        return pwd_context.hash(password)
+        pwd_bytes = password.encode('utf-8')  # Convert password to bytes
+        salt = bcrypt.gensalt()  # Generate a salt
+        hashed_password = bcrypt.hashpw(pwd_bytes, salt)  # Hash the password
+        return hashed_password
+
+    # Password verification utility using bcrypt directly
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        password_byte_enc = plain_password.encode('utf-8')  # Convert password to bytes
+        return bcrypt.checkpw(password_byte_enc, hashed_password.encode('utf-8'))  # Verify the password
 
     # Validate email and password format
     def validate_credentials(self, email, password):
@@ -43,7 +50,7 @@ class DatabaseService:
         if not self.validate_credentials(email, password):
             return {"error": "Invalid email or password format"}
 
-        hashed_password = self.hash_password(password)
+        hashed_password = self.hash_password(password).decode('utf-8')  # Decode the hashed password to store as string
 
         new_user = UserTable(email=email, hashed_password=hashed_password)
         
@@ -66,7 +73,7 @@ class DatabaseService:
             result = await self.db.execute(select(UserTable).where(UserTable.email == email))
             user = result.scalar_one_or_none()
 
-            if user and pwd_context.verify(password, user.hashed_password):
+            if user and self.verify_password(password, user.hashed_password):
                 logging.info(f"User signed in successfully: {email}")
                 
                 # Update last_sign_in timestamp

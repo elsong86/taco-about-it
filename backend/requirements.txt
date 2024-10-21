@@ -51,7 +51,6 @@ nltk==3.9.1
 numpy==2.0.2
 outscraper==5.2.1
 packaging==24.1
-passlib==1.7.4
 pip-autoremove==0.10.0
 pipdeptree==2.23.1
 postgrest==0.16.11

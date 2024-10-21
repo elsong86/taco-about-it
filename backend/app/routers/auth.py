@@ -40,3 +40,9 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
     )
 
     return {"message": "Signin successful"}
+
+@router.post("/logout")
+async def logout(response: Response):
+    # Clear the cookie by setting an expired max_age
+    response.delete_cookie(key="access_token", path="/", httponly=True)
+    return {"message": "Logged out successfully"}

@@ -47,7 +47,6 @@ const Profile: React.FC = () => {
       <h1>User Profile</h1>
       {user ? (
         <div>
-          <p><strong>User ID:</strong> {user.user_id}</p>
           <p><strong>Email:</strong> {user.email}</p>
         </div>
       ) : (

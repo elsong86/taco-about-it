@@ -5,7 +5,7 @@ class UserBase(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True  # Allows using SQLAlchemy instances with Pydantic validation
+        from_attributes = True  # Allows using SQLAlchemy instances with Pydantic validation
 
 class UserCreate(UserBase):
     password: str

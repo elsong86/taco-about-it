@@ -32,7 +32,7 @@ async def get_profile(request: Request, db: AsyncSession = Depends(get_database_
             raise HTTPException(status_code=404, detail="User not found")
         
         # Return the user's profile information
-        return {"user_id": user.id, "email": user.email}
+        return {"email": user.email}
     
     except Exception as e:
         logging.error(f"Failed to retrieve profile: {str(e)}")

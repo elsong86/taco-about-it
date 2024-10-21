@@ -1,15 +1,24 @@
-// app/page.tsx
-
 import React from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SearchContainer from './components/SearchContainer';
 import Image from 'next/image';
+import { cookies } from 'next/headers';
 
 const HomePage: React.FC = () => {
+  // Fetch the access_token from cookies on the server side
+  const cookieStore = cookies();
+  const token = cookieStore.get('access_token');
+  
+  // Determine if the user is authenticated (server-side)
+  const initialIsAuthenticated = !!token;
+
+  console.log('HomePage isAuthenticated:', initialIsAuthenticated);
+
   return (
     <div>
-      <Header />
+      {/* Pass the initial authentication state to Header */}
+      <Header initialIsAuthenticated={initialIsAuthenticated} />
       <div
         className="flex min-h-screen flex-col items-center justify-center relative"
         style={{
