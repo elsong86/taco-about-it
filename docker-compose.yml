@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/frontend:delegated
-      - frontend_node_modules:/frontend/node_modules
     ports:
       - "3000:3000"
     networks:
