@@ -1,7 +1,10 @@
+// app/components/Header.tsx
+
 "use client"; // Mark this as a Client Component
 
 import React from 'react';
 import Link from 'next/link'; // Import Next.js Link component
+import Image from 'next/image'; // Import the Image component
 
 interface HeaderProps {
   initialIsAuthenticated: boolean; // Define the prop type for initialIsAuthenticated
@@ -17,6 +20,10 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
       });
 
       if (response.ok) {
+        // Dispatch a custom event to notify the app of the authentication change
+        const authChangeEvent = new Event('authChange');
+        window.dispatchEvent(authChangeEvent);
+
         // Redirect the user to the home page after successful logout
         window.location.href = '/';
       } else {
@@ -34,14 +41,21 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
     >
       {/* Sombrero Image */}
       <div className="flex-shrink-0 ml-6">
-        <img src="/images/sombrero.png" alt="Sombrero logo" className="h-30 w-20" />
+        <Image
+          src="/images/sombrero.png" // Ensure this path is correct
+          alt="Sombrero logo"
+          width={80} // Set the appropriate width
+          height={120} // Set the appropriate height
+          className="h-30 w-20"
+        />
       </div>
 
       {/* Title */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-center text-8xl text-bold font-hustlers"
+      <div
+        className="absolute left-1/2 transform -translate-x-1/2 text-center text-8xl font-bold font-hustlers"
         style={{ textShadow: '2px 2px 0px black' }}
       >
-        {/* Taco About it */}
+        {/* Taco About It */}
         <span className="text-rose-800">T</span>
         <span className="text-emerald-800">A</span>
         <span className="text-yellow-600">C</span>
@@ -64,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
             {/* Profile Link using Next.js Link */}
             <Link
               href="/profile"
-              className="inline-block px-4 py-2 text-amber-50 bg-gray-700 hover:bg-gray-500 hover:bg-opacity-50 hover:text-gray-100 hover:shadow-lg font-bold text-md rounded shadow"
+              className="inline-block px-4 py-2 text-amber-50 bg-gray-700 hover:bg-gray-500 hover:text-gray-100 hover:shadow-lg font-bold text-md rounded shadow"
             >
               Profile
             </Link>
@@ -72,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
             {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="inline-block px-4 py-2 text-amber-50 bg-red-600 hover:bg-white hover:bg-opacity-50 hover:text-red-600 hover:shadow-lg font-bold text-md rounded shadow"
+              className="inline-block px-4 py-2 text-amber-50 bg-red-600 hover:bg-white hover:text-red-600 hover:shadow-lg font-bold text-md rounded shadow"
             >
               Logout
             </button>
@@ -81,13 +95,13 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
           <>
             <Link
               href="/signin"
-              className="inline-block px-4 py-2 text-amber-50 bg-yellow-600 hover:bg-white hover:bg-opacity-50 hover:shadow-lg hover:text-yellow-600 font-bold text-md rounded shadow"
+              className="inline-block px-4 py-2 text-amber-50 bg-yellow-600 hover:bg-white hover:text-yellow-600 hover:shadow-lg font-bold text-md rounded shadow"
             >
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="inline-block px-4 py-2 text-amber-50 bg-sky-700 hover:bg-white hover:bg-opacity-50 hover:text-sky-700 hover:shadow-lg font-bold text-md rounded shadow"
+              className="inline-block px-4 py-2 text-amber-50 bg-sky-700 hover:bg-white hover:text-sky-700 hover:shadow-lg font-bold text-md rounded shadow"
             >
               Sign Up
             </Link>
