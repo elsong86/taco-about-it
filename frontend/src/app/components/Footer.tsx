@@ -76,13 +76,6 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="absolute left-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
-        <img src={pinata.src} alt="Pinata" className="h-40 w-40 shadow-lg" /> {/* Adjust size as needed */}
-      </div>
-
-      <div className="absolute right-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
-        <img src={taco.src} alt="Pinata" className="h-40 w-40 " /> {/* Adjust size as needed */}
-      </div>
 
       <div className='py-6 font-thirsty'>
         <p>Made with ♡ in 2024</p>
