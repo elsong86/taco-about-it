@@ -42,18 +42,18 @@ const HomePageClient: React.FC<HomePageClientProps> = ({ initialIsAuthenticated 
         className="flex min-h-screen flex-col items-center justify-center relative"
         style={{ position: 'relative' }}
       >
-        <Image
+        {/* <Image
           src="/images/stock-photo-sumptuous-taco-feast-a-detailed-and-realistic-culinary-delight-on-a-dark-brown-table-2472438803.jpg"
           alt="Sumptuous Taco Feast"
           fill
           style={{ objectFit: 'cover' }}
           quality={75}
           priority
-        />
-        <div
+        /> */}
+        {/* <div
           className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20"
           style={{ opacity: 0.7 }}
-        ></div>
+        ></div> */}
         <SearchContainer />
       </div>
       <Footer />
