@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from './Footer';
 import Header from './NewHeader'
 import SearchContainerNew from './SearchContainerNew'
+import HowitWorks from './HowItWorks'
 
 interface HomePageClientProps {
   initialIsAuthenticated: boolean;
@@ -40,6 +41,7 @@ const HomePageClient: React.FC<HomePageClientProps> = ({ initialIsAuthenticated 
       
       <div>
         <SearchContainerNew />
+        <HowitWorks />
       </div>
       <Footer />
     </div>
