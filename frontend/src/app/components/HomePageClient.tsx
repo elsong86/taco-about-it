@@ -6,6 +6,7 @@ import Header from './Header';
 import Footer from './Footer';
 import SearchContainer from './SearchContainer';
 import Image from 'next/image';
+import NewHead from './NewHeader'
 
 interface HomePageClientProps {
   initialIsAuthenticated: boolean;
@@ -36,8 +37,9 @@ const HomePageClient: React.FC<HomePageClientProps> = ({ initialIsAuthenticated 
   return (
     <div>
       {/* Pass the updated authentication state to Header */}
-      <Header initialIsAuthenticated={isAuthenticated} />
+      {/* <Header initialIsAuthenticated={isAuthenticated} /> */}
       {/* Rest of your page content */}
+      <NewHead initialIsAuthenticated={isAuthenticated}/>
       <div
         className="flex min-h-screen flex-col items-center justify-center relative"
         style={{ position: 'relative' }}
