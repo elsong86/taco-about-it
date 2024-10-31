@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
     <section>
       <nav className="font-inter mx-auto h-auto w-full max-w-screen-4xl lg:relative lg:top-0 shadow-xl">
         <div className="flex flex-col px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-4 xl:px-20">
-          <a className="lg:text-3xl md:text:3xl sm:text-xl font-bold">
+          <a className="lg:text-5xl md:text:3xl sm:text-2xl font-bold font-hustlers">
             <Image
               src="/logo.svg"
               alt="Clipart Taco"
@@ -94,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
                 </Link>
                 <Link
                   href="/signin"
-                  className="inline-block px-4 py-2 text-black hover:bg-white hover:text-green-600 hover:shadow-lg font-bold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-black hover:bg-white hover:text-yellow-600 hover:shadow-lg font-bold text-md rounded shadow"
                 >
                   Log In
                 </Link>

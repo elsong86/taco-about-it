@@ -2,11 +2,9 @@
 "use client"; // Mark this as a Client Component
 
 import React, { useState, useEffect } from 'react';
-import Header from './Header';
 import Footer from './Footer';
-import SearchContainer from './SearchContainer';
-import Image from 'next/image';
-import NewHead from './NewHeader'
+import Header from './NewHeader'
+import SearchContainerNew from './SearchContainerNew'
 
 interface HomePageClientProps {
   initialIsAuthenticated: boolean;
@@ -37,26 +35,11 @@ const HomePageClient: React.FC<HomePageClientProps> = ({ initialIsAuthenticated 
   return (
     <div>
       {/* Pass the updated authentication state to Header */}
-      {/* <Header initialIsAuthenticated={isAuthenticated} /> */}
+      <Header initialIsAuthenticated={isAuthenticated}/>
       {/* Rest of your page content */}
-      <NewHead initialIsAuthenticated={isAuthenticated}/>
-      <div
-        className="flex min-h-screen flex-col items-center justify-center relative"
-        style={{ position: 'relative' }}
-      >
-        {/* <Image
-          src="/images/stock-photo-sumptuous-taco-feast-a-detailed-and-realistic-culinary-delight-on-a-dark-brown-table-2472438803.jpg"
-          alt="Sumptuous Taco Feast"
-          fill
-          style={{ objectFit: 'cover' }}
-          quality={75}
-          priority
-        /> */}
-        {/* <div
-          className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20"
-          style={{ opacity: 0.7 }}
-        ></div> */}
-        <SearchContainer />
+      
+      <div>
+        <SearchContainerNew />
       </div>
       <Footer />
     </div>
