@@ -35,14 +35,14 @@ const SearchContainer: React.FC = () => {
         >
             <div className="max-w-xl text-center sm:text-left ">
               
-            <p className=" font-bold text-2xl font-thirsty">
+            <p className=" font-bold sm:text-2xl lg:text-4xl font-thirsty pb-4">
             ~ Anywhere, Anytime ~
             </p>
 
             <h1 className="font-extrabold text-5xl">
             Find Your New Favorite
 
-        <p className="block "> 
+        <p className="block py-2"> 
             <span className="text-rose-800">T</span>
             <span className="text-emerald-800">A</span>
             <span className="text-yellow-600">C</span>
@@ -83,27 +83,6 @@ const SearchContainer: React.FC = () => {
           </div></>
     </section>
 
-    
-    // <div className="relative flex flex-col items-center rounded-lg border border-gray-300 border-opacity-50 text-center shadow-2xl bg-gray-200 bg-opacity-50 my-10 pt-20 pb-10 px-10">
-      // <p className=" font-bold text-3xl">
-      //   ~ Anywhere, Anytime ~
-      // </p>
-
-    //   <h1 className="text-6xl  py-4 text-neutral-950">
-    //     FIND YOUR NEW FAVORITE <br />TACO SPOT!
-    //   </h1>
-
-    //   <p className="font-bold text-xl pb-5">
-    //     Share or enter your location to get started.
-    //   </p>
-
-      // <Search
-      //   onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
-      //   onAddressSubmit={(address: string) =>
-      //     handleAddressSubmit(address, router)
-      //   }
-      // />
-    // </div>
   );
 };
 
