@@ -19,7 +19,7 @@ const SearchContainer: React.FC = () => {
   return (
     
     <section
-    // Since this is a background CSS - in - JS was a better option than Next.js IMG
+    // Since this is a background CSS - in - JS was a better option than Next.js innate IMG 
       className="relative bg-[url(https://images.pexels.com/photos/5454020/pexels-photo-5454020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)] bg-cover bg-center bg-no-repeat shadow-2xl max-h-400 mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20"
       >
       <><div
@@ -35,14 +35,14 @@ const SearchContainer: React.FC = () => {
         >
             <div className="max-w-xl text-center sm:text-left ">
               
-            <p className=" font-bold sm:text-2xl lg:text-4xl font-thirsty pb-4">
+            <p className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-thirsty pb-4  ">
             ~ Anywhere, Anytime ~
             </p>
 
-            <h1 className="font-extrabold text-5xl">
+            <h1 className="font-bold text-3xl sm:text-3xl md:text-4xl lg:text-5xl">
             Find Your New Favorite
 
-        <p className="block py-2"> 
+        <p className="block py-4 "> 
             <span className="text-rose-800">T</span>
             <span className="text-emerald-800">A</span>
             <span className="text-yellow-600">C</span>
@@ -65,12 +65,12 @@ const SearchContainer: React.FC = () => {
          
           </h1>
 
-              <p className="mt-4 max-w-lg sm:text-xl/relaxed">
+              <p className=" max-w-lg sm:text-xl/relaxed ">
                 Share or enter your location to get started
               </p>
               
               {/* Come back and edit this section to fit better both large and small screens- make buttons responsive  */}
-              <div className="mt-8 flex flex-wrap gap-4 text-center align-left">
+              <div className="mt-8 flex flex-wrap gap-4 align-left">
               <Search
               onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
               onAddressSubmit={(address: string) =>
