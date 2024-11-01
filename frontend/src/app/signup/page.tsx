@@ -52,10 +52,11 @@ const SignupPage: React.FC = () => {
 
   return (
 
-
     <section className="">
     <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
-      <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
+
+        {/* h-0 hides the image on mobile screens */}
+      <aside className="relative block h-0 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
       <Image
               src="/images/pexels-nubikini-1178991.jpg"
               alt="Neon Sign saying tacos"
@@ -63,25 +64,20 @@ const SignupPage: React.FC = () => {
               objectFit="cover" // Matches object-cover in CSS
               priority // Ensures image is loaded early
               quality={100} // Optional: set quality to max for a sharper image
-              className="absolute inset-0"
+              className="absolute inset-0 "
             />
-        {/* <img
-          alt=""
-          src="https://images.pexels.com/photos/1178991/pexels-photo-1178991.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          className="absolute inset-0 h-full w-full object-cover"
-        /> */}
       </aside>
 
       <main
-        className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
+        className="flex items-center justify-center px-8 py-6 sm:px-12 lg:col-span-7 lg:px-16 lg:py-8 xl:col-span-6"
       >
         <div className="max-w-xl lg:max-w-3xl">
         
         <Image
               src="/logo.svg"
               alt="Clipart Taco"
-              width={50}
-              height={50}
+              width={100}
+              height={100}
               className="mr-4 inline-block"
               priority
             />
