@@ -67,19 +67,19 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
           </a>
 
           <div
-            className={`flex flex-col space-y-8 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 ${isOpen ? "" : "hidden"}`}
+            className={`flex flex-col space-y-4 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 text-center sm:text-left py-1 bg-inherit  ${isOpen ? "" : "hidden"}`}
           >
             {initialIsAuthenticated ? (
               <>
                 <Link
                   href="/profile"
-                  className="inline-block px-4 py-2 text-amber-50 bg-gray-700 hover:bg-gray-500 hover:text-gray-100 hover:shadow-lg font-bold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-yellow-600 via-green-700 to-teal-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
                 >
                   Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="inline-block px-4 py-2 text-amber-50 bg-red-600 hover:bg-white hover:text-red-600 hover:shadow-lg font-bold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-black hover:text-rose-600 font-semibold border rounded text-md "
                 >
                   Logout
                 </button>
@@ -88,13 +88,13 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
               <>
               <Link
                   href="/signup"
-                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-xl font-semibold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
                 >
                   Sign up
                 </Link>
                 <Link
                   href="/signin"
-                  className="inline-block px-4 py-2 text-black hover:text-emerald-600 font-semibold text-md "
+                  className="inline-block px-4 py-2 text-black hover:text-emerald-600 font-semibold border rounded text-md "
                 >
                   Log In
                 </Link>

@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
             <span className="text-emerald-800">S</span>
          </p>
         </h2>
-        <p className="mx-auto mb-8 mt-4 max-w-lg text-center text-xl text-gray-500  md:mb-12 lg:mb-16 underline">
+        <p className="mx-auto mb-8 mt-4 max-w-lg text-center text-xl text-gray-500  md:mb-12 lg:mb-16 ">
           Using Taco About it is really easy! 
         </p>
         {/* Content */}
