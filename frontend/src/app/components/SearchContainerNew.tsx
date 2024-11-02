@@ -27,7 +27,7 @@ const SearchContainer: React.FC = () => {
       ></div>
       {/* for small screens */}
       <div
-      className="absolute inset-0 bg-white/55 sm:bg-transparent sm:from-white/75 sm:to-white/10 sm:bg-gradient-to-r"
+      className="absolute inset-0 bg-white/65 sm:bg-transparent sm:from-white/65 sm:to-white/10 sm:bg-gradient-to-r"
       ></div>
 
       <div
@@ -35,42 +35,44 @@ const SearchContainer: React.FC = () => {
         >
             <div className="max-w-xl text-center sm:text-left ">
               
-            <p className=" font-bold sm:text-2xl lg:text-4xl font-thirsty pb-4">
+            <p className=" text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-thirsty text-center pb-4">
             ~ Anywhere, Anytime ~
             </p>
 
-            <h1 className="font-extrabold text-5xl">
-            Find Your New Favorite
+            <div>
+            <h1 className=" text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-brothers whitespace:wrap lg:whitespace-nowrap">
+            FIND YOUR NEW FAVORITE
+            </h1>
 
-        <p className="block py-2"> 
-            <span className="text-rose-800">T</span>
-            <span className="text-emerald-800">A</span>
-            <span className="text-yellow-600">C</span>
-            <span className="text-orange-700">O </span>
+        <p className="block font-bold md:font-normal text-5xl sm:text-6xl md:text-6xl lg:text-8xl text-center"> 
+            <span className="text-rose-800 font-brothers sm:font-hustlers">T</span>
+            <span className="text-emerald-800 font-brothers sm:font-hustlers ">A</span>
+            <span className="text-yellow-600 font-brothers sm:font-hustlers ">C</span>
+            <span className="text-orange-700 font-brothers sm:font-hustlers ">O </span>
             
-            <span className="text-rose-800">S</span>
-            <span className="text-emerald-800">P</span>
-            <span className="text-yellow-600">O</span>
-            <span className="text-rose-800">T</span>
+            <span className="text-rose-800 font-brothers sm:font-hustlers  ">S</span>
+            <span className="text-emerald-800 font-brothers sm:font-hustlers ">P</span>
+            <span className="text-yellow-600 font-brothers sm:font-hustlers ">O</span>
+            <span className="text-rose-800 font-brothers sm:font-hustlers ">T</span>
             <span></span>
             <Image
               src="/logo.svg"
               alt="Clipart Taco"
-              width={50}
-              height={50}
-              className="mr-4 inline-block"
+              width={60}
+              height={60}
+              className="ml-2 inline-block"
               priority
             />
          </p>
-         
-          </h1>
-
-              <p className="mt-4 max-w-lg sm:text-xl/relaxed">
+         </div>
+        
+              <p className=" max-w-lg sm:text-xl/relaxed text-center">
                 Share or enter your location to get started
               </p>
               
+
               {/* Come back and edit this section to fit better both large and small screens- make buttons responsive  */}
-              <div className="mt-8 flex flex-wrap gap-4 text-center align-left">
+              <div className="pt-6">
               <Search
               onLocationShare={(loc: Location) => handleLocationShare(loc, router)}
               onAddressSubmit={(address: string) =>

@@ -40,9 +40,9 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
 
   return (
     <section>
-      <nav className="font-inter mx-auto h-auto w-full max-w-screen-4xl lg:relative lg:top-0 shadow-xl">
+      <nav className="font-inter mx-auto h-auto w-full max-w-screen-4xl lg:relative lg:top-0 shadow-xl bg-stone-100">
         <div className="flex flex-col px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-4 xl:px-20">
-          <a className="lg:text-5xl md:text:3xl sm:text-2xl font-bold font-hustlers">
+          <a className="text-3xl sm:text-3xl md:text-3xl lg:text-6xl font-hustlers">
             <Image
               src="/logo.svg"
               alt="Clipart Taco"
@@ -111,8 +111,8 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
             }}
           >
             <svg
-              width="30"
-              height="30"
+              width="35"
+              height="35"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
