@@ -35,9 +35,10 @@ const Footer: React.FC = () => {
         </p>
         {/* Content */}
         <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-6">
-          {/* Item */}
 
-          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-lg shadow-red-300 p-8 md:p-10">
+          {/* Item shadow-red-300 */}
+
+          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-[0px_1px_41px_-5px_#fca5a5] p-8 md:p-10">
           <Image
               src="/chili-pepper-svgrepo-com.svg"
               alt="Clipart chili"
@@ -56,8 +57,8 @@ const Footer: React.FC = () => {
           </div>
 
 
-          {/* Item */}
-          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-lg shadow-lime-300 p-8 md:p-10">
+          {/* Item  shadow-lime-300*/}
+          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-[0px_1px_41px_-5px_#bef264] p-8 md:p-10">
           <Image
               src="avocado-svgrepo-com.svg"
               alt="Clipart Avocado"
@@ -77,8 +78,8 @@ const Footer: React.FC = () => {
               Wait for all of the results to pop up on the next page, and click on the ones that interest you. 
             </p>
           </div>
-          {/* Item */}
-          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-lg shadow-yellow-300 p-8 md:p-10">
+          {/* Item  shadow-yellow-300 */}
+          <div className="relative grid gap-4 rounded-md border border-solid border-gray-300 shadow-[0px_1px_41px_-5px_#fde047] p-8 md:p-10">
           <Image
               src="corn-svgrepo-com.svg"
               alt="Clipart Onion"
