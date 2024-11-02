@@ -36,13 +36,16 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
 
   return (
     <header
-      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center text-center"
+      className="sticky top-0 left-0 right-0 shadow-md h-36 z-10 py-4 flex items-center text-center"
+      
     >
       {/* Title */}
       <div
         className="absolute left-1/2 transform -translate-x-1/2 text-center text-4xl"
+        
       >
         {/* Taco About It */}
+        
         <span className="text-rose-800">T</span>
         <span className="text-emerald-800">A</span>
         <span className="text-yellow-600">C</span>

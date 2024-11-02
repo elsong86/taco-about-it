@@ -35,7 +35,7 @@ const SearchContainer: React.FC = () => {
         >
             <div className="max-w-xl text-center sm:text-left ">
               
-            <p className=" text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-thirsty text-center pb-4">
+            <p className=" font-semibold text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-thirsty text-center pb-4">
             ~ Anywhere, Anytime ~
             </p>
 
@@ -44,7 +44,8 @@ const SearchContainer: React.FC = () => {
             FIND YOUR NEW FAVORITE
             </h1>
 
-        <p className="block font-bold md:font-normal text-5xl sm:text-6xl md:text-6xl lg:text-8xl text-center"> 
+        <p className="block font-bold md:font-normal text-5xl sm:text-4xl md:text-6xl lg:text-8xl text-center"
+        > 
             <span className="text-rose-800 font-brothers sm:font-hustlers">T</span>
             <span className="text-emerald-800 font-brothers sm:font-hustlers ">A</span>
             <span className="text-yellow-600 font-brothers sm:font-hustlers ">C</span>

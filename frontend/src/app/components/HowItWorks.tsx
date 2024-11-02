@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
               className="absolute top-0 right-0 h-20 w-20 m-4 "
               priority
             />
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
               <p className="text-md font-bold sm:text-xl">1</p>
             </div> 
             <p className="text-xl font-semibold">Share Your Location</p>
@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
              className="absolute top-0 right-0 h-20 w-20 m-4 "
               priority
             />
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-lime-100">
               <p className="text-sm font-bold sm:text-xl">2</p>
               
             </div>
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
               className="absolute top-0 right-0 h-20 w-20 m-4 "
               priority
             />
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
               <p className="text-sm font-bold sm:text-xl">3</p>
             </div>
             <p className="text-xl font-semibold">Sign Up For More</p>

@@ -146,7 +146,7 @@ const SignupPage: React.FC = () => {
           </div>
           <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
             <button
-              className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+              className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
               type="submit"
             >
               Sign Up
@@ -158,7 +158,7 @@ const SignupPage: React.FC = () => {
            Already have an account?{' '}
            <Link
             href="/signin"
-            className="text-gray-700 underline"
+            className="text-gray-700 underline hover:text-rose-700"
           >
             Sign In
           </Link>

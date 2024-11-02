@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
           <div className="font-semibold mb-4 sm:mb-0 py-1 text-center sm:text-center">
             {/* Goes to github */}
             <a
-              href="#"
+              href="https://github.com/elsong86/taco-about-it"
               className="inline-block font-normal text-gray-500 transition hover:text-blue-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
             >
               About

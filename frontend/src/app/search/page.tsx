@@ -6,6 +6,7 @@ import PlaceTile from '../components/PlaceTile';
 import Search from '../components/Search';
 import { Location, Place } from '../types';
 import useSWR from 'swr';
+import Footer from '../components/Footer'
 
 // Adjusted fetcher to accept a tuple (array) of arguments from useSWR
 const usePlacesFetcher = async ([url, params]: [string, any]) => {
@@ -100,11 +101,12 @@ const SearchPage: React.FC = () => {
   };
 
   return (
+    <div>
     <main className="items-left flex min-h-screen flex-col p-4">
-      <Search
+      {/* <Search
         onLocationShare={handleLocationShare}
         onAddressSubmit={useAddressSubmit}
-      />
+      /> */}
       <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {error && <div>Error fetching places.</div>}
@@ -115,6 +117,8 @@ const SearchPage: React.FC = () => {
           ))}
       </div>
     </main>
+    <Footer />
+    </div>
   );
 };
 
