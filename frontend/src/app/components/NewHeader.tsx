@@ -40,31 +40,28 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
 
   return (
     <section>
-      <nav className="font-inter mx-auto h-auto w-full max-w-screen-4xl lg:relative lg:top-0 shadow-2xl">
+      <nav className="font-inter mx-auto h-auto w-full max-w-screen-4xl lg:relative lg:top-0 shadow-xl">
         <div className="flex flex-col px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-4 xl:px-20">
-        <a className="text-4xl sm:text-4xl md:text-4xl lg:text-6xl font-hustlers flex items-center">
-          {/* div is to change image size on mobile devices */}
-          <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mr-4">
-              <Image
+          <a className="lg:text-5xl md:text:3xl sm:text-2xl font-bold font-hustlers">
+            <Image
               src="/logo.svg"
               alt="Clipart Taco"
-              layout="responsive" 
-              width={60}
-              height={60}
+              width={50}
+              height={50}
+              className="mr-4 inline-block"
               priority
-              className=''
             />
-            </div>
-
             <span className="text-rose-800">T</span>
             <span className="text-emerald-800">A</span>
             <span className="text-yellow-600">C</span>
-            <span className="text-orange-700 mr-2.5">O</span>
+            <span className="text-orange-700">O </span>
+            <span> </span>
             <span className="text-rose-800">A</span>
             <span className="text-emerald-800">B</span>
             <span className="text-yellow-600">O</span>
             <span className="text-orange-700">U</span>
-            <span className="text-rose-800 mr-2.5">T</span>
+            <span className="text-rose-800">T</span>
+            <span> </span>
             <span className="text-emerald-800">I</span>
             <span className="text-yellow-600">T</span>
           </a>

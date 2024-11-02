@@ -102,7 +102,7 @@ const SignupPage: React.FC = () => {
           </h1>
           
           <p className="mt-4 leading-relaxed text-gray-500 text-xl">
-            Register to get started
+            Sign up to get started
           </p>
 
           <form onSubmit={handleSignup} className="mt-8 grid grid-cols-6 gap-6">

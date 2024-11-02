@@ -101,10 +101,10 @@ const SearchPage: React.FC = () => {
 
   return (
     <main className="items-left flex min-h-screen flex-col p-4">
-      {/* <Search
+      <Search
         onLocationShare={handleLocationShare}
         onAddressSubmit={useAddressSubmit}
-      /> */}
+      />
       <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {error && <div>Error fetching places.</div>}

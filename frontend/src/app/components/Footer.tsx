@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
         
         <div className="mb-10 w-full border-b border-black mt-16"></div>
         
-        <div className="text-center sm:text-left sm:flex-row flex justify-between flex-col  ">
-        <a className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-hustlers">
+        <div className="text-center sm:text-left sm:flex-row flex justify-between flex-col sm:pb-2">
+        <a className="lg:text-3xl md:text:3xl sm:text-xl font-bold">
         <Image
               src="/logo.svg"
               alt="Clipart Taco"

@@ -169,7 +169,7 @@ const SignInPage: React.FC = () => {
           </div>
           
           </form>
-          <p className="mt-4 pt-4 text-sm text-gray-500 sm:mt-0">
+          <p className="mt-6">
           Don't have an account?{' '}
           <Link
             href="/signup"
