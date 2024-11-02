@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
           Using Taco About it is really easy! 
         </p>
         {/* Content */}
-        <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:gap-7">
 
           {/* Item shadow-red-300 */}
 

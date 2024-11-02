@@ -66,10 +66,16 @@ const SearchContainer: React.FC = () => {
          </p>
          </div>
         
-              <p className=" max-w-lg sm:text-xl/relaxed text-center">
+              <p className=" ml-0 sm:ml-4 md:ml-4 max-w-lg sm:text-xl/relaxed text-center pb-4">
                 Share or enter your location to get started
               </p>
-              
+
+              <span className="relative flex justify-center">
+                  <div
+                    className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gray-500"
+                  ></div>
+                </span>
+                              
 
               {/* Come back and edit this section to fit better both large and small screens- make buttons responsive  */}
               <div className="pt-6">

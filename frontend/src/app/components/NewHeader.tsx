@@ -88,13 +88,13 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
               <>
               <Link
                   href="/signup"
-                  className="inline-block px-4 py-2 text-white bg-black hover:bg-white hover:text-black hover:shadow-lg font-bold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-xl font-semibold text-md rounded shadow"
                 >
-                  Sign Up
+                  Sign up
                 </Link>
                 <Link
                   href="/signin"
-                  className="inline-block px-4 py-2 text-black hover:bg-white hover:text-yellow-600 hover:shadow-lg font-bold text-md rounded shadow"
+                  className="inline-block px-4 py-2 text-black hover:text-emerald-600 font-semibold text-md "
                 >
                   Log In
                 </Link>
