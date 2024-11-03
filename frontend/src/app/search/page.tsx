@@ -104,23 +104,27 @@ const SearchPage: React.FC = () => {
 
   return (
     <div>
-      <div className=" flex items-center justify-center sm:justify-center md:justify-start lg:justify-start space-x-2 py-6 px-8">
-      <Image
-              src="arrow-left-svgrepo-com.svg"
-              alt="Clipart Onion"
-              width={30}
-              height={30}
-              className="relative "
-              priority
-            />
+
+      <div className="  justify-center sm:justify-center md:justify-start lg:justify-start space-x-2 py-6 px-8">
+      
         <Link
               href={{
                 pathname: '/'
               }}
-              className="text-xl"
+              className="flex items-center text-lg space-x-2 group"
             >
-              Home
+              <Image
+              src="arrow-left-svgrepo-com.svg"
+              alt="Clipart Onion"
+              width={20}
+              height={20}
+              className="relative py-2"
+              priority
+            />
+            
+            <span className="group-hover:text-emerald-600 transition-colors">Home</span>
             </Link>
+            
       </div>
 
     <main className="items-left flex min-h-screen flex-col p-4 px-10">
