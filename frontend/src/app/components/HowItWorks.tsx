@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
          {/* Border line */}
-      <div className="mb-2 w-full border-b border-grey-600 mt-20"></div>
+      {/* <div className="mb-2 w-full border-b border-grey-600 mt-20"></div> */}
       </div>
     </section>
   )

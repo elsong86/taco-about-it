@@ -44,7 +44,7 @@ const SearchContainer: React.FC = () => {
             FIND YOUR NEW FAVORITE
             </h1>
 
-        <p className="block font-bold md:font-normal text-5xl sm:text-4xl md:text-6xl lg:text-8xl text-center"
+        <p className="block font-bold md:font-normal text-5xl sm:text-4xl md:text-5xl lg:text-8xl text-center"
         > 
             <span className="text-rose-800 font-brothers sm:font-hustlers">T</span>
             <span className="text-emerald-800 font-brothers sm:font-hustlers ">A</span>
@@ -56,14 +56,14 @@ const SearchContainer: React.FC = () => {
             <span className="text-yellow-600 font-brothers sm:font-hustlers ">O</span>
             <span className="text-rose-800 font-brothers sm:font-hustlers ">T</span>
             <span></span>
-            <Image
+            {/* <Image
               src="/logo.svg"
               alt="Clipart Taco"
               width={60}
               height={60}
               className="ml-2 inline-block"
               priority
-            />
+            /> */}
          </p>
          </div>
         

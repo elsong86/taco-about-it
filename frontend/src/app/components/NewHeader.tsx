@@ -73,13 +73,13 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
               <>
                 <Link
                   href="/profile"
-                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-yellow-600 via-green-700 to-teal-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
+                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-yellow-600 via-green-700 to-teal-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl text-center"
                 >
                   Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="inline-block px-4 py-2 text-black hover:text-rose-600 font-semibold border rounded text-md "
+                  className="inline-block px-4 py-2 text-black hover:text-rose-600 font-semibold border rounded text-md text-center"
                 >
                   Logout
                 </button>
@@ -88,13 +88,13 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
               <>
               <Link
                   href="/signup"
-                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
+                  className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl text-center"
                 >
                   Sign up
                 </Link>
                 <Link
                   href="/signin"
-                  className="inline-block px-4 py-2 text-black hover:text-emerald-600 font-semibold border rounded text-md "
+                  className="inline-block px-4 py-2 text-black hover:text-emerald-600 font-semibold border rounded text-md text-center"
                 >
                   Log In
                 </Link>
