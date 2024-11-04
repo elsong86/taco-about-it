@@ -55,6 +55,7 @@ const Template: React.FC = () => {
               name="user_name"
               className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
               placeholder="Your Name"
+              required
             />
           </div>
 
@@ -68,6 +69,7 @@ const Template: React.FC = () => {
               name="user_email"
               className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
               placeholder="Enter Email"
+              required
             />
           </div>
         </div>
@@ -80,6 +82,7 @@ const Template: React.FC = () => {
               name="message"
               className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg pb-20"
               placeholder="Leave your feedback:"
+              required
             />
           </div>
         </div>
