@@ -46,23 +46,26 @@ const Footer: React.FC = () => {
             {/* Goes to github */}
             <Link
               href="https://github.com/elsong86/taco-about-it"
-              className="inline-block font-normal text-gray-500 transition hover:text-blue-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+              className="inline-block font-normal text-gray-500 transition hover:text-yellow-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
             >
               About
             </Link>
+
+
             {/* Opens Modal that will send us feedback? */}
             <a
               href="#"
-              className="inline-block font-normal text-gray-500 transition hover:text-blue-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+              className="inline-block font-normal text-gray-500 transition hover:text-rose-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
             >
               Feedback
             </a>
+            
 
             <Link
               href={{
                 pathname: '/'
               }}
-              className="inline-block font-normal text-gray-500 transition hover:text-blue-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+              className="inline-block font-normal text-gray-500 transition hover:text-emerald-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
             >
               Home
             </Link>
@@ -70,7 +73,7 @@ const Footer: React.FC = () => {
             {/* Links to medium article  */}
             <Link
               href="#"
-              className="inline-block font-normal text-gray-500 transition hover:text-blue-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+              className="inline-block font-normal text-gray-500 transition hover:text-orange-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
             >
               Blog
             </Link>

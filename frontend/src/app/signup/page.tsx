@@ -10,6 +10,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isClient, setIsClient] = useState(false);
+  
 
   useEffect(() => {
     // Indicate that the component has mounted on the client
@@ -38,10 +39,12 @@ const SignupPage: React.FC = () => {
   
       const result = await response.json();
       console.log('Signup successful:', result);
+      window.alert('Signup successful!');
       router.push('/signin');
     } catch (error) {
       console.error('Signup failed:', error);
       // Display an error message to the user
+     
     }
   };
 
@@ -144,6 +147,8 @@ const SignupPage: React.FC = () => {
               required
             />
           </div>
+
+          
           <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
             <button
               className="inline-block px-4 py-2 text-slate-100 bg-black hover:bg-gradient-to-r from-rose-700 via-orange-700 to-yellow-600 transition  hover:shadow-2xl font-semibold text-md rounded shadow-xl"
