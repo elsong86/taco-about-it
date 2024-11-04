@@ -36,30 +36,20 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
 
   return (
     <header
-      className="sticky top-0 left-0 right-0 shadow-md h-35 z-10 py-4 flex items-center text-center"
-      style={{ backgroundColor: '#E8E4D9' }}
+      className="sticky top-0 left-0 right-0 shadow-md h-36 z-10 py-4 flex items-center text-center"
+      
     >
-      {/* Sombrero Image */}
-      <div className="flex-shrink-0 ml-6">
-        <Image
-          src="/images/sombrero.png" // Ensure this path is correct
-          alt="Sombrero logo"
-          width={80} // Set the appropriate width
-          height={120} // Set the appropriate height
-          className="h-30 w-20"
-        />
-      </div>
-
       {/* Title */}
       <div
-        className="absolute left-1/2 transform -translate-x-1/2 text-center text-8xl font-bold font-hustlers"
-        style={{ textShadow: '2px 2px 0px black' }}
+        className="absolute left-1/2 transform -translate-x-1/2 text-center text-4xl"
+        
       >
         {/* Taco About It */}
+        
         <span className="text-rose-800">T</span>
         <span className="text-emerald-800">A</span>
         <span className="text-yellow-600">C</span>
-        <span className="text-orange-700">O</span>
+        <span className="text-orange-700">O </span>
         <span> </span>
         <span className="text-rose-800">A</span>
         <span className="text-emerald-800">B</span>

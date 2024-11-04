@@ -6,6 +6,9 @@ import PlaceTile from '../components/PlaceTile';
 import Search from '../components/Search';
 import { Location, Place } from '../types';
 import useSWR from 'swr';
+import Footer from '../components/Footer'
+import Link from 'next/link';
+import Image from 'next/image';
 
 // Adjusted fetcher to accept a tuple (array) of arguments from useSWR
 const usePlacesFetcher = async ([url, params]: [string, any]) => {
@@ -100,11 +103,38 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <main className="items-left flex min-h-screen flex-col p-4">
-      <Search
+    <div>
+
+      <div className="  justify-center sm:justify-center md:justify-start lg:justify-start space-x-2 py-6 px-8">
+      
+        <Link
+              href={{
+                pathname: '/'
+              }}
+              className="flex items-center text-lg space-x-2 group"
+            >
+              <Image
+              src="arrow-left-svgrepo-com.svg"
+              alt="Clipart Onion"
+              width={20}
+              height={20}
+              className="relative py-2"
+              priority
+            />
+            
+            <span className="group-hover:text-emerald-600 transition-colors">Home</span>
+            </Link>
+            
+      </div>
+
+    <main className="items-left flex min-h-screen flex-col p-4 px-10">
+      {/* <Search
         onLocationShare={handleLocationShare}
         onAddressSubmit={useAddressSubmit}
-      />
+      /> */}
+      
+
+
       <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {error && <div>Error fetching places.</div>}
@@ -115,6 +145,8 @@ const SearchPage: React.FC = () => {
           ))}
       </div>
     </main>
+    <Footer />
+    </div>
   );
 };
 

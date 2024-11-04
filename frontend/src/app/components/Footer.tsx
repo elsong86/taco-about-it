@@ -1,94 +1,170 @@
-import React from "react";
-import Link from "next/link";
-import rip from '../../../public/footer.svg'
-import github from '../../../public/github.svg'
-import linkedin from '../../../public/linkedin.svg'
-import taco from '../../../public/images/taco.png'
-import pinata from '../../../public/images/pinata.png'
-
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import Modal from './Feedback'; // Import the Modal component
 
 const Footer: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="relative bottom-0 left-0 w-full bg-gray-800 text-white p-4 pt-5 flex items-center flex-col justify-center">
-      <div className="absolute inset-x-0 top-[-20px] w-full h-auto z-10 hidden md:block">
-        <img src={rip.src} alt="Ripped Paper Effect" className="w-full" />
-      </div>
-      <div>
-        <h1 className="text-lg py-2">Join the party!</h1>
-      </div>
-
-      <div>
-        <p className="text-2xl py-5 ">Connect with us:</p>
-      </div>
-
-    {/* Flex container for icons and names */}
-    <div className="flex flex-col space-y-4"> {/* Space between rows */}
-        {/* Ellis's */}
-        <div className="flex items-center space-x-4"
+    <footer className="block sm:flex sm:justify-center">
+      {/* Container */}
+      <div className="py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10">
+        {/* Component */}
         
-        > 
-          <Link href="https://github.com/elsong86" target="_blank">
-            <img
-              src={github.src}
-              alt="GitHub Icon"
-              className="h-10 w-10  bg-rose-600 rounded-md p-1" 
+        <div className="mb-10 w-full border-b border-black mt-16"></div>
+        
+        <div className="text-center sm:text-left sm:flex-row flex justify-between flex-col sm:pb-2">
+          <a className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-hustlers">
+            <Image
+              src="/logo.svg"
+              alt="Clipart Taco"
+              width={50}
+              height={50}
+              className="mr-4 inline-block"
+              priority
             />
-          </Link>
-          <Link href="https://www.linkedin.com/in/ellissong/" target="_blank">
-            <img
-              src={linkedin.src}
-              alt="LinkedIn Icon"
-              className="h-10 w-10 bg-orange-700 rounded-md" 
-            />
-          </Link>
-          <div className="text-5xl font-hustlers">
-            <span className="text-rose-600">E</span>
-            <span className="text-emerald-600">L</span>
-            <span className="text-yellow-600">L</span>
-            <span className="text-orange-700">I</span>
-            <span className="text-rose-800">S</span>
-          </div>
-        </div>
-
-        {/* Sofia's Icons and Name */}
-        <div className="flex items-center space-x-4"> 
-          <Link href="https://github.com/sarhiri" target="_blank">
-            <img
-              src={github.src}
-              alt="GitHub Icon"
-              className="h-10 w-10 bg-yellow-600 rounded-md p-1" 
-            />
-          </Link>
-          <Link href="https://www.linkedin.com/in/sofia-sarhiri/" target="_blank">
-            <img
-              src={linkedin.src}
-              alt="LinkedIn Icon"
-              className="h-10 w-10  bg-emerald-600 rounded-md" 
-            />
-          </Link>
-          <div className="text-5xl font-hustlers">
-            <span className="text-emerald-600">S</span>
-            <span className="text-rose-600">O</span>
-            <span className="text-yellow-600">F</span>
-            <span className="text-orange-700">I</span>
+            {/* Taco About It */}
+            <span className="text-rose-800">T</span>
+            <span className="text-emerald-800">A</span>
+            <span className="text-yellow-600">C</span>
+            <span className="text-orange-700">O </span>
+            <span> </span>
             <span className="text-rose-800">A</span>
+            <span className="text-emerald-800">B</span>
+            <span className="text-yellow-600">O</span>
+            <span className="text-orange-700">U</span>
+            <span className="text-rose-800">T</span>
+            <span> </span>
+            <span className="text-emerald-800">I</span>
+            <span className="text-yellow-600">T</span>
+          </a>
+        </div>
+        <div className="md:flex-row flex justify-between sm:items-center sm:flex-col items-center flex-col-reverse">
+          <div className="font-semibold mb-4 sm:mb-0 py-1 text-center sm:text-center">
+            {/* Goes to github */}
+            <Link
+              href="https://github.com/elsong86/taco-about-it"
+              className="inline-block font-normal text-gray-500 transition hover:text-yellow-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+            >
+              About
+            </Link>
+
+            {/* Opens Modal that will send us feedback */}
+            <button
+              className="inline-block font-normal text-gray-500 transition hover:text-rose-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+              onClick={handleOpenModal}
+            >
+              Feedback
+            </button>
+
+            <Link
+              href={{
+                pathname: '/'
+              }}
+              className="inline-block font-normal text-gray-500 transition hover:text-emerald-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+            >
+              Home
+            </Link>
+
+            {/* Links to medium article */}
+            <Link
+              href="#"
+              className="inline-block font-normal text-gray-500 transition hover:text-orange-600 sm:pr-6 lg:pr-12 py-1.5 sm:py-2 pr-6"
+            >
+              Blog
+            </Link>
+          </div>
+
+          {/* Right hand section */}
+          <div>
+            <ul className="col-span-2 flex justify-center gap-6 lg:col-span-5 lg:justify-end pt-2">
+              <li>
+                <Link
+                  href="https://github.com/elsong86"
+                  className="text-green-500"
+                >
+                  <Image
+                    src="/github.svg"
+                    alt="Github logo"
+                    width={20}
+                    height={20}
+                    className="mr-4 inline-block"
+                    priority
+                  />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="https://www.linkedin.com/in/ellissong/"
+                  className=""
+                >
+                  <Image
+                    src="/linkedin.svg"
+                    alt="linkedin Logo"
+                    width={20}
+                    height={20}
+                    className="mr-4 inline-block"
+                    priority
+                  />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="https://github.com/sarhiri"
+                  className=""
+                >
+                  <Image
+                    src="/github.svg"
+                    alt="GitHub Logo"
+                    width={20}
+                    height={20}
+                    className="mr-4 inline-block"
+                    priority
+                  />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="https://www.linkedin.com/in/sofia-sarhiri/"
+                  className=""
+                >
+                  <Image
+                    src="/linkedin.svg"
+                    alt="linkedin Logo"
+                    width={20}
+                    height={20}
+                    className="mr-4 inline-block"
+                    priority
+                  />
+                </Link>
+              </li>
+            </ul>
+            <p className="text-gray-500 text-sm sm:text-base pt-8">
+              © Copyright 2024. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="absolute left-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
-        <img src={pinata.src} alt="Pinata" className="h-40 w-40 shadow-lg" /> {/* Adjust size as needed */}
-      </div>
-
-      <div className="absolute right-40 bottom-50 mb-4 ml-4 rotate-12 "> {/* Adjust the margins as needed */}
-        <img src={taco.src} alt="Pinata" className="h-40 w-40 " /> {/* Adjust size as needed */}
-      </div>
-
-      <div className='py-6 font-thirsty'>
-        <p>Made with ♡ in 2024</p>
-      </div>
-
-    </div>
+      {/* Modal */}
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        {/* Modal content will be here */}
+        <h2 className="text-xl font-bold mb-4">Feedback</h2>
+        <p>Your feedback is important to us!</p>
+      </Modal>
+    </footer>
   );
 };
 
