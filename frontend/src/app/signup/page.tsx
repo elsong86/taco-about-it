@@ -44,6 +44,7 @@ const SignupPage: React.FC = () => {
     } catch (error) {
       console.error('Signup failed:', error);
       // Display an error message to the user
+      window.alert('Signup unsuccessful, please try again!');
      
     }
   };
