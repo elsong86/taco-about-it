@@ -75,8 +75,31 @@ const SignupPage: React.FC = () => {
       <main
         className="flex items-center justify-center px-8 py-6 sm:px-12 lg:col-span-7 lg:px-16 lg:py-8 xl:col-span-6"
       >
-        <div className="max-w-xl lg:max-w-3xl">
         
+      
+      
+          
+
+        <div className="max-w-xl lg:max-w-3xl">
+
+        <Link
+            href={{
+              pathname: '/'
+            }}
+            className="flex items-center text-lg space-x-2 group"
+          >
+            <Image
+            src="arrow-left-svgrepo-com.svg"
+            alt="Clipart Onion"
+            width={20}
+            height={20}
+            className="relative py-2"
+            priority
+          />
+          
+          <span className="group-hover:text-emerald-600 transition-colors">Home</span>
+          </Link>
+          
         <Image
               src="/logo.svg"
               alt="Clipart Taco"
