@@ -1,4 +1,5 @@
 import React from 'react';
+import EmailForm from '../components/EmailForm'
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           </svg>
         </button>
         {children}
+        <EmailForm />
       </div>
     </div>
   );
