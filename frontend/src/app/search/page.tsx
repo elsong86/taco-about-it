@@ -10,6 +10,7 @@ import Footer from '../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 
+console.log(process.env.NEXT_PUBLIC_API_URL)
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const usePlacesFetcher = async ([url, params]: [string, any]) => {
