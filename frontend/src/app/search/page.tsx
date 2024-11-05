@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PlaceTile from '../components/PlaceTile';
 import Search from '../components/Search';
@@ -26,7 +26,7 @@ const usePlacesFetcher = async ([url, params]: [string, any]) => {
   return response.json();
 };
 
-const SearchPage: React.FC = () => {
+const SearchPageContent: React.FC = () => {
   const [location, setLocation] = useState<Location | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -97,45 +97,25 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="justify-center sm:justify-center md:justify-start lg:justify-start space-x-2 py-6 px-8">
-        <Link
-          href={{
-            pathname: '/',
-          }}
-          className="flex items-center text-lg space-x-2 group"
-        >
-          <Image
-            src="arrow-left-svgrepo-com.svg"
-            alt="Clipart Onion"
-            width={20}
-            height={20}
-            className="relative py-2"
-            priority
-          />
-          <span className="group-hover:text-emerald-600 transition-colors">
-            Home
-          </span>
-        </Link>
+    <main className="items-left flex min-h-screen flex-col p-4 px-10">
+      <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {error && <div>Error fetching places.</div>}
+        {!placesData && <div>Loading places...</div>}
+        {placesData &&
+          placesData.places.map((place: Place) => (
+            <PlaceTile key={place.id} place={place} />
+          ))}
       </div>
-
-      <main className="items-left flex min-h-screen flex-col p-4 px-10">
-        <h1 className="mb-4 text-2xl font-bold">Search Results</h1>
-        
-        {/* Wrap the section that depends on asynchronous data with Suspense */}
-        <Suspense fallback={<div>Loading places...</div>}>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {error && <div>Error fetching places.</div>}
-            {placesData &&
-              placesData.places.map((place: Place) => (
-                <PlaceTile key={place.id} place={place} />
-              ))}
-          </div>
-        </Suspense>
-      </main>
-      <Footer />
-    </div>
+    </main>
   );
 };
+
+const SearchPage: React.FC = () => (
+  <Suspense fallback={<div>Loading Search Page...</div>}>
+    <SearchPageContent />
+    <Footer />
+  </Suspense>
+);
 
 export default SearchPage;
