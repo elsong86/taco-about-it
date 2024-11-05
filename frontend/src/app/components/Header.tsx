@@ -1,5 +1,3 @@
-// app/components/Header.tsx
-
 "use client"; // Mark this as a Client Component
 
 import React from 'react';
@@ -10,11 +8,13 @@ interface HeaderProps {
   initialIsAuthenticated: boolean; // Define the prop type for initialIsAuthenticated
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
   const handleLogout = async () => {
     try {
       // Use the fetch API to send a POST request to the logout route
-      const response = await fetch('http://localhost:8000/logout', {
+      const response = await fetch(`${apiUrl}/logout`, {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -37,15 +37,12 @@ const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
   return (
     <header
       className="sticky top-0 left-0 right-0 shadow-md h-36 z-10 py-4 flex items-center text-center"
-      
     >
       {/* Title */}
       <div
         className="absolute left-1/2 transform -translate-x-1/2 text-center text-4xl"
-        
       >
         {/* Taco About It */}
-        
         <span className="text-rose-800">T</span>
         <span className="text-emerald-800">A</span>
         <span className="text-yellow-600">C</span>

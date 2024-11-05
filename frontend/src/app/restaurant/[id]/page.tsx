@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Place } from '../../types';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const RestaurantPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [place, setPlace] = useState<Place | null>(null);
@@ -34,14 +36,14 @@ const RestaurantPage: React.FC = () => {
         // Pass displayName and formattedAddress to fetchReviews
         fetchReviews(id, displayName, formattedAddress);
     }
-}, [searchParams]);
+  }, [searchParams]);
 
 
   const fetchReviews = async (placeId: string, displayName: string, formattedAddress: string) => {
     setLoading(true);
     try {
         const response = await fetch(
-            `http://localhost:8000/reviews?place_id=${placeId}&displayName=${encodeURIComponent(displayName)}&formattedAddress=${encodeURIComponent(formattedAddress)}`,
+            `${apiUrl}/reviews?place_id=${placeId}&displayName=${encodeURIComponent(displayName)}&formattedAddress=${encodeURIComponent(formattedAddress)}`,
         );
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
@@ -56,17 +58,17 @@ const RestaurantPage: React.FC = () => {
         }
 
         if (data.average_sentiment !== undefined) {
-          setAverageSentiment(data.average_sentiment);  // No additional scaling needed
-      } else {
-          setAverageSentiment(null);
-      }
+            setAverageSentiment(data.average_sentiment);
+        } else {
+            setAverageSentiment(null);
+        }
       
     } catch (error) {
         console.error('Failed to fetch reviews:', error);
     } finally {
         setLoading(false);
     }
-};
+  };
 
 
   if (!place) {

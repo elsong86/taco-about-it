@@ -1,10 +1,12 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 
 interface User {
   user_id: string;
   email: string;
 }
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -14,7 +16,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('http://localhost:8000/profile', {
+        const response = await fetch(`${apiUrl}/profile`, {
           credentials: 'include',  // Make sure cookies are sent with the request
         });
         

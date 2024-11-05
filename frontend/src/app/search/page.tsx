@@ -10,6 +10,8 @@ import Footer from '../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const usePlacesFetcher = async ([url, params]: [string, any]) => {
   const response = await fetch(url, {
     method: 'POST',
@@ -54,7 +56,7 @@ const SearchPageContent: React.FC = () => {
     : null;
 
   const { data: placesData, error } = useSWR(
-    location ? ['http://localhost:8000/places', params] : null,
+    location ? [`${apiUrl}/places`, params] : null,
     usePlacesFetcher,
     {
       dedupingInterval: 86400000,
@@ -70,7 +72,7 @@ const SearchPageContent: React.FC = () => {
 
   const useAddressSubmit = async (address: string) => {
     try {
-      const response = await fetch('http://localhost:8000/geocode', {
+      const response = await fetch(`${apiUrl}/geocode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
