@@ -161,8 +161,7 @@ const Footer: React.FC = () => {
       {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         {/* Modal content will be here */}
-        <h2 className="text-xl font-bold mb-4">Feedback</h2>
-        <p>Your feedback is important to us!</p>
+        <p></p>
       </Modal>
     </footer>
   );

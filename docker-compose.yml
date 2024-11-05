@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     networks:
       - app-network
+    env_file: 
+      - .env  # Load all variables from the .env file
 
   backend:
     build:
