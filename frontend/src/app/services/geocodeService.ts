@@ -6,7 +6,8 @@ export async function handleAddressSubmit(
   router: ReturnType<typeof useRouter>,
 ): Promise<void> {
   try {
-    const response = await fetch('http://localhost:8000/geocode', {
+    // Use NEXT_PUBLIC_API_URL from environment variables
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/geocode`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
