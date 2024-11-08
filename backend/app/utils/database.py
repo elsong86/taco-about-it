@@ -12,9 +12,9 @@ load_dotenv()
 # Fetch DATABASE_URL from environment
 DATABASE_URL: str = os.getenv("DATABASE_URL")
 
-if not DATABASE_URL:
-    logging.error("DATABASE_URL not set in environment variables.")
-    raise ValueError("DATABASE_URL must be set")
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+
 
 # Create async engine
 engine = create_async_engine(

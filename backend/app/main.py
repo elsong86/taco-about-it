@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from app.utils.database import engine, test_connection
 from app.models.tables import Base
 from app.routers import google_places, google_geocode, outscraper_reviews, auth, profile
+import os
 
 # Global session factory
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
@@ -29,10 +30,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # CORS configuration
-origins = [
-    "http://localhost:3000",
-    "http://frontend:3000"
-]
+origins = [os.getenv("FRONTEND_URL", "http://localhost:3000")]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -55,6 +54,6 @@ async def get_db():
         yield session
 
 # Run the app with Uvicorn
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+#if __name__ == "__main__":
+#    import uvicorn
+#    uvicorn.run(app, host="0.0.0.0", port=8000)

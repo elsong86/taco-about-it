@@ -1,3 +1,5 @@
+# Dockerfile
+
 FROM python:3.11-slim AS backend
 
 # Set the working directory
@@ -7,25 +9,19 @@ WORKDIR /backend
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install gcc, g++, and libc-dev
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     libc-dev \
     && apt-get clean
 
-# Copy only requirements.txt first to leverage Docker layer caching
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
-
-# Upgrade pip and install Python dependencies from requirements.txt
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose the backend port
-EXPOSE 8000
-
-# Run the backend server using uvicorn
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "debug"]
+# Set the command to run gunicorn and bind to the dynamic $PORT
+CMD gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:${PORT}
