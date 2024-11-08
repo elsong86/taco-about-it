@@ -30,7 +30,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # CORS configuration
-origins = [os.getenv("FRONTEND_URL", "http://localhost:3000")]
+origins = [
+    "https://tacoaboutit.app"
+]
 
 
 app.add_middleware(
