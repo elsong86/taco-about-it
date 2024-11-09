@@ -6,23 +6,23 @@ from urllib.parse import urlparse
 # Load environment variables from the .env file
 load_dotenv()
 
-# Get Redis connection details from the environment
-redis_url = os.getenv("REDIS_HOST", "redis")  # Defaults to "redis" for local development
-
-# Parse the Redis URL if it's in rediss:// format
-if redis_url.startswith("rediss://"):
-    parsed_url = urlparse(redis_url)
-    redis_host = parsed_url.hostname
-    redis_port = parsed_url.port or 6379  # Defaults to 6379 if not specified
-    redis_password = parsed_url.password
-    use_ssl = True
+# Determine environment and set Redis URL
+environment = os.getenv("ENV", "development")
+if environment == "development":
+    # For local Dockerized Redis, use "redis://redis:6379" as default
+    redis_url = os.getenv("REDIS_URL", "redis://redis:6379")
 else:
-    redis_host = redis_url
-    redis_port = 6379
-    redis_password = None
-    use_ssl = False
+    # For production, use "REDIS_URL" which should default to "rediss://..."
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
 
-# Initialize the Redis client with SSL settings to bypass self-signed certificate verification
+# Parse the Redis URL and configure SSL if using `rediss://`
+parsed_url = urlparse(redis_url)
+redis_host = parsed_url.hostname
+redis_port = parsed_url.port or 6379
+redis_password = parsed_url.password
+use_ssl = redis_url.startswith("rediss://")
+
+# Initialize the Redis client with SSL settings for Heroku mini plans
 redis_client = redis.Redis(
     host=redis_host,
     port=redis_port,
@@ -30,5 +30,5 @@ redis_client = redis.Redis(
     db=0,
     decode_responses=True,
     ssl=use_ssl,
-    ssl_cert_reqs=None  # Fully bypass certificate verification
+    ssl_cert_reqs=None if use_ssl else "required"
 )
