@@ -29,19 +29,15 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
     
     jwt_token = result["access_token"]
     response.set_cookie(
-        key="access_token", 
-        value=jwt_token, 
-        httponly=True, 
-        secure=True,        
-        samesite="None",     
-        max_age=60 * 60     
+        key="access_token",
+        value=jwt_token,
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=3600,
+        path="/",  # Ensure this is set to root
+        domain="tacoaboutit.app"  # Specify domain if applicable
     )
-    
-    # Prevent caching
-    response.headers["Cache-Control"] = "no-store"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-
     return {"message": "Signin successful"}
 
 @router.post("/logout")
@@ -49,3 +45,16 @@ async def logout(response: Response):
     # Clear the cookie by setting an expired max_age
     response.delete_cookie(key="access_token", path="/", httponly=True)
     return {"message": "Logged out successfully"}
+
+@router.get("/set-test-cookie")
+async def set_test_cookie(response: Response):
+    response.set_cookie(
+        key="test_cookie",
+        value="test_value",
+        httponly=True,
+        secure=True,
+        samesite="None",
+        max_age=3600,
+        path="/"
+    )
+    return {"message": "Test cookie set"}

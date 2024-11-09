@@ -23,7 +23,7 @@ const SignInPage: React.FC = () => {
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("handleSignin triggered");
-
+  
     try {
       console.log("Preparing to send POST request to", `${apiUrl}/signin`);
       const response = await fetch(`${apiUrl}/signin`, {
@@ -35,20 +35,23 @@ const SignInPage: React.FC = () => {
         credentials: 'include',  // This ensures cookies are sent with the request
       });
       console.log("Response received:", response);
-
+  
       if (response.status === 429) {
         throw new Error('Too many requests. Please try again later.');
       }
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Sign in failed');
       }
-
-      // On success, dispatch the authChange event
+  
+      // Wait briefly to ensure the cookie is set before redirecting
+      await new Promise((resolve) => setTimeout(resolve, 100));
+  
+      // Dispatch the authChange event
       const authChangeEvent = new Event('authChange');
       window.dispatchEvent(authChangeEvent);
-
+  
       // Redirect to home or dashboard
       window.location.href = '/'; // Use window.location.href for full page reload
     } catch (error: any) {
