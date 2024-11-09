@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log("API URL:", apiUrl);
 
 const SignInPage: React.FC = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const SignInPage: React.FC = () => {
     console.log("handleSignin triggered");
 
     try {
+      console.log("Preparing to send POST request to", `${apiUrl}/signin`);
       const response = await fetch(`${apiUrl}/signin`, {
         method: 'POST',
         headers: {
@@ -32,6 +34,7 @@ const SignInPage: React.FC = () => {
         body: JSON.stringify({ email, password }),
         credentials: 'include',  // This ensures cookies are sent with the request
       });
+      console.log("Response received:", response);
 
       if (response.status === 429) {
         throw new Error('Too many requests. Please try again later.');
