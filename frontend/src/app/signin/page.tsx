@@ -46,7 +46,7 @@ const SignInPage: React.FC = () => {
       }
   
       // Wait briefly to ensure the cookie is set before redirecting
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
   
       // Dispatch the authChange event
       const authChangeEvent = new Event('authChange');
