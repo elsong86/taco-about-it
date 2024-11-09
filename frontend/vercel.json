@@ -1,0 +1,12 @@
+{
+    "routes": [
+      {
+        "src": "/signin",
+        "headers": {
+          "Vercel-CDN-Cache-Control": "no-store, max-age=0, must-revalidate",
+          "Cache-Control": "no-store, max-age=0, must-revalidate"
+        }
+      }
+    ]
+  }
+  

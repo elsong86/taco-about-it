@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import UserCreate
 from app.services.database_service import DatabaseService
 from app.utils.database import get_database_client
+import logging
 
 # Constants for JWT expiration (1 hour in this case)
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
@@ -26,18 +27,20 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
     if 'error' in result:
         raise HTTPException(status_code=401, detail=result['error'])
     
-    # Extract the JWT token from the response
     jwt_token = result["access_token"]
-
-    # Set the JWT token in an HTTP-only cookie
     response.set_cookie(
         key="access_token", 
         value=jwt_token, 
         httponly=True, 
-        secure=True,        # Ensure HTTPS in production
-        samesite="None",     # Adjust based on your CSRF strategy
-        max_age=60 * 60     # 1 hour in seconds
+        secure=True,        
+        samesite="None",     
+        max_age=60 * 60     
     )
+    
+    # Prevent caching
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
 
     return {"message": "Signin successful"}
 
