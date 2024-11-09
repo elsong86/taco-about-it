@@ -21,6 +21,7 @@ const SignInPage: React.FC = () => {
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("handleSignin triggered");
 
     try {
       const response = await fetch(`${apiUrl}/signin`, {
