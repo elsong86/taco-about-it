@@ -11,6 +11,8 @@ load_dotenv()
 
 # Fetch DATABASE_URL from environment
 DATABASE_URL: str = os.getenv("DATABASE_URL")
+print("DATABASE_URL:", DATABASE_URL)
+ 
 
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)

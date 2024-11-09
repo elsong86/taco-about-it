@@ -29,19 +29,21 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with the lifespan context manager
 app = FastAPI(lifespan=lifespan)
 
-# CORS configuration
 origins = [
+    os.getenv("FRONTEND_URL", "http://localhost:3000"),  # primary URL
+    "https://taco-about-it.vercel.app",                  # canonical Vercel URL
+    "https://www.tacoaboutit.app",                       # custom domain
     "https://tacoaboutit.app"
 ]
 
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins,  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Include your routers
 app.include_router(google_places.router)
@@ -55,7 +57,6 @@ async def get_db():
     async with SessionLocal() as session:
         yield session
 
-# Run the app with Uvicorn
-#if __name__ == "__main__":
-#    import uvicorn
-#    uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__" and os.getenv("APP_ENV") == "development":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)

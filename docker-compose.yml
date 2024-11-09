@@ -10,7 +10,7 @@ services:
     networks:
       - app-network
     env_file: 
-      - .env  # Load all variables from the .env file
+      - .env
 
   backend:
     build:
@@ -24,10 +24,13 @@ services:
       - redis
       - postgres  
     env_file: 
-      - .env  # Load all variables from the .env file
-
+      - .env
     networks:
       - app-network
+    environment:
+      - APP_ENV=development
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  # Override only in dev
+
 
   redis:
     image: "redis:7.4.0"
@@ -46,7 +49,7 @@ services:
     image: postgres:latest  
     container_name: my_postgres
     env_file: 
-      - .env  # This ensures Docker reads your environment variables
+      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

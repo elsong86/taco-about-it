@@ -22,12 +22,13 @@ else:
     redis_password = None
     use_ssl = False
 
-# Initialize the Redis client
+# Initialize the Redis client with SSL settings to bypass self-signed certificate verification
 redis_client = redis.Redis(
     host=redis_host,
     port=redis_port,
     password=redis_password,
     db=0,
     decode_responses=True,
-    ssl=use_ssl
+    ssl=use_ssl,
+    ssl_cert_reqs=None  # Fully bypass certificate verification
 )
