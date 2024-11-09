@@ -35,7 +35,7 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
         value=jwt_token, 
         httponly=True, 
         secure=True,        # Ensure HTTPS in production
-        samesite="Lax",     # Adjust based on your CSRF strategy
+        samesite="None",     # Adjust based on your CSRF strategy
         max_age=60 * 60     # 1 hour in seconds
     )
 
