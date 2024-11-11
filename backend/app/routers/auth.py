@@ -34,7 +34,8 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
     httponly=True,
     secure=True,  # Ensure HTTPS is used
     samesite="None",  # Or "Lax" for testing
-    max_age=3600
+    max_age=3600,
+    path="/"
 )
     return {"message": "Signin successful"}
 
