@@ -37,7 +37,7 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
         max_age=3600,
         path="/",
         # For cookies to work across subdomains, include the leading dot
-        domain=".tacoaboutit.app"  # Added leading dot for subdomain support
+        domain="tacoaboutit.app"  # Added leading dot for subdomain support
     )
     return {
         "message": "Signin successful",
@@ -47,6 +47,12 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
 
 @router.post("/logout")
 async def logout(response: Response):
-    # Clear the cookie by setting an expired max_age
-    response.delete_cookie(key="access_token", path="/", httponly=True)
+    response.delete_cookie(
+        key="access_token",
+        path="/",
+        domain="tacoaboutit.app",  # Must match the domain used in signin
+        secure=True,
+        httponly=True,
+        samesite="None"  # Must match the samesite setting used in signin
+    )
     return {"message": "Logged out successfully"}
