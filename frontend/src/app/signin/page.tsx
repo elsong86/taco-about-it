@@ -53,7 +53,7 @@ const SignInPage: React.FC = () => {
       window.dispatchEvent(authChangeEvent);
   
       // Redirect to home or dashboard
-      window.location.href = '/'; // Use window.location.href for full page reload
+      // window.location.href = '/'; // Use window.location.href for full page reload
     } catch (error: any) {
       console.error('Sign in failed:', error.message);
       setError(error.message);  // Display an error message to the user
