@@ -23,5 +23,4 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
-# Set the command to run gunicorn and bind to the dynamic $PORT
-CMD gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:${PORT}
+CMD /bin/sh -c 'gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:${PORT}'
