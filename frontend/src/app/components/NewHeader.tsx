@@ -11,11 +11,13 @@ interface HeaderProps {
   initialIsAuthenticated: boolean; // Define the prop type for initialIsAuthenticated
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const Header: React.FC<HeaderProps> = ({ initialIsAuthenticated }) => {
   const handleLogout = async () => {
     try {
       // Use the fetch API to send a POST request to the logout route
-      const response = await fetch('http://localhost:8000/logout', {
+      const response = await fetch(`${apiUrl}/logout`, {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });

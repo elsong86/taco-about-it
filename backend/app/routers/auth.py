@@ -29,15 +29,21 @@ async def signin(user_details: UserCreate, response: Response, db_service: Datab
     
     jwt_token = result["access_token"]
     response.set_cookie(
-    key="access_token",
-    value=jwt_token,
-    httponly=True,
-    secure=True,  # Ensure HTTPS is used
-    samesite="None",  # Or "Lax" for testing
-    max_age=3600,
-    path="/"
-)
-    return {"message": "Signin successful"}
+        key="access_token",
+        value=jwt_token,
+        httponly=True,
+        secure=True,
+        samesite="None",  # Capital "N" is correct for cross-origin
+        max_age=3600,
+        path="/",
+        # For cookies to work across subdomains, include the leading dot
+        domain=".tacoaboutit.app"  # Added leading dot for subdomain support
+    )
+    return {
+        "message": "Signin successful",
+        "access_token": jwt_token,
+        "token_type": "bearer"
+    }
 
 @router.post("/logout")
 async def logout(response: Response):
