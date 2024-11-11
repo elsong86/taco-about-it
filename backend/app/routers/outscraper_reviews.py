@@ -77,25 +77,25 @@ async def fetch_reviews_from_api(place_id: str):
 
 async def store_restaurant(place_id: str, name: str, address: str, db: AsyncSession):
     try:
-        # Use the provided AsyncSession `db` to execute the query
-        result = await db.execute(select(Restaurant).where(Restaurant.place_id == place_id))
-        existing_restaurant = result.scalar_one_or_none()
+        async with db.begin():  # Ensure transaction consistency
+            result = await db.execute(select(Restaurant).where(Restaurant.place_id == place_id))
+            existing_restaurant = result.scalar_one_or_none()
 
-        if not existing_restaurant:
-            # Insert the new restaurant if it doesn't exist
-            new_restaurant = Restaurant(
-                place_id=place_id,
-                name=name,
-                address=address,
-                source="outscraper_api",
-                created_at=datetime.now(timezone.utc)
-            )
-            db.add(new_restaurant)
-            await db.commit()
-            logging.info(f"Restaurant stored successfully: {name}")
-        else:
-            logging.info(f"Restaurant already exists: {name}")
+            if not existing_restaurant:
+                new_restaurant = Restaurant(
+                    place_id=place_id,
+                    name=name,
+                    address=address,
+                    source="outscraper_api",
+                    created_at=datetime.now(timezone.utc)
+                )
+                db.add(new_restaurant)
+                await db.commit()
+                logging.info(f"Restaurant stored successfully: {name}")
+            else:
+                logging.info(f"Restaurant already exists: {name}")
     except SQLAlchemyError as e:
+        await db.rollback()  # Rollback on SQLAlchemy errors
         logger.error(f"Failed to store restaurant: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -104,43 +104,43 @@ async def get_stored_reviews(place_id: str, db: AsyncSession):
     now = datetime.now(timezone.utc)
 
     try:
-        # Use the provided AsyncSession `db` to execute the query
-        result = await db.execute(
-            select(Review).where(Review.place_id == place_id).order_by(Review.created_at.desc()).limit(30)
-        )
-        reviews = result.scalars().all()
+        async with db.begin():  # Use context to handle transaction
+            result = await db.execute(
+                select(Review).where(Review.place_id == place_id).order_by(Review.created_at.desc()).limit(30)
+            )
+            reviews = result.scalars().all()
 
-        if reviews:
-            latest_review = max(reviews, key=lambda r: r.created_at)
-            review_age = now - latest_review.created_at
+            if reviews:
+                latest_review = max(reviews, key=lambda r: r.created_at)
+                review_age = now - latest_review.created_at
 
-            if review_age < freshness_limit:
-                logger.info(f"Found recent reviews in the database for place_id: {place_id}")
+                if review_age < freshness_limit:
+                    logger.info(f"Found recent reviews in the database for place_id: {place_id}")
 
-                # Convert ORM instances to dictionaries before caching and returning
-                review_dicts = [
-                    {
-                        "id": str(review.id),  # Convert UUID to string
-                        "place_id": review.place_id,
-                        "review_text": review.review_text,
-                        "source": review.source,
-                        "created_at": review.created_at.isoformat()  # Convert datetime to string
-                    }
-                    for review in reviews
-                ]
+                    # Convert ORM instances to dictionaries before caching and returning
+                    review_dicts = [
+                        {
+                            "id": str(review.id),
+                            "place_id": review.place_id,
+                            "review_text": review.review_text,
+                            "source": review.source,
+                            "created_at": review.created_at.isoformat()
+                        }
+                        for review in reviews
+                    ]
 
-                # Cache the fetched reviews
-                cache_key = f"reviews:{place_id}"
-                redis_client.setex(cache_key, 3600, json.dumps(review_dicts))
-                logger.info(f"Cached reviews from database for place_id: {place_id}")
+                    # Cache the fetched reviews
+                    cache_key = f"reviews:{place_id}"
+                    redis_client.setex(cache_key, 3600, json.dumps(review_dicts))
+                    logger.info(f"Cached reviews from database for place_id: {place_id}")
 
-                return review_dicts
+                    return review_dicts
         logger.info(f"No recent reviews found in the database for place_id: {place_id}")
         return None
     except SQLAlchemyError as e:
+        await db.rollback()  # Rollback on error
         logger.error(f"Error fetching reviews from database: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-
 
 class ReviewQueryParams(BaseModel):
     place_id: str = Field(..., alias="place_id", pattern=r"^[A-Za-z0-9_\-]+$")
@@ -176,12 +176,12 @@ async def get_reviews(
 
         # Step 3: If not found in Redis or database, fetch from Outscraper API
         reviews = await fetch_reviews_from_api(place_id)
-        
+
         # Store the restaurant details before storing reviews
         await store_restaurant(place_id, name, address, db)
 
         # Store fetched reviews in the database
-        async with db.begin():
+        async with db.begin():  # Transaction context for storing reviews
             for review in reviews:
                 new_review = Review(
                     place_id=place_id,
@@ -190,7 +190,7 @@ async def get_reviews(
                     created_at=datetime.now(timezone.utc)
                 )
                 db.add(new_review)
-            await db.commit()
+            await db.commit()  # Explicit commit
 
         average_sentiment = analyze_sentiments(reviews)
         return {"average_sentiment": average_sentiment, "reviews": reviews, "source": "api"}
