@@ -1,12 +1,10 @@
-# Python
+# Python artifacts
 __pycache__/
 *.pyc
 backend/.venv/
 
-# Node
+# Node.js artifacts
 node_modules/
-
-# Next.js
 .next/
 out/
 
@@ -15,45 +13,39 @@ out/
 .env.local
 .env*.local
 
-# VS Code
-.vscode/
+# macOS files
+*.DS_Store
 
-# macOS
-.DS_Store
+# Xcode/SwiftUI
+*.xcuserdatad
+*.xcworkspace
+DerivedData/
+build/
+.build/  # Swift Package Manager
+xcuserdata/
+*.xcscmblueprint
 
 # Logs
 *.log
+*.log.*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build files
-build/
-dist/
+# VS Code
+.vscode/
 
-# Frontend dependencies
-frontend/node_modules/
-frontend/.pnp/
-frontend/.pnp.js
-frontend/.yarn/install-state.gz
+# Build artifacts
+dist/
+build/
 
 # Frontend testing
-frontend/coverage/
-
-# Frontend Next.js
-frontend/.next/
-frontend/out/
-
-# Frontend production
-frontend/build/
+coverage/
 
 # Frontend misc
-frontend/.DS_Store
-frontend/*.pem
+*.pem
+next-env.d.ts
+*.tsbuildinfo
 
 # Frontend vercel
-frontend/.vercel
-
-# Frontend typescript
-frontend/*.tsbuildinfo
-frontend/next-env.d.ts
+.vercel
