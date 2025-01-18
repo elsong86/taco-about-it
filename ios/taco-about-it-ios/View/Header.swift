@@ -16,32 +16,35 @@ struct Header: View {
     ]
 
     var body: some View {
-        VStack { // Wrap the HStack in a VStack to add padding above
-            Spacer()
-                .frame(height: 20) // Add space above the content (adjust as needed)
-            
-            HStack {
-                // Logo
-                Image("logo")
+        HStack {
+            // Logo
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 40) // Adjust size as needed
 
-                // Title
-                HStack(spacing: 0) {
-                    ForEach(title, id: \.character) { item in
-                        Text(item.character)
-                            .foregroundColor(item.color)
-                            .font(Font.custom("HustlersRoughDemo", size: 30))
-                    }
+            // Title
+            HStack(spacing: 0) {
+                ForEach(title, id: \.character) { item in
+                    Text(item.character)
+                        .foregroundColor(item.color)
+                        .font(Font.custom("HustlersRoughDemo", size: 30))
                 }
-
-                Spacer() // Push the menu icon to the far right
-
-                // Menu Icon
-                Image(systemName: "line.3.horizontal")
             }
-            .frame(maxWidth: UIScreen.main.bounds.width * 0.9) // Constrain to screen width
+
+            Spacer() // Push the menu icon to the far right
+
+            // Menu Icon
+            Image(systemName: "line.3.horizontal")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24) // Adjust icon size
         }
-        .frame(maxWidth: .infinity) // Ensure the header stretches to the full width
-        .padding(.top, 20) // Add padding at the top of the header (for additional space)
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.9)) // Apply background with opacity
+        .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 2) // Shadow
+        .frame(maxWidth: .infinity) // Stretch to the full width of the screen
     }
 }
 
