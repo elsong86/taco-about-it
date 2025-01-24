@@ -9,8 +9,13 @@ struct ActionButtonsView: View {
         VStack {
             // Share Location Button
             Button(action: {
-                viewModel.requestLocation()
-                print("Requesting location...")
+                Task {
+                    viewModel.requestLocation() // Request the user's location
+                    if let location = viewModel.location {
+                        await viewModel.fetchPlaces(latitude: location.latitude, longitude: location.longitude)
+                        destination = .location(location) // Navigate to PlacesListView
+                    }
+                }
             }) {
                 Label("Share Location", systemImage: "location.fill")
                     .frame(maxWidth: .infinity)
@@ -29,11 +34,10 @@ struct ActionButtonsView: View {
             SearchBarView(
                 searchText: $searchText,
                 onSearch: { text in
-                    print("Setting navigationTarget to .search with \(searchText)")
                     destination = .search(text)
                 }
             )
-            .frame(maxWidth: .infinity) // Make search bar fill available width
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(Color.white)
