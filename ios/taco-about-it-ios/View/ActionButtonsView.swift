@@ -10,12 +10,14 @@ struct ActionButtonsView: View {
             // Share Location Button
             Button(action: {
                 Task {
-                    viewModel.requestLocation() // Request the user's location
-                    if let location = viewModel.location {
-                        await viewModel.fetchPlaces(latitude: location.latitude, longitude: location.longitude)
-                        destination = .location(location) // Navigate to PlacesListView
+                        do {
+                            let location = try await viewModel.requestLocationAndFetchPlaces()
+                            await viewModel.fetchPlaces()
+                            destination = .location(location)
+                        } catch {
+                            viewModel.errorMessage = error.localizedDescription
+                        }
                     }
-                }
             }) {
                 Label("Share Location", systemImage: "location.fill")
                     .frame(maxWidth: .infinity)

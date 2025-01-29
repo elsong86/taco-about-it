@@ -6,7 +6,7 @@ class ContentViewModel: ObservableObject {
     @Published var location: GeoLocation? // Holds the user's location
     @Published var places: [Place] = [] // Fetched places
     @Published var errorMessage: String? // For error handling
-    
+
     private let locationManager = LocationManager() // Handles location fetching
     private var cancellables = Set<AnyCancellable>() // For Combine subscriptions
 
@@ -57,45 +57,44 @@ class ContentViewModel: ObservableObject {
     func resetLocation() {
         self.location = nil
     }
-
-    // Fetch places based on latitude and longitude
-    func fetchPlaces(latitude: Double, longitude: Double) async {
-        guard let url = URL(string: "http://127.0.0.1:8000/places") else {
-            print("Invalid URL")
+    
+    func requestLocationAndFetchPlaces() async throws -> GeoLocation {
+            // Create a continuation that completes when location is received
+            return try await withCheckedThrowingContinuation { continuation in
+                var cancellable: AnyCancellable?
+                
+                cancellable = locationManager.$location
+                    .compactMap { $0 }
+                    .first()
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            continuation.resume(throwing: error)
+                        }
+                    } receiveValue: { locationValue in
+                        let geoLocation = GeoLocation(
+                            latitude: locationValue.latitude,
+                            longitude: locationValue.longitude
+                        )
+                        continuation.resume(returning: geoLocation)
+                        cancellable?.cancel()
+                    }
+                
+                locationManager.requestLocation()
+            }
+        }
+    
+    // Fetch places using PlacesService
+    func fetchPlaces() async {
+        guard let location = location else {
+            self.errorMessage = "Location not available."
             return
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let requestBody: [String: Any] = [
-            "location": [
-                "latitude": latitude,
-                "longitude": longitude
-            ],
-            "radius": 1000,
-            "max_results": 20,
-            "text_query": "tacos"
-        ]
-
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200..<300).contains(httpResponse.statusCode) else {
-                print("Error: Invalid response")
-                return
-            }
-
-            let decodedResponse = try JSONDecoder().decode(PlacesResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.places = decodedResponse.places
-            }
+            let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: location)
+            self.places = fetchedPlaces
         } catch {
-            print("Error fetching places:", error)
-            DispatchQueue.main.async {
-                self.errorMessage = "Error fetching places: \(error.localizedDescription)"
-            }
+            self.errorMessage = "Failed to fetch places: \(error.localizedDescription)"
         }
     }
 }
