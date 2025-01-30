@@ -4,35 +4,44 @@ struct ActionButtonsView: View {
     @ObservedObject var viewModel: ContentViewModel
     @Binding var searchText: String
     @Binding var destination: ContentView.Destination?
-
+    @State private var isLoading = false
+    
     var body: some View {
         VStack {
-            // Share Location Button
             Button(action: {
                 Task {
-                        do {
-                            let location = try await viewModel.requestLocationAndFetchPlaces()
-                            await viewModel.fetchPlaces()
-                            destination = .location(location)
-                        } catch {
-                            viewModel.errorMessage = error.localizedDescription
-                        }
+                    isLoading = true
+                    do {
+                        let location = try await viewModel.requestLocationAndFetchPlaces()
+                        await viewModel.fetchPlaces()
+                        destination = .location(location)
+                    } catch {
+                        viewModel.errorMessage = error.localizedDescription
                     }
+                    isLoading = false
+                }
             }) {
-                Label("Share Location", systemImage: "location.fill")
-                    .frame(maxWidth: .infinity)
+                HStack {
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .padding(.trailing, 8)
+                    }
+                    Label("Share Location", systemImage: "location.fill")
+                }
+                .frame(maxWidth: .infinity)
             }
+            .disabled(isLoading)
             .padding()
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(10)
             .shadow(color: .black.opacity(0.5), radius: 5, x: 2, y: 2)
-
+            
             Text("OR")
                 .foregroundColor(.black)
                 .padding(.vertical, 8)
-
-            // Search Bar
+            
             SearchBarView(
                 searchText: $searchText,
                 onSearch: { text in

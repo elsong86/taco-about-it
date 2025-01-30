@@ -3,34 +3,44 @@ import SwiftUI
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
-
-    @Published var location: CLLocationCoordinate2D?
+    private var locationContinuation: CheckedContinuation<CLLocationCoordinate2D, Error>?
+    
     @Published var errorMessage: String?
-
+    
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
-
-    func requestLocation() {
+    
+    func requestLocationAsync() async throws -> CLLocationCoordinate2D {
         let status = locationManager.authorizationStatus
-        if status == .notDetermined {
+        
+        switch status {
+        case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
-        } else if status == .denied || status == .restricted {
-            errorMessage = "Location access is denied. Please enable it in settings."
-        } else {
+        case .denied, .restricted:
+            throw LocationError.locationAccessDenied
+        default:
+            break
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            self.locationContinuation = continuation
             locationManager.startUpdatingLocation()
         }
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        self.location = location.coordinate
         locationManager.stopUpdatingLocation()
+        locationContinuation?.resume(returning: location.coordinate)
+        locationContinuation = nil
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        locationContinuation?.resume(throwing: LocationError.unknown(error))
+        locationContinuation = nil
         errorMessage = "Failed to get location: \(error.localizedDescription)"
     }
 }

@@ -1,15 +1,13 @@
 import SwiftUI
-import Combine
 
 @MainActor
 class ContentViewModel: ObservableObject {
-    @Published var location: GeoLocation? // Holds the user's location
-    @Published var places: [Place] = [] // Fetched places
-    @Published var errorMessage: String? // For error handling
-
-    private let locationManager = LocationManager() // Handles location fetching
-    private var cancellables = Set<AnyCancellable>() // For Combine subscriptions
-
+    @Published var location: GeoLocation?
+    @Published var places: [Place] = []
+    @Published var errorMessage: String?
+    
+    private let locationManager = LocationManager()
+    
     // Mock data for testing or previews
     static let mockPlaces: [Place] = [
         Place(
@@ -34,67 +32,38 @@ class ContentViewModel: ObservableObject {
             userRatingCount: 300
         )
     ]
-
-    init(useMockData: Bool = false) {
-        if useMockData {
-            self.places = Self.mockPlaces // Use mock data
-        }
-
-        // Observe location changes and update `location`
-        locationManager.$location
-            .map { $0.map { GeoLocation(latitude: $0.latitude, longitude: $0.longitude) } }
-            .assign(to: &$location)
-
-        // Observe error messages from the location manager
-        locationManager.$errorMessage
-            .assign(to: &$errorMessage)
-    }
-
-    func requestLocation() {
-        locationManager.requestLocation()
-    }
-
-    func resetLocation() {
-        self.location = nil
-    }
     
-    func requestLocationAndFetchPlaces() async throws -> GeoLocation {
-            // Create a continuation that completes when location is received
-            return try await withCheckedThrowingContinuation { continuation in
-                var cancellable: AnyCancellable?
-                
-                cancellable = locationManager.$location
-                    .compactMap { $0 }
-                    .first()
-                    .sink { completion in
-                        if case .failure(let error) = completion {
-                            continuation.resume(throwing: error)
-                        }
-                    } receiveValue: { locationValue in
-                        let geoLocation = GeoLocation(
-                            latitude: locationValue.latitude,
-                            longitude: locationValue.longitude
-                        )
-                        continuation.resume(returning: geoLocation)
-                        cancellable?.cancel()
-                    }
-                
-                locationManager.requestLocation()
+    init(useMockData: Bool = false) {
+            if useMockData {
+                self.places = Self.mockPlaces
             }
         }
-    
-    // Fetch places using PlacesService
-    func fetchPlaces() async {
-        guard let location = location else {
-            self.errorMessage = "Location not available."
-            return
+        
+        func requestLocationAndFetchPlaces() async throws -> GeoLocation {
+            let location = try await locationManager.requestLocationAsync()
+            let geoLocation = GeoLocation(
+                latitude: location.latitude,
+                longitude: location.longitude
+            )
+            self.location = geoLocation
+            return geoLocation
         }
-
-        do {
-            let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: location)
-            self.places = fetchedPlaces
-        } catch {
-            self.errorMessage = "Failed to fetch places: \(error.localizedDescription)"
+        
+        func fetchPlaces() async {
+            guard let location = location else {
+                errorMessage = "Location not available"
+                return
+            }
+            
+            do {
+                let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: location)
+                self.places = fetchedPlaces
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+        
+        func resetLocation() {
+            self.location = nil
         }
     }
-}
