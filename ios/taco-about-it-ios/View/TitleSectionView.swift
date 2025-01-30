@@ -8,19 +8,19 @@ struct TitleSectionView: View {
         VStack(spacing: 16) {
             // First Line of Title
             Text("Anywhere, Anytime")
-                .font(Font.custom("ThirstyRoughReg", size: 20))
+                .font(AppFonts.thirstyReg20)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
             // Second Line of Title
             Text("Find Your New")
-                .font(Font.custom("BrothersRegular", size: 30))
+                .font(AppFonts.brothers30)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
             // Third Line of Title
             Text("Favorite")
-                .font(Font.custom("BrothersRegular", size: 30))
+                .font(AppFonts.brothers30)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
@@ -29,7 +29,7 @@ struct TitleSectionView: View {
                 ForEach(tacoSpotCharacters, id: \.character) { item in
                     Text(item.character)
                         .foregroundColor(item.color)
-                        .font(Font.custom("BrothersRegular", size: 50))
+                        .font(AppFonts.brothers50)
                 }
             }
         }

@@ -2,17 +2,17 @@ import SwiftUI
 
 struct Header: View {
     let title: [(character: String, color: Color)] = [
-        ("T", Color(hex: "#9F1239")), // Rose 800
-        ("A", Color(hex: "#065F46")), // Emerald 800
-        ("C", Color(hex: "#D97706")), // Yellow 600
-        ("O", Color(hex: "#C2410C")), // Orange 700
-        ("A", Color(hex: "#9F1239")), // Rose 800
-        ("B", Color(hex: "#065F46")), // Emerald 800
-        ("O", Color(hex: "#D97706")), // Yellow 600
-        ("U", Color(hex: "#C2410C")), // Orange 700
-        ("T", Color(hex: "#9F1239")), // Rose 800
-        ("I", Color(hex: "#065F46")), // Emerald 800
-        ("T", Color(hex: "#D97706"))  // Yellow 600
+        ("T", .tacoRose),
+        ("A", .tacoEmerald),
+        ("C", .tacoYellow),
+        ("O", .tacoOrange),
+        ("A", .tacoRose),
+        ("B", .tacoEmerald),
+        ("O", .tacoYellow),
+        ("U", .tacoOrange),
+        ("T", .tacoRose),
+        ("I", .tacoEmerald),
+        ("T", .tacoYellow)
     ]
 
     var body: some View {
@@ -28,7 +28,7 @@ struct Header: View {
                 ForEach(title, id: \.character) { item in
                     Text(item.character)
                         .foregroundColor(item.color)
-                        .font(Font.custom("HustlersRoughDemo", size: 30))
+                        .font(AppFonts.hustlersDemo30)
                 }
             }
 

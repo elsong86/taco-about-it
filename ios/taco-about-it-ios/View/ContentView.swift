@@ -11,14 +11,14 @@ struct ContentView: View {
     }
 
     let tacoSpotCharacters: [(character: String, color: Color)] = [
-        ("T", Color(hex: "#9F1239")), // Rose 800
-        ("A", Color(hex: "#065F46")), // Emerald 800
-        ("C", Color(hex: "#D97706")), // Yellow 600
-        ("O", Color(hex: "#C2410C")), // Orange 700
-        ("S", Color(hex: "#9F1239")), // Rose 800
-        ("P", Color(hex: "#065F46")), // Emerald 800
-        ("O", Color(hex: "#D97706")), // Yellow 600
-        ("T", Color(hex: "#9F1239"))  // Rose 800
+        ("T", .tacoRose),     
+        ("A", .tacoEmerald),
+        ("C", .tacoYellow),
+        ("O", .tacoOrange),
+        ("S", .tacoRose),
+        ("P", .tacoEmerald),
+        ("O", .tacoYellow),
+        ("T", .tacoRose)
     ]
 
     var body: some View {

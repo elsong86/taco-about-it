@@ -30,4 +30,9 @@ extension Color {
         }
         self.init(red: r, green: g, blue: b)
     }
+    
+    static let tacoRose = Color(hex: "#9F1239")    
+    static let tacoEmerald = Color(hex: "#065F46")
+    static let tacoYellow = Color(hex: "#D97706")
+    static let tacoOrange = Color(hex: "#C2410C")
 }
