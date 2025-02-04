@@ -1,54 +1,95 @@
 import SwiftUI
 
 struct ReviewsView: View {
-    let reviews: [Review]  // Simple array, not a binding
+    let reviews: [Review]
     let averageSentiment: Double
     
+    private var sentimentColor: Color {
+        switch averageSentiment {
+        case 8...: return .green
+        case 6..<8: return .yellow
+        default: return .orange
+        }
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             // Sentiment Score Section
             VStack(alignment: .leading, spacing: 8) {
-                Text("Sentiment Score")
+                Text("Overall Sentiment")
                     .font(.headline)
-                Text(String(format: "%.1f/10", averageSentiment))
-                    .font(.title)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.secondary)
+                
+                HStack(alignment: .firstTextBaseline) {
+                    Text(String(format: "%.1f", averageSentiment))
+                        .font(.system(.title, design: .rounded))
+                        .fontWeight(.bold)
+                        .foregroundColor(sentimentColor)
+                    
+                    Text("/10")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
-            .padding(.bottom)
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .background(Color(.systemBackground))
+            .cornerRadius(10)
+            .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
             
-            // Reviews List
-            Text("Reviews")
-                .font(.headline)
-            
-            if reviews.isEmpty {
-                Text("No reviews available")
-                    .foregroundColor(.gray)
-            } else {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 12) {
+            // Reviews Section
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Reviews")
+                    .font(.headline)
+                
+                if reviews.isEmpty {
+                    Text("No reviews yet")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                } else {
+                    VStack(alignment: .leading, spacing: 16) {
                         ForEach(reviews.indices, id: \.self) { index in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(reviews[index].reviewText)
-                                    .font(.body)
+                            ReviewCell(review: reviews[index])
+                            
+                            if index < reviews.count - 1 {
                                 Divider()
                             }
                         }
                     }
                 }
             }
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .background(Color(.systemBackground))
+            .cornerRadius(10)
+            .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 
-// Preview provider
+struct ReviewCell: View {
+    let review: Review
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(review.reviewText)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
 #Preview {
-    ReviewsView(
-        reviews: [
-            Review(reviewText: "Great tacos! Would definitely come back."),
-            Review(reviewText: "Decent food but slow service."),
-            Review(reviewText: "Best Mexican food in the area!")
-        ],
-        averageSentiment: 8.5
-    )
+    ScrollView {
+        ReviewsView(
+            reviews: [
+                Review(reviewText: "Amazing tacos! The salsa verde is incredibly fresh and authentic. The tortillas are homemade and you can really taste the difference."),
+                Review(reviewText: "Good food but the service was a bit slow. The al pastor tacos are their specialty though."),
+                Review(reviewText: "Great spot! Their horchata is perfect and the prices are reasonable.")
+            ],
+            averageSentiment: 8.5
+        )
+    }
+    .background(Color(.systemGroupedBackground))
 }
