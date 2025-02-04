@@ -64,16 +64,15 @@ struct ContentView: View {
             .navigationDestination(item: $destination) { destination in
                 switch destination {
                 case .location(let loc):
-                        let mockContentViewModel = ContentViewModel(useMockData: true)
-                        let mockPlacesViewModel = PlacesViewModel(prefetchedPlaces: mockContentViewModel.places)
-
-                        PlacesListView(
-                            viewModel: mockPlacesViewModel, // Use mock data from ContentViewModel
-                            location: loc
-                        )
-                        .onDisappear {
-                            viewModel.resetLocation()
-                        }
+                    let placesViewModel = PlacesViewModel() // No mock data
+                    
+                    PlacesListView(
+                        viewModel: placesViewModel,
+                        location: loc
+                    )
+                    .onDisappear {
+                        viewModel.resetLocation()
+                    }
                 case .search(let query):
                     PlaceholderView(location: nil, searchString: query, onDisappear: {
                         // If you have a separate state for search, reset it here

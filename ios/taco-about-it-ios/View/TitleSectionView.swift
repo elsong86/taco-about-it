@@ -1,39 +1,34 @@
 import SwiftUI
 
 struct TitleSectionView: View {
-    // Array of characters with their respective colors
     let tacoSpotCharacters: [(character: String, color: Color)]
     
     var body: some View {
         VStack(spacing: 16) {
-            // First Line of Title
             Text("Anywhere, Anytime")
                 .font(AppFonts.thirstyReg20)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
-            // Second Line of Title
             Text("Find Your New")
                 .font(AppFonts.brothers30)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
-            // Third Line of Title
             Text("Favorite")
                 .font(AppFonts.brothers30)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
             
-            // Colored Characters Line
             HStack(spacing: 0) {
-                ForEach(tacoSpotCharacters, id: \.character) { item in
+                ForEach(Array(tacoSpotCharacters.enumerated()), id: \.offset) { index, item in
                     Text(item.character)
                         .foregroundColor(item.color)
                         .font(AppFonts.brothers50)
                 }
             }
         }
-        .frame(maxWidth: .infinity) // Ensures the VStack takes the full available width
+        .frame(maxWidth: .infinity)
     }
 }
 

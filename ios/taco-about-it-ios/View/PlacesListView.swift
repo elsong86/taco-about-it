@@ -3,16 +3,35 @@ import SwiftUI
 struct PlacesListView: View {
     @StateObject private var viewModel: PlacesViewModel
     let location: GeoLocation
-
+    @State private var isLoading = false
+    @State private var error: Error?
+    
     init(viewModel: PlacesViewModel, location: GeoLocation) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        self.location = location
-    }
+            _viewModel = StateObject(wrappedValue: viewModel) // Note the underscore prefix
+            self.location = location
+        }
 
     var body: some View {
-        VStack {
-            if viewModel.places.isEmpty {
-                Text("No places yet...")
+        Group {
+            if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let error = error {
+                VStack {
+                    Text("Error loading places")
+                        .font(.headline)
+                    Text(error.localizedDescription)
+                        .font(.subheadline)
+                        .foregroundColor(.red)
+                    Button("Retry") {
+                        Task {
+                            await loadPlaces()
+                        }
+                    }
+                    .padding()
+                }
+            } else if viewModel.places.isEmpty {
+                Text("No places found")
                     .foregroundColor(.gray)
             } else {
                 List(viewModel.places) { place in
@@ -24,6 +43,23 @@ struct PlacesListView: View {
             }
         }
         .navigationTitle("Nearby Places")
+        .task {
+            await loadPlaces()
+        }
+    }
+    
+    private func loadPlaces() async {
+        isLoading = true
+        error = nil
+        
+        do {
+            let places = try await PlacesService.shared.fetchPlaces(location: location)
+            viewModel.places = places
+        } catch {
+            self.error = error
+        }
+        
+        isLoading = false
     }
 }
 
