@@ -2,7 +2,7 @@ import Foundation
 
 class PlacesService {
     static let shared = PlacesService()
-    private let baseURL = "https://taco-about-it-a36d890791f4.herokuapp.com"
+    let baseURL = "https://api.tacoaboutit.app"
     private let urlSession: URLSession
     
     init(urlSession: URLSession = .shared) {
