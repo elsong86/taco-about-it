@@ -5,6 +5,7 @@ struct ActionButtonsView: View {
     @Binding var searchText: String
     @Binding var destination: ContentView.Destination?
     @State private var isLoading = false
+    @State private var isSearchLoading = false
     
     var body: some View {
         VStack {
@@ -12,9 +13,8 @@ struct ActionButtonsView: View {
                 Task {
                     isLoading = true
                     do {
-                        let location = try await viewModel.requestLocationAndFetchPlaces()
-                        await viewModel.fetchPlaces()
-                        destination = .location(location)
+                        let (location, places) = try await viewModel.requestLocationAndFetchPlaces()
+                        destination = .places(location: location, places: places)
                     } catch {
                         viewModel.errorMessage = error.localizedDescription
                     }
@@ -44,8 +44,18 @@ struct ActionButtonsView: View {
             
             SearchBarView(
                 searchText: $searchText,
+                isLoading: isSearchLoading,
                 onSearch: { text in
-                    destination = .search(text)
+                    Task {
+                        isSearchLoading = true
+                        do {
+                            let (location, places) = try await viewModel.handleSearch(address: text)
+                            destination = .places(location: location, places: places)
+                        } catch {
+                            viewModel.errorMessage = error.localizedDescription
+                        }
+                        isSearchLoading = false
+                    }
                 }
             )
             .frame(maxWidth: .infinity)

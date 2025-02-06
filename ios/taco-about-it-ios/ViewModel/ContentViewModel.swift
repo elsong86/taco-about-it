@@ -2,11 +2,50 @@ import SwiftUI
 
 @MainActor
 class ContentViewModel: ObservableObject {
-    @Published var location: GeoLocation?
+    @Published var location: GeoLocation? {
+        willSet {
+            print("📍 Location about to change to:", newValue?.latitude ?? 0, newValue?.longitude ?? 0)
+        }
+        didSet {
+            print("📍 Location changed to:", location?.latitude ?? 0, location?.longitude ?? 0)
+        }
+    }
     @Published var places: [Place] = []
     @Published var errorMessage: String?
     
     private let locationManager = LocationManager()
+    
+    init(useMockData: Bool = false) {
+        if useMockData {
+            self.places = Self.mockPlaces
+        }
+    }
+    
+    func requestLocationAndFetchPlaces() async throws -> (GeoLocation, [Place]) {
+        let location = try await locationManager.requestLocationAsync()
+        let geoLocation = GeoLocation(
+            latitude: location.latitude,
+            longitude: location.longitude
+        )
+        self.location = geoLocation
+        let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: geoLocation)
+        self.places = fetchedPlaces
+        return (geoLocation, fetchedPlaces)
+    }
+    
+    func handleSearch(address: String) async throws -> (GeoLocation, [Place]) {
+        print("🔍 Starting search flow for address:", address)
+        let location = try await geocodeAddress(address)
+        print("📌 Setting location and fetching places for:", location)
+        self.location = location
+        let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: location)
+        self.places = fetchedPlaces
+        return (location, fetchedPlaces)
+    }
+    
+    func resetLocation() {
+        self.location = nil
+    }
     
     // Mock data for testing or previews
     static let mockPlaces: [Place] = [
@@ -32,38 +71,38 @@ class ContentViewModel: ObservableObject {
             userRatingCount: 300
         )
     ]
-    
-    init(useMockData: Bool = false) {
-            if useMockData {
-                self.places = Self.mockPlaces
-            }
-        }
-        
-        func requestLocationAndFetchPlaces() async throws -> GeoLocation {
-            let location = try await locationManager.requestLocationAsync()
-            let geoLocation = GeoLocation(
-                latitude: location.latitude,
-                longitude: location.longitude
-            )
-            self.location = geoLocation
-            return geoLocation
-        }
-        
-        func fetchPlaces() async {
-            guard let location = location else {
-                errorMessage = "Location not available"
-                return
-            }
-            
-            do {
-                let fetchedPlaces = try await PlacesService.shared.fetchPlaces(location: location)
-                self.places = fetchedPlaces
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-        }
-        
-        func resetLocation() {
-            self.location = nil
-        }
+}
+
+// MARK: - Geocoding Extension
+extension ContentViewModel {
+    struct GeocodingResponse: Codable {
+        let latitude: Double
+        let longitude: Double
     }
+    
+    func geocodeAddress(_ address: String) async throws -> GeoLocation {
+        print("🌎 Starting geocoding for address:", address)
+        guard let encodedAddress = address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "https://taco-about-it-a36d890791f4.herokuapp.com/geocode") else {
+            throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = ["address": encodedAddress]
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw NSError(domain: "HTTP Error", code: (response as? HTTPURLResponse)?.statusCode ?? 0, userInfo: nil)
+        }
+        
+        let geocodeResponse = try JSONDecoder().decode(GeocodingResponse.self, from: data)
+        print("✅ Geocoding successful:", geocodeResponse.latitude, geocodeResponse.longitude)
+        return GeoLocation(latitude: geocodeResponse.latitude, longitude: geocodeResponse.longitude)
+    }
+}

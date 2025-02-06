@@ -2,30 +2,37 @@ import SwiftUI
 
 struct SearchBarView: View {
     @Binding var searchText: String
-    var onSearch: (String) -> Void // Pass the search text when the button is tapped
+    let isLoading: Bool
+    var onSearch: (String) -> Void
 
     var body: some View {
-        HStack(spacing: 8) { // Adjust spacing between the elements
-            // TextField
+        HStack(spacing: 8) {
             TextField("Enter Address", text: $searchText)
                 .padding(.horizontal, 8)
                 .frame(height: 40)
-                .background(Color.white) // Light background for the TextField
+                .background(Color.white)
                 .cornerRadius(8)
 
-            // Search Button
             Button(action: {
-                onSearch(searchText) // Trigger the search with the entered text
+                onSearch(searchText)
             }) {
-                Text("Search")
-                    .padding(.horizontal, 16)
-                    .frame(height: 40)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+                HStack {
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .padding(.trailing, 4)
+                    }
+                    Text("Search")
+                }
+                .padding(.horizontal, 16)
+                .frame(height: 40)
             }
+            .disabled(isLoading)
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(8)
         }
-        .frame(maxWidth: UIScreen.main.bounds.width * 0.9) // Constrain to screen width
+        .frame(maxWidth: UIScreen.main.bounds.width * 0.9)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .shadow(color: .gray.opacity(0.5), radius: 5, x: 2, y: 2)
@@ -35,6 +42,7 @@ struct SearchBarView: View {
 #Preview {
     SearchBarView(
         searchText: .constant("Test Address"),
+        isLoading: false,
         onSearch: { searchText in
             print("Search triggered for: \(searchText)")
         }
