@@ -83,11 +83,7 @@ struct ReviewCell: View {
 #Preview {
     ScrollView {
         ReviewsView(
-            reviews: [
-                Review(reviewText: "Amazing tacos! The salsa verde is incredibly fresh and authentic. The tortillas are homemade and you can really taste the difference."),
-                Review(reviewText: "Good food but the service was a bit slow. The al pastor tacos are their specialty though."),
-                Review(reviewText: "Great spot! Their horchata is perfect and the prices are reasonable.")
-            ],
+            reviews: Review.mockReviews,  
             averageSentiment: 8.5
         )
     }

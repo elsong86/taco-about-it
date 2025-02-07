@@ -73,12 +73,6 @@ struct PlaceTileView: View {
 }
 
 #Preview {
-    PlaceTileView(place: Place(
-        id: "test-id",
-        displayName: DisplayName(text: "Taco Paradise"),
-        formattedAddress: "123 Taco Street, Flavor Town, CA",
-        rating: 4.5,
-        userRatingCount: 128
-    ))
-    .padding()
+    PlaceTileView(place: Place.mockPlace)  
+        .padding()
 }

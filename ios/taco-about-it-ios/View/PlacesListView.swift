@@ -30,16 +30,8 @@ struct PlacesListView: View {
 #Preview {
     NavigationView {
         PlacesListView(
-            viewModel: PlacesViewModel(prefetchedPlaces: [
-                Place(
-                    id: "1",
-                    displayName: DisplayName(text: "Test Taco Place"),
-                    formattedAddress: "123 Test St",
-                    rating: 4.5,
-                    userRatingCount: 100
-                )
-            ]),
-            location: GeoLocation(latitude: 37.7749, longitude: -122.4194)
+            viewModel: PlacesViewModel.preview,  
+            location: MockData.location
         )
     }
 }

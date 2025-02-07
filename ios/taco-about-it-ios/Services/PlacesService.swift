@@ -1,6 +1,6 @@
 import Foundation
 
-class PlacesService {
+class PlacesService: PlacesServiceProtocol {
     static let shared = PlacesService()
     let baseURL = "https://api.tacoaboutit.app"
     private let urlSession: URLSession
@@ -66,9 +66,7 @@ class PlacesService {
             throw error
         }
     }
-}
 
-extension PlacesService {
     func fetchReviews(for place: Place) async throws -> ReviewAnalysisResponse {
         guard let url = URL(string: "\(baseURL)/reviews") else {
             print("Error: Invalid URL construction - \(baseURL)/reviews")

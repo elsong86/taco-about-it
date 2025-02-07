@@ -90,56 +90,9 @@ struct PlaceView: View {
 #Preview {
     NavigationView {
         PlaceView(
-            place: Place(
-                id: "mock-id-1",
-                displayName: DisplayName(text: "Tacos El Rey"),
-                formattedAddress: "123 Main Street, San Francisco, CA 94110",
-                rating: 4.7,
-                userRatingCount: 342
-            ),
-            previewReviews: [
-                Review(reviewText: "Best tacos in the Mission! The al pastor is incredible and their salsa verde is perfectly spicy."),
-                Review(reviewText: "Great spot for authentic Mexican food. The tortillas are handmade and you can taste the difference."),
-                Review(reviewText: "Decent tacos but a bit pricey for the portion size. The carnitas were tender though.")
-            ],
+            place: Place.mockPlace,  // Uses single mock place
+            previewReviews: Review.mockReviews,  // Uses mock reviews
             previewSentiment: 8.5
         )
-    }
-}
-
-// Additional preview states
-struct PlaceView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            // Loading state
-            NavigationView {
-                PlaceView(
-                    place: Place(
-                        id: "mock-id-2",
-                        displayName: DisplayName(text: "Taqueria Loading"),
-                        formattedAddress: "456 Market St, San Francisco, CA 94105",
-                        rating: 4.2,
-                        userRatingCount: 156
-                    )
-                )
-            }
-            .previewDisplayName("Loading State")
-            
-            // Empty state
-            NavigationView {
-                PlaceView(
-                    place: Place(
-                        id: "mock-id-3",
-                        displayName: DisplayName(text: "New Taqueria"),
-                        formattedAddress: "789 Valencia St, San Francisco, CA 94110",
-                        rating: nil,
-                        userRatingCount: nil
-                    ),
-                    previewReviews: [],
-                    previewSentiment: 0.0
-                )
-            }
-            .previewDisplayName("No Reviews")
-        }
     }
 }

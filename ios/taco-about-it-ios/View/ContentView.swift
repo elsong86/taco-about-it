@@ -2,9 +2,12 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var searchText: String = ""
-    @StateObject private var viewModel = ContentViewModel()
     @State private var destination: Destination?
     @State private var isSearchLoading = false
+    @StateObject private var viewModel = ContentViewModel(useMockData: true)
+
+    
+
     
     enum Destination: Hashable {
             case places(location: GeoLocation, places: [Place])
@@ -101,18 +104,7 @@ struct ContentView: View {
     }
 }
 
-// MARK: - PreviewProvider
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            ContentView()
-                .environmentObject(mockContentViewModel)
-        }
-    }
-
-    static var mockContentViewModel: ContentViewModel {
-        let viewModel = ContentViewModel()
-        viewModel.location = GeoLocation(latitude: 37.7749, longitude: -122.4194)
-        return viewModel
-    }
+#Preview {
+    ContentView()
+        .environmentObject(ContentViewModel.preview)  
 }
