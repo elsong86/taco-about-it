@@ -34,9 +34,7 @@ class ContentViewModel: ObservableObject {
     }
    
     func handleSearch(address: String) async throws -> (GeoLocation, [Place]) {
-        print("🔍 Starting search flow for address:", address)
         let location = try await geocodeAddress(address)
-        print("📌 Setting location and fetching places for:", location)
         self.location = location
         let fetchedPlaces = try await placesService.fetchPlaces(
             location: location,

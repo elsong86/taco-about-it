@@ -88,10 +88,10 @@
 		A560501B2CF82C0F00523C32 = {
 			isa = PBXGroup;
 			children = (
+				A56050252CF82C0F00523C32 /* Products */,
 				A56050262CF82C0F00523C32 /* taco-about-it-ios */,
 				A56050372CF82C1200523C32 /* taco-about-it-iosTests */,
 				A56050412CF82C1200523C32 /* taco-about-it-iosUITests */,
-				A56050252CF82C0F00523C32 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
