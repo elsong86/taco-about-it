@@ -15,11 +15,17 @@ struct PlacesListView: View {
                 Text("No places found")
                     .foregroundColor(.gray)
             } else {
-                List(viewModel.places) { place in
-                    NavigationLink(destination: PlaceView(place: place)) {
-                        PlaceTileView(place: place)
-                            .padding(.vertical, 8)
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(viewModel.places) { place in
+                            NavigationLink(destination: PlaceView(place: place)) {
+                                PlaceTileView(place: place)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal)
+                            }
+                        }
                     }
+                    .padding(.vertical)
                 }
             }
         }

@@ -7,44 +7,34 @@ enum MockData {
         longitude: -122.4194
     )
     
-    static let places: [Place] = [
-        Place(
-            id: "mock-place-1",
-            displayName: DisplayName(text: "El Taco Loco"),
-            formattedAddress: "123 Mission St, San Francisco, CA 94110",
-            rating: 4.8,
-            userRatingCount: 342
-        ),
-        Place(
-            id: "mock-place-2",
-            displayName: DisplayName(text: "Taqueria La Mejor"),
-            formattedAddress: "456 Valencia St, San Francisco, CA 94103",
-            rating: 4.5,
-            userRatingCount: 256
-        ),
-        Place(
-            id: "mock-place-3",
-            displayName: DisplayName(text: "Tacos El Rey"),
-            formattedAddress: "789 24th St, San Francisco, CA 94110",
-            rating: 4.9,
-            userRatingCount: 512
-        ),
-        Place(
-            id: "mock-place-4",
-            displayName: DisplayName(text: "La Taqueria"),
-            formattedAddress: "2889 Mission St, San Francisco, CA 94110",
-            rating: 4.7,
-            userRatingCount: 423
-        ),
-        Place(
-            id: "mock-place-5",
-            displayName: DisplayName(text: "El Farolito"),
-            formattedAddress: "2779 Mission St, San Francisco, CA 94110",
-            rating: 4.6,
-            userRatingCount: 678
-        )
+    // Sample taco restaurant names for variety
+    private static let restaurantNames = [
+        "El Taco Loco", "Taqueria La Mejor", "Tacos El Rey",
+        "La Taqueria", "El Farolito", "Taco Bell",
+        "Super Tacos", "Los Coyotes", "Taqueria San Jose",
+        "King Taco", "Guisados", "Mi Ranchito Taco Shop",
+        "Taqueria Guadalajara", "El Gallo Giro", "Titos Tacos",
+        "Pinches Tacos", "Taco Temple", "Tacos Morenos",
+        "Tacos Por Favor", "Mexicali Taco & Co"
     ]
     
+    // Generate a large number of mock places for testing
+    static let places: [Place] = (0..<200).map { index in
+        let nameIndex = index % restaurantNames.count
+        let streetNumber = 100 + index
+        let streetNames = ["Mission St", "Valencia St", "Market St", "Castro St", "Hayes St"]
+        let streetIndex = index % streetNames.count
+        
+        return Place(
+            id: "mock-place-\(index)",
+            displayName: DisplayName(text: "\(restaurantNames[nameIndex]) #\(index/restaurantNames.count + 1)"),
+            formattedAddress: "\(streetNumber) \(streetNames[streetIndex]), San Francisco, CA 9411\(index % 10)",
+            rating: Double.random(in: 3.0...5.0).rounded(to: 1),
+            userRatingCount: Int.random(in: 50...500)
+        )
+    }
+    
+    // Keep a smaller set of the original sample reviews
     static let reviews: [Review] = [
         Review(reviewText: "Best tacos in the Mission! The al pastor is incredible and their salsa verde is perfectly spicy. The tortillas are always fresh and handmade."),
         Review(reviewText: "Great authentic Mexican food. You can really taste the difference with their homemade tortillas. The carnitas are tender and flavorful."),
@@ -53,19 +43,29 @@ enum MockData {
         Review(reviewText: "Their fish tacos are surprisingly good! The batter is light and crispy, and the chipotle crema adds the perfect kick.")
     ]
     
+    // Generate review responses for all mock places
     static let reviewResponses: [String: ReviewAnalysisResponse] = Dictionary(
         uniqueKeysWithValues: places.map { place in
             (
                 place.id,
                 ReviewAnalysisResponse(
-                    averageSentiment: Double.random(in: 7.0...9.5),
-                    reviews: Array(reviews.shuffled().prefix(3)),
+                    averageSentiment: Double.random(in: 7.0...9.5).rounded(to: 1),
+                    reviews: Array(reviews.shuffled().prefix(Int.random(in: 2...5))),
                     source: "Mock Data"
                 )
             )
         }
     )
 }
+
+// Helper extension to round doubles to specified decimal places
+extension Double {
+    func rounded(to places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+
 
 // MARK: - Preview Helpers
 extension Place {
