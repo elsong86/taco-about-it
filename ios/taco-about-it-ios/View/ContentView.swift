@@ -4,7 +4,7 @@ struct ContentView: View {
     @State private var searchText: String = ""
     @State private var destination: Destination?
     @State private var isSearchLoading = false
-    @StateObject private var viewModel = ContentViewModel(useMockData: true)
+    @StateObject private var viewModel = ContentViewModel(useMockData: false)
 
     
 

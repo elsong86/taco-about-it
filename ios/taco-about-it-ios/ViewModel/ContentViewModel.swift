@@ -65,6 +65,7 @@ extension ContentViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(PlacesService.shared.apiKey, forHTTPHeaderField: "X-API-Key")
         
         let requestBody = ["address": trimmedAddress]
         let jsonData = try JSONEncoder().encode(requestBody)

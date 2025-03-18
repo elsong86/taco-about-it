@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A5440C662D8A3A6300C730AC /* APIConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5440C652D8A3A6300C730AC /* APIConfig.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A56050352CF82C1200523C32 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A5440C652D8A3A6300C730AC /* APIConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = APIConfig.plist; sourceTree = "<group>"; };
 		A56050242CF82C0F00523C32 /* taco-about-it-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "taco-about-it-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56050342CF82C1200523C32 /* taco-about-it-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "taco-about-it-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A560503E2CF82C1200523C32 /* taco-about-it-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "taco-about-it-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +93,7 @@
 		A560501B2CF82C0F00523C32 = {
 			isa = PBXGroup;
 			children = (
+				A5440C652D8A3A6300C730AC /* APIConfig.plist */,
 				A56050252CF82C0F00523C32 /* Products */,
 				A56050262CF82C0F00523C32 /* taco-about-it-ios */,
 				A56050372CF82C1200523C32 /* taco-about-it-iosTests */,
@@ -225,6 +231,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5440C662D8A3A6300C730AC /* APIConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,9 +4,11 @@ class PlacesService: PlacesServiceProtocol {
     static let shared = PlacesService()
     let baseURL = "https://api.tacoaboutit.app"
     private let urlSession: URLSession
+    internal let apiKey: String
     
     init(urlSession: URLSession = .shared) {
         self.urlSession = urlSession
+        self.apiKey = ConfigurationManager.shared.getAPIKey()
     }
 
     func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos") async throws -> [Place] {
@@ -17,6 +19,7 @@ class PlacesService: PlacesServiceProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
 
         let body = PlacesRequest(location: location, radius: radius, maxResults: maxResults, textQuery: textQuery)
         
@@ -67,6 +70,7 @@ class PlacesService: PlacesServiceProtocol {
         
         var request = URLRequest(url: finalUrl)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
         
         
         do {

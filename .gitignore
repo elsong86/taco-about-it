@@ -24,6 +24,7 @@ build/
 .build/  # Swift Package Manager
 xcuserdata/
 *.xcscmblueprint
+APIConfig.plist
 
 # Logs
 *.log

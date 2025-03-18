@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from app.utils.database import engine, test_connection
 from app.models.tables import Base
 from app.routers import google_places, google_geocode, outscraper_reviews, auth, profile
+from app.utils.api_key_middleware import verify_api_key
 import os
 
 # Global session factory
@@ -36,6 +37,10 @@ origins = [
     "https://tacoaboutit.app"
 ]
 
+# Apply API key middleware
+app.middleware("http")(verify_api_key)
+
+# Apply CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  
@@ -46,7 +51,8 @@ app.add_middleware(
         "Authorization",
         "Accept",
         "Origin",
-        "X-Requested-With"
+        "X-Requested-With",
+        "X-API-Key"  # Add this to allow the API key header
     ],  
     expose_headers=["Set-Cookie"]
 )
