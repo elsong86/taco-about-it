@@ -17,20 +17,34 @@ class ContentViewModel: ObservableObject {
     }
    
     func requestLocationAndFetchPlaces() async throws -> (GeoLocation, [Place]) {
-        let location = try await locationManager.requestLocationAsync()
-        let geoLocation = GeoLocation(
-            latitude: location.latitude,
-            longitude: location.longitude
-        )
-        self.location = geoLocation
-        let fetchedPlaces = try await placesService.fetchPlaces(
-            location: geoLocation,
-            radius: 1000.0,
-            maxResults: 20,
-            textQuery: "tacos"
-        )
-        self.places = fetchedPlaces
-        return (geoLocation, fetchedPlaces)
+        do {
+            let location = try await locationManager.requestLocationAsync()
+            let geoLocation = GeoLocation(
+                latitude: location.latitude,
+                longitude: location.longitude
+            )
+            self.location = geoLocation
+            
+            do {
+                let fetchedPlaces = try await placesService.fetchPlaces(
+                    location: geoLocation,
+                    radius: 1000.0,
+                    maxResults: 20,
+                    textQuery: "tacos"
+                )
+                self.places = fetchedPlaces
+                return (geoLocation, fetchedPlaces)
+            } catch {
+                // If we got location but failed to fetch places, still show location
+                self.errorMessage = "Could not fetch places: \(error.localizedDescription)"
+                return (geoLocation, [])
+            }
+        } catch let error as LocationError {
+            // More specific error handling for location errors
+            throw error
+        } catch {
+            throw LocationError.unknown(error)
+        }
     }
    
     func handleSearch(address: String) async throws -> (GeoLocation, [Place]) {

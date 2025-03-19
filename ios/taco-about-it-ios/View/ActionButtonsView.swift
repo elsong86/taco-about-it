@@ -15,6 +15,18 @@ struct ActionButtonsView: View {
                     do {
                         let (location, places) = try await viewModel.requestLocationAndFetchPlaces()
                         destination = .places(location: location, places: places)
+                    } catch let error as LocationError {
+                        // More specific error handling
+                        switch error {
+                        case .timeout:
+                            viewModel.errorMessage = "Location request timed out. Please try again."
+                        case .locationAccessDenied:
+                            viewModel.errorMessage = "Please enable location access in Settings to use this feature."
+                        case .locationServicesDisabled:
+                            viewModel.errorMessage = "Please enable location services on your device to use this feature."
+                        default:
+                            viewModel.errorMessage = error.localizedDescription
+                        }
                     } catch {
                         viewModel.errorMessage = error.localizedDescription
                     }
