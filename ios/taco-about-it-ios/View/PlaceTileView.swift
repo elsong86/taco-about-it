@@ -4,117 +4,116 @@ struct PlaceTileView: View {
     let place: Place
     @State private var photoURL: URL? = nil
     @State private var isLoadingPhoto = false
-    @State private var photoLoadError = false
-    
-    // Create a computed property for rating display
-    private var ratingView: some View {
-        HStack(spacing: 4) {
-            ForEach(1...5, id: \.self) { index in
-                Image(systemName: index <= Int(place.rating ?? 0) ? "star.fill" : "star")
-                    .foregroundColor(.yellow)
-                    .font(.caption)
-            }
-            if let rating = place.rating {
-                Text(String(format: "%.1f", rating))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-            if let reviews = place.userRatingCount {
-                Text("(\(reviews))")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Photo Section
-            photoView
+        HStack(alignment: .top, spacing: 12) {
+            // Image
+            restaurantImageView
                 .frame(width: 80, height: 80)
                 .cornerRadius(8)
-                .clipped()
             
-            // Details Section
-            VStack(alignment: .leading, spacing: 8) {
-                // Name and Address Section
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(place.displayNameText)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .lineLimit(1)
-                    
-                    if let address = place.formattedAddress {
-                        Text(address)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .lineLimit(2)
-                    }
+            // Content
+            VStack(alignment: .leading, spacing: 6) {
+                // Restaurant Name
+                Text(place.displayNameText)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                
+                // Address - with multiple lines allowed
+                if let address = place.formattedAddress {
+                    Text(address)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(3) // Allow up to 3 lines
+                        .fixedSize(horizontal: false, vertical: true) // Important for proper text wrapping
                 }
                 
-                // Ratings Section
-                if place.rating != nil {
-                    ratingView
+                // Ratings
+                if let rating = place.rating {
+                    HStack(spacing: 2) {
+                        // Stars
+                        ForEach(1...5, id: \.self) { index in
+                            Image(systemName: index <= Int(rating) ? "star.fill" : "star")
+                                .foregroundColor(.yellow)
+                                .font(.caption)
+                        }
+                        
+                        Text(String(format: "%.1f", rating))
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .padding(.leading, 2)
+                        
+                        if let reviews = place.userRatingCount {
+                            Text("(\(reviews))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer(minLength: 0)
+                    }
                 }
             }
             
-            Spacer()
+            Spacer(minLength: 0)
         }
         .padding()
-        .background {
+        .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 2)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(generateAccessibilityLabel())
+        )
         .task {
-            await loadPhoto()
+            if photoURL == nil {
+                await loadPhoto()
+            }
         }
     }
     
-    // Photo View
-    private var photoView: some View {
+    // Restaurant image view
+    private var restaurantImageView: some View {
         Group {
             if isLoadingPhoto {
                 ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(width: 80, height: 80)
                     .background(Color.gray.opacity(0.1))
             } else if let photoURL = photoURL {
                 AsyncImage(url: photoURL) { phase in
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(width: 80, height: 80)
                             .background(Color.gray.opacity(0.1))
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                     case .failure:
-                        placeholderImage
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 30))
+                            .foregroundColor(.gray)
+                            .frame(width: 80, height: 80)
+                            .background(Color.gray.opacity(0.1))
                     @unknown default:
-                        placeholderImage
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 30))
+                            .foregroundColor(.gray)
+                            .frame(width: 80, height: 80)
+                            .background(Color.gray.opacity(0.1))
                     }
                 }
             } else {
-                placeholderImage
+                Image(systemName: "fork.knife")
+                    .font(.system(size: 30))
+                    .foregroundColor(.gray)
+                    .frame(width: 80, height: 80)
+                    .background(Color.gray.opacity(0.1))
             }
         }
     }
     
-    // Placeholder Image
-    private var placeholderImage: some View {
-        Image(systemName: "fork.knife")
-            .font(.largeTitle)
-            .foregroundColor(.gray)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.gray.opacity(0.1))
-    }
-    
-    // Function to load the photo
+    // Function to load the photo with retry and error handling
     private func loadPhoto() async {
-        // Only proceed if we have a photo
         guard let photo = place.primaryPhoto else {
             return
         }
@@ -123,30 +122,12 @@ struct PlaceTileView: View {
         defer { isLoadingPhoto = false }
         
         do {
-            photoURL = try await PlacesService.shared.fetchPhotoURL(for: photo, maxWidth: 320, maxHeight: 320)
+            // Add delay to avoid rate limiting
+            try await Task.sleep(nanoseconds: UInt64.random(in: 100_000_000...500_000_000))
+            photoURL = try await PlacesService.shared.fetchPhotoURL(for: photo, maxWidth: 160, maxHeight: 160)
         } catch {
-            photoLoadError = true
-            print("Error loading photo: \(error.localizedDescription)")
+            // Silent fail to avoid console spam - we'll show the placeholder image
+            print("Photo loading error: \(error.localizedDescription)")
         }
     }
-    
-    // Generate accessibility label
-    private func generateAccessibilityLabel() -> String {
-        var label = place.displayNameText
-        if let address = place.formattedAddress {
-            label += ", located at \(address)"
-        }
-        if let rating = place.rating {
-            label += ", rated \(String(format: "%.1f", rating)) stars"
-        }
-        if let reviews = place.userRatingCount {
-            label += ", with \(reviews) reviews"
-        }
-        return label
-    }
-}
-
-#Preview {
-    PlaceTileView(place: Place.mockPlace)
-        .padding()
 }

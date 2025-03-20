@@ -18,11 +18,12 @@ struct PlacesListView: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(viewModel.places) { place in
-                            NavigationLink(destination: PlaceView(place: place)) {
+                            NavigationLink {
+                                PlaceView(place: place)
+                            } label: {
                                 PlaceTileView(place: place)
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal)
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.vertical)
@@ -36,7 +37,7 @@ struct PlacesListView: View {
 #Preview {
     NavigationView {
         PlacesListView(
-            viewModel: PlacesViewModel.preview,  
+            viewModel: PlacesViewModel.preview,
             location: MockData.location
         )
     }
