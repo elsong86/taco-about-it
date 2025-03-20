@@ -18,6 +18,21 @@ enum MockData {
         "Tacos Por Favor", "Mexicali Taco & Co"
     ]
     
+    // Mock photo names that simulate Google Places photo resource names
+    private static let mockPhotoNames = [
+        "places/ChIJa8K5XnmmI4gRTUwGh6e7AZU/photos/AWU5eFg0b15q",
+        "places/ChIJN1t_tDeuEmsRUsoyG83frY4/photos/BXYZ1234k15q",
+        "places/ChIJ7cv00DwsDogRAMDACha2mQ0/photos/CWUabCd0q24r",
+        "places/ChIJO3qMc8gDdkgRu8siOXHqt7w/photos/DZYDefG1r35s",
+        "places/ChIJ2eUgeAK6j4ARbn5u_wAGqWA/photos/EFGhIjK2s46t"
+    ]
+    
+    // Generate a sample photo for each place
+    private static func generateMockPhoto(for index: Int) -> Photo {
+        let photoIndex = index % mockPhotoNames.count
+        return Photo(name: mockPhotoNames[photoIndex])
+    }
+    
     // Generate a large number of mock places for testing
     static let places: [Place] = (0..<200).map { index in
         let nameIndex = index % restaurantNames.count
@@ -30,7 +45,8 @@ enum MockData {
             displayName: DisplayName(text: "\(restaurantNames[nameIndex]) #\(index/restaurantNames.count + 1)"),
             formattedAddress: "\(streetNumber) \(streetNames[streetIndex]), San Francisco, CA 9411\(index % 10)",
             rating: Double.random(in: 3.0...5.0).rounded(to: 1),
-            userRatingCount: Int.random(in: 50...500)
+            userRatingCount: Int.random(in: 50...500),
+            photos: [generateMockPhoto(for: index)]
         )
     }
     
@@ -122,5 +138,12 @@ extension ContentViewModel {
 extension PlacesViewModel {
     static var preview: PlacesViewModel {
         PlacesViewModel(prefetchedPlaces: MockData.places)
+    }
+}
+
+extension MockPlacesService {
+    func fetchPhotoURL(for photo: Photo, maxWidth: Int = 400, maxHeight: Int? = nil) async throws -> URL {
+        // Return a placeholder image URL for testing
+        return URL(string: "https://via.placeholder.com/\(maxWidth)x\(maxHeight ?? maxWidth)")!
     }
 }

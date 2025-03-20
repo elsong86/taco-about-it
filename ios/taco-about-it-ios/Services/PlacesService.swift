@@ -98,3 +98,53 @@ class PlacesService: PlacesServiceProtocol {
         }
     }
 }
+
+extension PlacesService {
+    func fetchPhotoURL(for photo: Photo, maxWidth: Int = 400, maxHeight: Int? = nil) async throws -> URL {
+        guard let url = URL(string: "\(baseURL)/photos") else {
+            throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
+        
+        let photoRequest = PhotoRequest(
+            photoName: photo.name,
+            maxHeight: maxHeight,
+            maxWidth: maxWidth
+        )
+        
+        do {
+            let encodedBody = try JSONEncoder().encode(photoRequest)
+            request.httpBody = encodedBody
+        } catch {
+            throw error
+        }
+        
+        do {
+            let (data, response) = try await urlSession.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NSError(domain: "Invalid response", code: 0, userInfo: nil)
+            }
+            
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
+            }
+            
+            do {
+                let photoResponse = try JSONDecoder().decode(PhotoResponse.self, from: data)
+                guard let photoURL = URL(string: photoResponse.url) else {
+                    throw NSError(domain: "Invalid photo URL", code: 0, userInfo: nil)
+                }
+                return photoURL
+            } catch {
+                throw error
+            }
+        } catch {
+            throw error
+        }
+    }
+}

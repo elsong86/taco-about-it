@@ -1,5 +1,14 @@
 import Foundation
 
+// Photo model to represent a Google Places photo
+struct Photo: Codable {
+    let name: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+    }
+}
+
 // Make sure DisplayName is Codable
 struct DisplayName: Codable {
     let text: String
@@ -12,9 +21,15 @@ struct Place: Codable, Identifiable {
     let formattedAddress: String?
     let rating: Double?
     let userRatingCount: Int?
+    let photos: [Photo]?
     
     var displayNameText: String {
         displayName.text
+    }
+    
+    // Helper to get primary photo if available
+    var primaryPhoto: Photo? {
+        return photos?.first
     }
     
     // Explicitly define coding keys if needed
@@ -24,6 +39,7 @@ struct Place: Codable, Identifiable {
         case formattedAddress
         case rating
         case userRatingCount
+        case photos
     }
 }
 
