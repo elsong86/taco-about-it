@@ -100,7 +100,30 @@ class PlacesService: PlacesServiceProtocol {
 }
 
 extension PlacesService {
+    // Cache for storing photo URLs to avoid repeated API calls
+    private static let photoURLCache = NSCache<NSString, NSString>()
+    
+    // Debug flag - set to true to enable detailed URL cache logging
+    private static let enableLogging = true
+    
     func fetchPhotoURL(for photo: Photo, maxWidth: Int = 400, maxHeight: Int? = nil) async throws -> URL {
+        // Create a cache key from the photo name and dimensions
+        let dimensionString = maxHeight != nil ? "\(maxWidth)x\(maxHeight!)" : "\(maxWidth)"
+        let cacheKey = NSString(string: "\(photo.name)_\(dimensionString)")
+        
+        // Check if we already have this URL cached
+        if let cachedURLString = PlacesService.photoURLCache.object(forKey: cacheKey) {
+            if PlacesService.enableLogging {
+                print("🔵 URL CACHE HIT: \(shortenPhotoName(photo.name)) -> \(dimensionString)")
+            }
+            return URL(string: cachedURLString as String)!
+        }
+        
+        if PlacesService.enableLogging {
+            print("⚪ URL cache miss: \(shortenPhotoName(photo.name)) -> \(dimensionString)")
+        }
+        
+        // If not cached, fetch from the API
         guard let url = URL(string: "\(baseURL)/photos") else {
             throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
         }
@@ -116,35 +139,56 @@ extension PlacesService {
             maxWidth: maxWidth
         )
         
-        do {
-            let encodedBody = try JSONEncoder().encode(photoRequest)
-            request.httpBody = encodedBody
-        } catch {
-            throw error
+        let encodedBody = try JSONEncoder().encode(photoRequest)
+        request.httpBody = encodedBody
+        
+        if PlacesService.enableLogging {
+            print("📡 FETCHING URL from API: \(shortenPhotoName(photo.name))")
         }
         
-        do {
-            let (data, response) = try await urlSession.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw NSError(domain: "Invalid response", code: 0, userInfo: nil)
-            }
-            
-            guard (200..<300).contains(httpResponse.statusCode) else {
-                throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
-            }
-            
-            do {
-                let photoResponse = try JSONDecoder().decode(PhotoResponse.self, from: data)
-                guard let photoURL = URL(string: photoResponse.url) else {
-                    throw NSError(domain: "Invalid photo URL", code: 0, userInfo: nil)
-                }
-                return photoURL
-            } catch {
-                throw error
-            }
-        } catch {
-            throw error
+        let (data, response) = try await urlSession.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NSError(domain: "Invalid response", code: 0, userInfo: nil)
         }
+        
+        guard (200..<300).contains(httpResponse.statusCode) else {
+            throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
+        }
+        
+        let photoResponse = try JSONDecoder().decode(PhotoResponse.self, from: data)
+        guard let photoURL = URL(string: photoResponse.url) else {
+            throw NSError(domain: "Invalid photo URL", code: 0, userInfo: nil)
+        }
+        
+        // Cache the URL for future requests
+        PlacesService.photoURLCache.setObject(NSString(string: photoResponse.url), forKey: cacheKey)
+        
+        if PlacesService.enableLogging {
+            print("🔵 Cached URL: \(shortenPhotoName(photo.name)) → \(shortenURL(photoResponse.url))")
+        }
+        
+        return photoURL
+    }
+    
+    // Helper to shorten photo name for logging
+    private func shortenPhotoName(_ photoName: String) -> String {
+        let components = photoName.components(separatedBy: "/")
+        if components.count > 1 {
+            return "..." + components.suffix(2).joined(separator: "/")
+        }
+        return photoName
+    }
+    
+    // Helper to shorten URLs for logging
+    private func shortenURL(_ urlString: String) -> String {
+        if urlString.count < 40 {
+            return urlString
+        }
+        
+        guard let url = URL(string: urlString) else { return urlString }
+        let host = url.host ?? ""
+        let query = url.query?.prefix(30) ?? ""
+        return "\(host)/...\(query)..."
     }
 }
