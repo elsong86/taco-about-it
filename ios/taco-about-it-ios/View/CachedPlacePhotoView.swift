@@ -14,6 +14,7 @@ struct CachedPlacePhotoView: View {
     var body: some View {
         Group {
             if let photoURL = photoURL {
+                // This method is nonisolated and is safe to call directly
                 ImageCacheService.shared.cachedImage(
                     url: photoURL,
                     placeholder: Image(systemName: "fork.knife")
@@ -45,37 +46,20 @@ struct CachedPlacePhotoView: View {
             return
         }
         
-        // Enable additional debug logging
-        let enableLogging = true
-        
-        if enableLogging {
-            let photoNameShort = photo.name.components(separatedBy: "/").last ?? photo.name
-            let dimensionText = height != nil ? "\(width)x\(height!)" : "\(width)"
-            print("🌮 Photo request: \(photoNameShort) @ \(dimensionText)")
-        }
-        
         isLoading = true
         defer { isLoading = false }
         
         do {
-            // Add a small random delay to avoid too many simultaneous requests
-            if Task.isCancelled { return }
+            // Add small delay between requests to avoid overwhelming API
             try await Task.sleep(nanoseconds: UInt64.random(in: 50_000_000...200_000_000))
             
-            if Task.isCancelled { return }
-            let startTime = CFAbsoluteTimeGetCurrent()
             photoURL = try await PlacesService.shared.fetchPhotoURL(
                 for: photo,
                 maxWidth: width,
                 maxHeight: height
             )
-            
-            if enableLogging {
-                let timeElapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
-                print("⏱️ URL resolution took: \(Int(timeElapsed))ms")
-            }
         } catch {
-            print("⚠️ Photo loading error: \(error.localizedDescription)")
+            print("Photo loading error: \(error.localizedDescription)")
         }
     }
 }

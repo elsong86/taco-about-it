@@ -31,6 +31,24 @@ struct PlacesListView: View {
             }
         }
         .navigationTitle("Nearby Places")
+        .onAppear {
+            // Launch task from non-async context
+            Task {
+                await preloadImagesForVisibleRows()
+            }
+        }
+        // Alternative approach using task modifier
+        .task {
+            // This is automatically async
+            await preloadImagesForVisibleRows()
+        }
+    }
+    
+    // This function is async
+    private func preloadImagesForVisibleRows() async {
+        // Get visible and soon-to-be-visible places based on scroll position
+        let visiblePlaces = viewModel.places.prefix(10) // Adjust based on your UI
+        await ImageCacheService.shared.prefetchImagesForPlaces(Array(visiblePlaces))
     }
 }
 

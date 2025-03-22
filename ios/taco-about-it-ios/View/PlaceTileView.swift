@@ -114,7 +114,7 @@ struct PlaceTileView: View {
     
     // Function to load the photo with retry and error handling
     private func loadPhoto() async {
-        guard let photo = place.primaryPhoto else {
+        guard let photo = place.primaryPhoto, !isLoadingPhoto, photoURL == nil else {
             return
         }
         
@@ -122,11 +122,12 @@ struct PlaceTileView: View {
         defer { isLoadingPhoto = false }
         
         do {
-            // Add delay to avoid rate limiting
-            try await Task.sleep(nanoseconds: UInt64.random(in: 100_000_000...500_000_000))
-            photoURL = try await PlacesService.shared.fetchPhotoURL(for: photo, maxWidth: 160, maxHeight: 160)
+            photoURL = try await PlacesService.shared.fetchPhotoURL(
+                for: photo,
+                maxWidth: 160,
+                maxHeight: 160
+            )
         } catch {
-            // Silent fail to avoid console spam - we'll show the placeholder image
             print("Photo loading error: \(error.localizedDescription)")
         }
     }

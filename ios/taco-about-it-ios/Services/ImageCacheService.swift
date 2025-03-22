@@ -2,16 +2,16 @@ import SwiftUI
 import Foundation
 
 // A service to handle image caching
-class ImageCacheService {
+actor ImageCacheService {
     static let shared = ImageCacheService()
     
     // NSCache for in-memory caching of images
-    private let imageCache = NSCache<NSString, UIImage>()
+    private var imageCache = NSCache<NSString, UIImage>()
     
     // Debug flag - set to true to enable detailed cache logging
     private let enableLogging = true
     
-    private init() {
+    init() {
         // Configure cache limits
         imageCache.countLimit = 100 // Max number of images to keep in memory
         
@@ -22,11 +22,13 @@ class ImageCacheService {
         URLCache.shared = urlCache
         
         if enableLogging {
-            logCacheStatus()
+            // This is safe to call directly since it doesn't use any actor state
+            Self.logCacheStatus()
         }
     }
     
-    private func logCacheStatus() {
+    // Make this static and nonisolated since it doesn't use actor state
+    private static func logCacheStatus() {
         let urlCache = URLCache.shared
         let memoryUsageMB = Double(urlCache.currentMemoryUsage) / (1024 * 1024)
         let diskUsageMB = Double(urlCache.currentDiskUsage) / (1024 * 1024)
@@ -47,25 +49,49 @@ class ImageCacheService {
         URLCache.shared.removeAllCachedResponses()
         
         if enableLogging {
-            logCacheStatus()
+            Self.logCacheStatus()
         }
+    }
+    
+    // Check if an image is in memory cache
+    func isImageCached(for urlString: String) -> Bool {
+        let cacheKey = urlString as NSString
+        return imageCache.object(forKey: cacheKey) != nil
+    }
+    
+    // Store an image in memory cache
+    func storeImage(_ image: UIImage, for urlString: String) {
+        let cacheKey = urlString as NSString
+        imageCache.setObject(image, forKey: cacheKey)
+        
+        if enableLogging {
+            print("🏎️ Saved to memory cache: \(shortenURL(urlString))")
+        }
+    }
+    
+    // Get an image from memory cache
+    func getCachedImage(for urlString: String) -> UIImage? {
+        let cacheKey = urlString as NSString
+        let image = imageCache.object(forKey: cacheKey)
+        
+        if image != nil && enableLogging {
+            print("🏎️ MEMORY CACHE HIT: \(shortenURL(urlString))")
+        }
+        
+        return image
     }
     
     // Load an image from URL with caching
     func loadImage(url: URL) async throws -> UIImage {
-        let urlKey = url.absoluteString
-        let cacheKey = NSString(string: urlKey)
+        let urlString = url.absoluteString
         
         // Check in-memory cache first
-        if let cachedImage = imageCache.object(forKey: cacheKey) {
-            if enableLogging {
-                print("🏎️ MEMORY CACHE HIT: \(shortenURL(urlKey))")
-            }
+        if let cachedImage = getCachedImage(for: urlString) {
             return cachedImage
         }
         
         if enableLogging {
-            print("🔍 Memory cache miss: \(shortenURL(urlKey))")
+            print("🔍 Memory cache miss: \(shortenURL(urlString))")
         }
         
         // Create a URLRequest that allows caching
@@ -75,19 +101,19 @@ class ImageCacheService {
         // Check if we have the response in URLCache (disk cache)
         if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
             if enableLogging {
-                print("💾 DISK CACHE HIT: \(shortenURL(urlKey))")
+                print("💾 DISK CACHE HIT: \(shortenURL(urlString))")
             }
             
             if let image = UIImage(data: cachedResponse.data) {
                 // Store in memory cache too for faster future access
-                imageCache.setObject(image, forKey: cacheKey)
+                storeImage(image, for: urlString)
                 return image
             }
         }
         
         // If we got here, we need to download from network
         if enableLogging {
-            print("📡 DOWNLOADING: \(shortenURL(urlKey))")
+            print("📡 DOWNLOADING: \(shortenURL(urlString))")
         }
         
         // Fetch the image data from network
@@ -104,28 +130,55 @@ class ImageCacheService {
             URLCache.shared.storeCachedResponse(cachedResponse, for: request)
             
             if enableLogging {
-                print("💾 Saved to disk cache: \(shortenURL(urlKey))")
-                logCacheStatus()
+                print("💾 Saved to disk cache: \(shortenURL(urlString))")
+                Self.logCacheStatus()
             }
         }
         
         // Store in memory cache
-        imageCache.setObject(image, forKey: cacheKey)
-        
-        if enableLogging {
-            print("🏎️ Saved to memory cache: \(shortenURL(urlKey))")
-        }
+        storeImage(image, for: urlString)
         
         return image
     }
     
-    // Helper method to create Image view with caching
-    func cachedImage(url: URL, placeholder: Image = Image(systemName: "fork.knife")) -> some View {
-        CachedAsyncImage(url: url, placeholder: placeholder)
+    // Prefetch images for places
+    func prefetchImagesForPlaces(_ places: [Place]) async {
+        // Get photos to prefetch
+        let photosToFetch = places.compactMap { $0.primaryPhoto }
+        
+        if !photosToFetch.isEmpty {
+            do {
+                // Use a standard size for thumbnails
+                let maxWidth = 160
+                let maxHeight = 160
+                
+                let urls = try await PlacesService.shared.fetchPhotoURLsBatch(
+                    photos: photosToFetch,
+                    maxWidth: maxWidth,
+                    maxHeight: maxHeight
+                )
+                
+                // Prefetch the images themselves in parallel
+                await withTaskGroup(of: Void.self) { group in
+                    for (_, url) in urls {
+                        group.addTask {
+                            do {
+                                _ = try await self.loadImage(url: url)
+                            } catch {
+                                // Silently fail on individual image loads
+                                print("Failed to prefetch image: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            } catch {
+                print("Prefetch error: \(error)")
+            }
+        }
     }
     
-    // Helper to shorten URLs for logging
-    private func shortenURL(_ urlString: String) -> String {
+    // Helper to shorten URLs for logging - make this static and nonisolated
+    private static func shortenURL(_ urlString: String) -> String {
         // Get last path component or a portion of the URL to display
         guard let url = URL(string: urlString) else { return urlString }
         if urlString.count < 40 {
@@ -135,6 +188,11 @@ class ImageCacheService {
         let lastPathComponent = url.lastPathComponent
         let host = url.host ?? ""
         return "\(host)/...\(lastPathComponent.prefix(20))...\(lastPathComponent.count - 20) chars"
+    }
+    
+    // Instance method version that calls the static version
+    private func shortenURL(_ urlString: String) -> String {
+        return Self.shortenURL(urlString)
     }
 }
 
@@ -192,5 +250,12 @@ struct CachedAsyncImage: View {
                 }
             }
         }
+    }
+}
+
+// Extension to create a view helper
+extension ImageCacheService {
+    nonisolated func cachedImage(url: URL, placeholder: Image = Image(systemName: "fork.knife")) -> some View {
+        CachedAsyncImage(url: url, placeholder: placeholder)
     }
 }
