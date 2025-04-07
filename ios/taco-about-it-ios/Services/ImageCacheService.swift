@@ -53,6 +53,12 @@ actor ImageCacheService {
         }
     }
     
+    nonisolated func clearCacheAsync() {
+        Task {
+            await clearCache()
+        }
+    }
+    
     // Check if an image is in memory cache
     func isImageCached(for urlString: String) -> Bool {
         let cacheKey = urlString as NSString

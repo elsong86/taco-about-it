@@ -44,7 +44,8 @@ struct CacheDebugView: View {
                         withAnimation {
                             isClearing = true
                         }
-                        ImageCacheService.shared.clearCache()
+                        // Use the new nonisolated wrapper method
+                        ImageCacheService.shared.clearCacheAsync()
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             withAnimation {
