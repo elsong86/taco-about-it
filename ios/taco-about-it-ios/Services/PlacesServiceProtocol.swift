@@ -1,8 +1,8 @@
 import Foundation
 
 protocol PlacesServiceProtocol {
-    func fetchPlaces(location: GeoLocation, radius: Double, maxResults: Int, textQuery: String) async throws -> [Place]
-    func fetchReviews(for place: Place) async throws -> ReviewAnalysisResponse
+    func fetchPlaces(location: GeoLocation, radius: Double, maxResults: Int, textQuery: String, forceRefresh: Bool) async throws -> [Place]
+    func fetchReviews(for place: Place, forceRefresh: Bool) async throws -> ReviewAnalysisResponse
 }
 extension PlacesServiceProtocol {
     func fetchPhotoURL(for photo: Photo, maxWidth: Int = 400, maxHeight: Int? = nil) async throws -> URL {

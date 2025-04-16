@@ -20,8 +20,17 @@ actor PlacesService: PlacesServiceProtocol {
         self.urlSession = urlSession
         self.apiKey = ConfigurationManager.shared.getAPIKey()
     }
-
-    nonisolated func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos") async throws -> [Place] {
+    
+    nonisolated func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos", forceRefresh: Bool = false) async throws -> [Place] {
+        // Generate cache key
+        let cacheKey = await DiskCacheService.shared.placeSearchCacheKey(location: location, radius: radius, query: textQuery)
+        
+        // Try to get from cache first (unless force refresh requested)
+        if !forceRefresh, let cachedPlaces: [Place] = await DiskCacheService.shared.retrieve(forKey: cacheKey) {
+            print("Retrieved places from disk cache")
+            return cachedPlaces
+        }
+        
         guard let url = URL(string: "\(baseURL)/places") else {
             throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
         }
@@ -53,6 +62,11 @@ actor PlacesService: PlacesServiceProtocol {
 
         let placesResponse = try JSONDecoder().decode(PlacesResponse.self, from: data)
         
+        // Cache the result after successful fetch
+        Task {
+            await DiskCacheService.shared.cache(placesResponse.places, forKey: cacheKey, withExpiration: 3600) // 1 hour
+        }
+        
         // Pre-fetch photo URLs for the first visible places
         Task {
             try? await self.prefetchPhotosForPlaces(Array(placesResponse.places.prefix(8)))
@@ -60,16 +74,17 @@ actor PlacesService: PlacesServiceProtocol {
         
         return placesResponse.places
     }
-    
-    private func prefetchPhotosForPlaces(_ places: [Place]) async throws {
-        // Extract all unique photos to prefetch
-        let photos = places.compactMap { $0.primaryPhoto }
-        if !photos.isEmpty {
-            _ = try await fetchPhotoURLsBatch(photos: photos, maxWidth: 160, maxHeight: 160)
-        }
-    }
 
-    nonisolated func fetchReviews(for place: Place) async throws -> ReviewAnalysisResponse {
+    nonisolated func fetchReviews(for place: Place, forceRefresh: Bool = false) async throws -> ReviewAnalysisResponse {
+        // Generate cache key
+        let cacheKey = await DiskCacheService.shared.reviewsCacheKey(placeId: place.id)
+        
+        // Try to get from cache first (unless force refresh requested)
+        if !forceRefresh, let cachedReviews: ReviewAnalysisResponse = await DiskCacheService.shared.retrieve(forKey: cacheKey) {
+            print("Retrieved reviews from disk cache")
+            return cachedReviews
+        }
+        
         guard let url = URL(string: "\(baseURL)/reviews") else {
             throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
         }
@@ -99,7 +114,22 @@ actor PlacesService: PlacesServiceProtocol {
             throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
         }
         
-        return try JSONDecoder().decode(ReviewAnalysisResponse.self, from: data)
+        let reviewResponse = try JSONDecoder().decode(ReviewAnalysisResponse.self, from: data)
+        
+        // Cache the result after successful fetch
+        Task {
+            await DiskCacheService.shared.cache(reviewResponse, forKey: cacheKey, withExpiration: 24 * 3600) // 24 hours
+        }
+        
+        return reviewResponse
+    }
+    
+    private func prefetchPhotosForPlaces(_ places: [Place]) async throws {
+        // Extract all unique photos to prefetch
+        let photos = places.compactMap { $0.primaryPhoto }
+        if !photos.isEmpty {
+            _ = try await fetchPhotoURLsBatch(photos: photos, maxWidth: 160, maxHeight: 160)
+        }
     }
     
     // MARK: - Photo URL Methods

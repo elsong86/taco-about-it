@@ -142,8 +142,15 @@ extension PlacesViewModel {
 }
 
 extension MockPlacesService {
-    func fetchPhotoURL(for photo: Photo, maxWidth: Int = 400, maxHeight: Int? = nil) async throws -> URL {
-        // Return a placeholder image URL for testing
-        return URL(string: "https://via.placeholder.com/\(maxWidth)x\(maxHeight ?? maxWidth)")!
-    }
+    func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos", forceRefresh: Bool = false) async throws -> [Place] {
+            return MockData.places
+        }
+        
+        func fetchReviews(for place: Place, forceRefresh: Bool = false) async throws -> ReviewAnalysisResponse {
+            return MockData.reviewResponses[place.id] ?? ReviewAnalysisResponse(
+                averageSentiment: 8.5,
+                reviews: Array(MockData.reviews.prefix(3)),
+                source: "Mock Data"
+            )
+        }
 }

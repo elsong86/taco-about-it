@@ -15,8 +15,13 @@ class ContentViewModel: ObservableObject {
             self.places = MockData.places
         }
     }
+    
+    func refreshPlaces() async throws -> [Place] {
+        let (location, places) = try await requestLocationAndFetchPlaces(forceRefresh: true)
+        return places
+    }
    
-    func requestLocationAndFetchPlaces() async throws -> (GeoLocation, [Place]) {
+    func requestLocationAndFetchPlaces(forceRefresh: Bool = false) async throws -> (GeoLocation, [Place]) {
         do {
             let location = try await locationManager.requestLocationAsync()
             let geoLocation = GeoLocation(
@@ -30,7 +35,8 @@ class ContentViewModel: ObservableObject {
                     location: geoLocation,
                     radius: 1000.0,
                     maxResults: 20,
-                    textQuery: "tacos"
+                    textQuery: "tacos",
+                    forceRefresh: forceRefresh
                 )
                 self.places = fetchedPlaces
                 return (geoLocation, fetchedPlaces)
@@ -47,14 +53,15 @@ class ContentViewModel: ObservableObject {
         }
     }
    
-    func handleSearch(address: String) async throws -> (GeoLocation, [Place]) {
+    func handleSearch(address: String, forceRefresh: Bool = false) async throws -> (GeoLocation, [Place]) {
         let location = try await geocodeAddress(address)
         self.location = location
         let fetchedPlaces = try await placesService.fetchPlaces(
             location: location,
             radius: 1000.0,
             maxResults: 20,
-            textQuery: "tacos"
+            textQuery: "tacos",
+            forceRefresh: forceRefresh
         )
         self.places = fetchedPlaces
         return (location, fetchedPlaces)

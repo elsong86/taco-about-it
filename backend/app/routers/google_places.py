@@ -54,7 +54,7 @@ def get_places(request: PlacesRequest):
     try:
         response = requests.post(url, json=data, headers=headers)
         response.raise_for_status()
-        redis_client.setex(cache_key, 3600, json.dumps(response.json()))
+        redis_client.setex(cache_key, 172800, json.dumps(response.json()))
         return response.json()
     except requests.RequestException as e:
         print(f"Error response: {e.response.text if e.response else 'No response'}")

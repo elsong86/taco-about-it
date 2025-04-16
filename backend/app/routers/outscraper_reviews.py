@@ -66,7 +66,7 @@ async def fetch_reviews_from_api(place_id: str):
 
             # Cache the fetched reviews
             cache_key = f"reviews:{place_id}"
-            redis_client.setex(cache_key, 3600, json.dumps(non_empty_reviews))  # Cache for 1 hour
+            redis_client.setex(cache_key, 86400, json.dumps(non_empty_reviews))  # Cache for 1 hour
             logger.info(f"Cached reviews for place_id: {place_id}")
 
             return non_empty_reviews
@@ -131,7 +131,7 @@ async def get_stored_reviews(place_id: str, db: AsyncSession):
 
                     # Cache the fetched reviews
                     cache_key = f"reviews:{place_id}"
-                    redis_client.setex(cache_key, 3600, json.dumps(review_dicts))
+                    redis_client.setex(cache_key, 86400, json.dumps(review_dicts))
                     logger.info(f"Cached reviews from database for place_id: {place_id}")
 
                     return review_dicts
