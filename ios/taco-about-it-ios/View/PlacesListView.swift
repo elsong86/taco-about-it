@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct PlacesListView: View {
-    @StateObject private var viewModel: PlacesViewModel
+    @State private var viewModel: PlacesViewModel
     let location: GeoLocation
     
     init(viewModel: PlacesViewModel, location: GeoLocation) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        _viewModel = State(wrappedValue: viewModel)
         self.location = location
     }
 

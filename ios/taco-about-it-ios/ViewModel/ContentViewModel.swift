@@ -1,10 +1,11 @@
 import SwiftUI
+import Observation
 
-@MainActor
+@Observable @MainActor
 class ContentViewModel: ObservableObject {
-    @Published var location: GeoLocation?
-    @Published var places: [Place] = []
-    @Published var errorMessage: String?
+    var location: GeoLocation?
+    var places: [Place] = []
+    var errorMessage: String?
    
     private let locationManager = LocationManager()
     private let placesService: PlacesServiceProtocol
@@ -17,7 +18,7 @@ class ContentViewModel: ObservableObject {
     }
     
     func refreshPlaces() async throws -> [Place] {
-        let (location, places) = try await requestLocationAndFetchPlaces(forceRefresh: true)
+        let (_, places) = try await requestLocationAndFetchPlaces(forceRefresh: true)
         return places
     }
    
