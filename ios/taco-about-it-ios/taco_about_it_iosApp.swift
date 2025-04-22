@@ -6,7 +6,7 @@ struct taco_about_it_iosApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreen()
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .background {
@@ -17,4 +17,9 @@ struct taco_about_it_iosApp: App {
             }
         }
     }
+}
+
+// Preview
+#Preview {
+    SplashScreen()
 }

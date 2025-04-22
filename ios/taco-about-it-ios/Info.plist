@@ -9,6 +9,7 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>LieurRegular.otf</string>
 		<string>ThirstyRoughRegular.otf</string>
 		<string>BrothersRegular.otf</string>
 		<string>AvenirLTStd-Book.otf</string>
