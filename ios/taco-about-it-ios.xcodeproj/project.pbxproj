@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A5440C662D8A3A6300C730AC /* APIConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5440C652D8A3A6300C730AC /* APIConfig.plist */; };
+		A574E1F12DB8353100F0C194 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A574E1F02DB8353100F0C194 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A574E1F12DB8353100F0C194 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,8 +132,6 @@
 				A56050262CF82C0F00523C32 /* taco-about-it-ios */,
 			);
 			name = "taco-about-it-ios";
-			packageProductDependencies = (
-			);
 			productName = "taco-about-it-ios";
 			productReference = A56050242CF82C0F00523C32 /* taco-about-it-ios.app */;
 			productType = "com.apple.product-type.application";
@@ -153,8 +153,6 @@
 				A56050372CF82C1200523C32 /* taco-about-it-iosTests */,
 			);
 			name = "taco-about-it-iosTests";
-			packageProductDependencies = (
-			);
 			productName = "taco-about-it-iosTests";
 			productReference = A56050342CF82C1200523C32 /* taco-about-it-iosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -176,8 +174,6 @@
 				A56050412CF82C1200523C32 /* taco-about-it-iosUITests */,
 			);
 			name = "taco-about-it-iosUITests";
-			packageProductDependencies = (
-			);
 			productName = "taco-about-it-iosUITests";
 			productReference = A560503E2CF82C1200523C32 /* taco-about-it-iosUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -214,6 +210,9 @@
 			);
 			mainGroup = A560501B2CF82C0F00523C32;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A574E1EF2DB8353100F0C194 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A56050252CF82C0F00523C32 /* Products */;
 			projectDirPath = "";
@@ -578,6 +577,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A574E1EF2DB8353100F0C194 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A574E1F02DB8353100F0C194 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A574E1EF2DB8353100F0C194 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A560501C2CF82C0F00523C32 /* Project object */;
 }

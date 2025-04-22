@@ -4,7 +4,6 @@ actor PlacesService: PlacesServiceProtocol {
     static let shared = PlacesService()
     let baseURL = "https://api.tacoaboutit.app"
     private let urlSession: URLSession
-    nonisolated let apiKey: String
     
     // Photo request throttling
     private let photoRequestQueue = DispatchQueue(label: "com.tacoaboutit.photoRequests")
@@ -18,7 +17,15 @@ actor PlacesService: PlacesServiceProtocol {
     
     init(urlSession: URLSession = .shared) {
         self.urlSession = urlSession
-        self.apiKey = ConfigurationManager.shared.getAPIKey()
+    }
+    
+    // Helper method to prepare authenticated requests
+    private func prepareAuthenticatedRequest(_ request: inout URLRequest) async throws {
+        // Get a valid session token
+        let token = try await SessionManager.shared.ensureValidSession()
+        
+        // Add the token to the request
+        request.addValue(token, forHTTPHeaderField: "X-Session-Token")
     }
     
     nonisolated func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos", forceRefresh: Bool = false) async throws -> [Place] {
@@ -38,7 +45,7 @@ actor PlacesService: PlacesServiceProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
+        try await prepareAuthenticatedRequest(&request)
 
         let body = PlacesRequest(
             location: location,
@@ -57,6 +64,13 @@ actor PlacesService: PlacesServiceProtocol {
         }
 
         guard (200..<300).contains(httpResponse.statusCode) else {
+            // Handle session errors
+            if httpResponse.statusCode == 401 {
+                try await handleAPIError(httpResponse: httpResponse)
+                // Retry the request once (optional)
+                return try await fetchPlaces(location: location, radius: radius, maxResults: maxResults, textQuery: textQuery, forceRefresh: true)
+            }
+            
             throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
         }
 
@@ -102,7 +116,8 @@ actor PlacesService: PlacesServiceProtocol {
         
         var request = URLRequest(url: finalUrl)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
+        try await prepareAuthenticatedRequest(&request)
+
         
         let (data, response) = try await urlSession.data(for: request)
         
@@ -111,6 +126,13 @@ actor PlacesService: PlacesServiceProtocol {
         }
         
         guard (200..<300).contains(httpResponse.statusCode) else {
+            // Handle session errors
+            if httpResponse.statusCode == 401 {
+                try await handleAPIError(httpResponse: httpResponse)
+                // Retry the request once (optional)
+                return try await fetchReviews(for: place, forceRefresh: true)
+            }
+            
             throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
         }
         
@@ -129,6 +151,14 @@ actor PlacesService: PlacesServiceProtocol {
         let photos = places.compactMap { $0.primaryPhoto }
         if !photos.isEmpty {
             _ = try await fetchPhotoURLsBatch(photos: photos, maxWidth: 160, maxHeight: 160)
+        }
+    }
+    
+    private func handleAPIError(httpResponse: HTTPURLResponse) async throws {
+        // If we get a 401 Unauthorized, try creating a new session
+        if httpResponse.statusCode == 401 {
+            // Clear existing session
+            try SessionManager.shared.clearSession()
         }
     }
     
@@ -256,8 +286,8 @@ actor PlacesService: PlacesServiceProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(apiKey, forHTTPHeaderField: "X-API-Key")
-        
+        try await prepareAuthenticatedRequest(&request)
+
         let photoRequest = PhotoRequest(
             photoName: photo.name,
             maxHeight: maxHeight,
@@ -278,6 +308,18 @@ actor PlacesService: PlacesServiceProtocol {
         }
         
         guard (200..<300).contains(httpResponse.statusCode) else {
+            // Handle session errors
+            if httpResponse.statusCode == 401 {
+                try await handleAPIError(httpResponse: httpResponse)
+                // Retry the request once
+                return try await performPhotoURLRequest(
+                    photo: photo,
+                    maxWidth: maxWidth,
+                    maxHeight: maxHeight,
+                    cacheKeyString: cacheKeyString
+                )
+            }
+            
             throw NSError(
                 domain: "Invalid response",
                 code: httpResponse.statusCode,

@@ -45,3 +45,14 @@ class Review(Base):
     review_text = Column(Text)
     source = Column(String)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class AnonymousSession(Base):
+    __tablename__ = 'anonymous_sessions'
+
+    id = Column(PostgresUUID(as_uuid=True), primary_key=True, default=uuid4)
+    token = Column(String, unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    rate_limit = Column(String, default="standard")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    last_used = Column(DateTime(timezone=True), nullable=True)

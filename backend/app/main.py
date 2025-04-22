@@ -4,8 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from app.utils.database import engine, test_connection
 from app.models.tables import Base
-from app.routers import google_places, google_geocode, outscraper_reviews, auth, profile, place_photos
+from app.routers import google_places, google_geocode, outscraper_reviews, auth, profile, place_photos, sessions
 from app.utils.api_key_middleware import verify_api_key
+from app.utils.session_middleware import verify_session_token
 import os
 
 # Global session factory
@@ -29,10 +30,12 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with the lifespan context manager
 app = FastAPI(lifespan=lifespan)
 
-# Apply API key middleware - essential for API security
+# Apply middleware - first session token, then API key as fallback during transition
+app.middleware("http")(verify_session_token)
 app.middleware("http")(verify_api_key)
 
-# Include your routers
+# Include all routers
+app.include_router(sessions.router)  # Add new sessions router
 app.include_router(google_places.router)
 app.include_router(google_geocode.router)
 app.include_router(outscraper_reviews.router)
