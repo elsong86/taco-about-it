@@ -6,18 +6,20 @@ from dotenv import load_dotenv
 from typing import Callable  
 from app.utils.rate_limiter import rate_limiter
 from app.utils.redis_utils import redis_client
+from app.dependencies.auth import session_token_dependency
 
 load_dotenv()
-
 api_key = os.getenv("GOOGLE_API_KEY")
-
-
 router = APIRouter()
 
 class AddressRequest(BaseModel):
     address: str
 
-@router.post("/geocode")
+@router.post(
+    "/geocode",
+    # Add the session token dependency here
+    dependencies=[Depends(session_token_dependency)]
+)
 def get_geocode(
     request: AddressRequest, 
     limiter: Callable[[Request], None] = Depends(rate_limiter(redis_client, rate=1.0, capacity=10))

@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 import requests 
 import os
 from dotenv import load_dotenv
 from app.utils.redis_utils import redis_client
+from app.dependencies.auth import session_token_dependency
 import json
 
 load_dotenv()
@@ -22,7 +23,11 @@ class PlacesRequest(BaseModel):
     max_results: int = 20
     text_query: str = "tacos"
 
-@router.post("/places")
+@router.post(
+    "/places",
+    # Add the session token dependency here
+    dependencies=[Depends(session_token_dependency)]
+)
 def get_places(request: PlacesRequest): 
     cache_key = f"places:{json.dumps(request.model_dump(), sort_keys=True)}"
     cached_places = redis_client.get(cache_key)
