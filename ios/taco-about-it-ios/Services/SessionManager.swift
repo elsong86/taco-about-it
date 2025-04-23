@@ -17,7 +17,7 @@ class SessionManager {
     private let keychain = Keychain(service: "com.tacoaboutit.app") // Ensure this matches your app's identifier
     // --- Make sure these are correct for your setup ---
     private let baseURL = "https://api.tacoaboutit.app"
-    private let appSecret = "CEABSIxqEQx6ZpP3CY5IMS3E2q32PJNIXrjuZlF69gc" // Ensure this matches your backend CLIENT_API_KEY
+    private let appSecret: String = ConfigurationManager.shared.getAPIKey()
     // ----------------------------------------------------
     
     private(set) var sessionToken: String?
