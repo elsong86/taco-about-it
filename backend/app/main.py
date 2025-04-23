@@ -30,10 +30,6 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with the lifespan context manager
 app = FastAPI(lifespan=lifespan)
 
-# Apply middleware - first session token, then API key as fallback during transition
-app.middleware("http")(verify_session_token)
-app.middleware("http")(verify_api_key)
-
 # Include all routers
 app.include_router(sessions.router)  # Add new sessions router
 app.include_router(google_places.router)
