@@ -87,22 +87,56 @@ extension ContentViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(PlacesService.shared.apiKey, forHTTPHeaderField: "X-API-Key")
+        
+        // Get and use session token - with better error handling
+        do {
+            let token = try await SessionManager.shared.ensureValidSession()
+            print("Got session token: \(token.prefix(10))...") // Print part of token for debugging
+            request.setValue(token, forHTTPHeaderField: "X-Session-Token")
+        } catch {
+            print("Failed to get session token: \(error.localizedDescription)")
+            throw error
+        }
         
         let requestBody = ["address": trimmedAddress]
         let jsonData = try JSONEncoder().encode(requestBody)
         request.httpBody = jsonData
         
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        if let httpResponse = response as? HTTPURLResponse,
-           !(200..<300).contains(httpResponse.statusCode) {
-            throw NSError(domain: "HTTP Error",
-                         code: httpResponse.statusCode,
-                         userInfo: [NSLocalizedDescriptionKey: String(data: data, encoding: .utf8) ?? "Unknown error"])
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP response code: \(httpResponse.statusCode)")
+                
+                if !(200..<300).contains(httpResponse.statusCode) {
+                    if let responseString = String(data: data, encoding: .utf8) {
+                        print("Error response: \(responseString)")
+                    }
+                    
+                    if httpResponse.statusCode == 401 {
+                        try SessionManager.shared.clearSession()
+                        // Retry once with a new session
+                        return try await geocodeAddress(address)
+                    }
+                    
+                    throw NSError(domain: "HTTP Error",
+                                 code: httpResponse.statusCode,
+                                 userInfo: [NSLocalizedDescriptionKey: String(data: data, encoding: .utf8) ?? "Unknown error"])
+                }
+            }
+            
+            let geocodeResponse = try JSONDecoder().decode(GeocodingResponse.self, from: data)
+            return GeoLocation(latitude: geocodeResponse.latitude, longitude: geocodeResponse.longitude)
+        } catch {
+            print("Network request failed: \(error.localizedDescription)")
+            
+            // If it's an NSError, print more details
+            if let nsError = error as NSError? {
+                print("Error domain: \(nsError.domain), code: \(nsError.code)")
+                print("Error user info: \(nsError.userInfo)")
+            }
+            
+            throw error
         }
-        
-        let geocodeResponse = try JSONDecoder().decode(GeocodingResponse.self, from: data)
-        return GeoLocation(latitude: geocodeResponse.latitude, longitude: geocodeResponse.longitude)
     }
 }

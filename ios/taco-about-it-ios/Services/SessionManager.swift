@@ -6,7 +6,7 @@ class SessionManager {
     
     private let keychain = Keychain(service: "com.tacoaboutit.app")
     private let baseURL = "https://api.tacoaboutit.app"
-    private let appSecret = "your_embedded_app_secret" // Replace with your actual app secret
+    private let appSecret = "CEABSIxqEQx6ZpP3CY5IMS3E2q32PJNIXrjuZlF69gc"
     
     private(set) var sessionToken: String?
     private(set) var sessionExpiry: Date?
@@ -18,7 +18,7 @@ class SessionManager {
     
     // Check if we have a valid session
     var hasValidSession: Bool {
-        guard let token = sessionToken, let expiry = sessionExpiry else {
+        guard sessionToken != nil, let expiry = sessionExpiry else {
             return false
         }
         // Check if token is not expired (with 1 hour buffer)
@@ -27,44 +27,63 @@ class SessionManager {
     
     // Create a new session
     func createSession() async throws -> String {
-        guard let url = URL(string: "\(baseURL)/create-session") else {
-            throw NetworkError.invalidURL
+        do {
+            guard let url = URL(string: "\(baseURL)/create-session") else {
+                    throw NetworkError.invalidURL
+                }
+            
+            var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue(appSecret, forHTTPHeaderField: "X-API-Key")
+
+            
+            
+            print("Creating session with URL: \(url.absoluteString)")
+            print("Using app secret: \(appSecret.prefix(5))...") // Print part of the secret for debugging
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response type")
+                throw NetworkError.invalidResponse
+            }
+            
+            print("Create session HTTP status: \(httpResponse.statusCode)")
+            
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Error response: \(responseString)")
+                }
+                throw NetworkError.httpError(statusCode: httpResponse.statusCode)
+            }
+            
+            // Parse response
+            struct SessionResponse: Decodable {
+                let token: String
+                let expiresAt: Date
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            
+            let sessionResponse = try decoder.decode(SessionResponse.self, from: data)
+            
+            print("Successfully got session token: \(sessionResponse.token.prefix(10))...")
+            print("Token expires at: \(sessionResponse.expiresAt)")
+            
+            // Store session
+            self.sessionToken = sessionResponse.token
+            self.sessionExpiry = sessionResponse.expiresAt
+            
+            // Save to keychain
+            try saveSession()
+            
+            return sessionResponse.token
+        } catch {
+            print("Create session failed: \(error.localizedDescription)")
+            throw error
         }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(appSecret, forHTTPHeaderField: "X-App-Secret")
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw NetworkError.invalidResponse
-        }
-        
-        guard (200..<300).contains(httpResponse.statusCode) else {
-            throw NetworkError.httpError(statusCode: httpResponse.statusCode)
-        }
-        
-        // Parse response
-        struct SessionResponse: Decodable {
-            let token: String
-            let expiresAt: Date
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        
-        let sessionResponse = try decoder.decode(SessionResponse.self, from: data)
-        
-        // Store session
-        self.sessionToken = sessionResponse.token
-        self.sessionExpiry = sessionResponse.expiresAt
-        
-        // Save to keychain
-        try saveSession()
-        
-        return sessionResponse.token
     }
     
     // Ensure we have a valid session, creating one if needed

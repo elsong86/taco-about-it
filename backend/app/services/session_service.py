@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # App secret for validating app requests
-APP_SECRET = os.getenv("APP_SECRET")
+APP_SECRET = os.getenv("CLIENT_API_KEY")
 
 class SessionService:
     def __init__(self, db: AsyncSession = Depends(get_database_client)):
