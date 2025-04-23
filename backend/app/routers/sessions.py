@@ -11,11 +11,11 @@ async def create_session(
     session_service: SessionService = Depends()
 ):
     # Extract app secret from headers
-    app_secret = request.headers.get("X-App-Secret")
+    app_secret = request.headers.get("X-API-Key")
     
     # Validate app secret
     if not app_secret or not session_service.validate_app_secret(app_secret):
-        logger.warning("Invalid app secret provided")
+        logger.warning(f"Invalid app secret provided via X-API-Key header. Key starts with: {app_secret[:5] if app_secret else 'None'}") # Added logging detail
         raise HTTPException(status_code=403, detail="Invalid app secret")
     
     try:
