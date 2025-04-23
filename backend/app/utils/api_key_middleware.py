@@ -16,7 +16,7 @@ async def verify_api_key(request: Request, call_next):
         return await call_next(request)
         
     # Get API key from header
-    api_key = request.headers.get("X-API-Key")
+    api_key = request.headers.get("X-Session-Token")
     
     if not api_key or api_key != CLIENT_API_KEY:
         return JSONResponse(

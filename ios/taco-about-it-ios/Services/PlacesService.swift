@@ -29,65 +29,106 @@ actor PlacesService: PlacesServiceProtocol {
     }
     
     nonisolated func fetchPlaces(location: GeoLocation, radius: Double = 1000.0, maxResults: Int = 20, textQuery: String = "tacos", forceRefresh: Bool = false) async throws -> [Place] {
-        // Generate cache key
-        let cacheKey = await DiskCacheService.shared.placeSearchCacheKey(location: location, radius: radius, query: textQuery)
-        
-        // Try to get from cache first (unless force refresh requested)
-        if !forceRefresh, let cachedPlaces: [Place] = await DiskCacheService.shared.retrieve(forKey: cacheKey) {
-            print("Retrieved places from disk cache")
-            return cachedPlaces
-        }
-        
-        guard let url = URL(string: "\(baseURL)/places") else {
-            throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        try await prepareAuthenticatedRequest(&request)
-
-        let body = PlacesRequest(
-            location: location,
-            radius: radius,
-            maxResults: maxResults,
-            textQuery: textQuery
-        )
-        
-        let encodedBody = try JSONEncoder().encode(body)
-        request.httpBody = encodedBody
-
-        let (data, response) = try await urlSession.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw NSError(domain: "Invalid response", code: 0, userInfo: nil)
-        }
-
-        guard (200..<300).contains(httpResponse.statusCode) else {
-            // Handle session errors
-            if httpResponse.statusCode == 401 {
-                try await handleAPIError(httpResponse: httpResponse)
-                // Retry the request once (optional)
-                return try await fetchPlaces(location: location, radius: radius, maxResults: maxResults, textQuery: textQuery, forceRefresh: true)
+            // Generate cache key
+            let cacheKey = await DiskCacheService.shared.placeSearchCacheKey(location: location, radius: radius, query: textQuery)
+            
+            // Try to get from cache first (unless force refresh requested)
+            if !forceRefresh, let cachedPlaces: [Place] = await DiskCacheService.shared.retrieve(forKey: cacheKey) {
+                print("Retrieved places from disk cache")
+                // Optionally prefetch photos for cached places too if desired
+                // Task { try? await self.prefetchPhotosForPlaces(Array(cachedPlaces.prefix(8))) }
+                return cachedPlaces
             }
             
-            throw NSError(domain: "Invalid response", code: httpResponse.statusCode, userInfo: nil)
-        }
+            print("Fetching places from network...") // Added log
+            guard let url = URL(string: "\(baseURL)/places") else {
+                throw NSError(domain: "Invalid URL", code: 0, userInfo: nil)
+            }
 
-        let placesResponse = try JSONDecoder().decode(PlacesResponse.self, from: data)
-        
-        // Cache the result after successful fetch
-        Task {
-            await DiskCacheService.shared.cache(placesResponse.places, forKey: cacheKey, withExpiration: 3600) // 1 hour
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            try await prepareAuthenticatedRequest(&request) // Adds X-Session-Token
+
+            let body = PlacesRequest( // Assuming PlacesRequest struct exists and is Codable
+                location: location,
+                radius: radius,
+                maxResults: maxResults,
+                textQuery: textQuery
+            )
+            
+            let encodedBody = try JSONEncoder().encode(body)
+            request.httpBody = encodedBody
+
+            // --- Network Call ---
+            let (data, response) = try await urlSession.data(for: request)
+            
+            // --- Response Validation ---
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NSError(domain: "Invalid response type", code: 0, userInfo: nil)
+            }
+             print("Fetch places HTTP status: \(httpResponse.statusCode)") // Added log
+
+            // --- Log Raw Response ---
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("--- RAW JSON Response from /places ---")
+                print(jsonString)
+                print("--------------------------------------")
+            } else {
+                print("--- Failed to convert /places response data to UTF8 string ---")
+            }
+
+            // --- Handle Non-Success Status Codes ---
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                // Handle session errors (like 401 Unauthorized)
+                if httpResponse.statusCode == 401 {
+                    print("Received 401 Unauthorized for /places. Clearing session and retrying...")
+                    try await handleAPIError(httpResponse: httpResponse)
+                    // Retry the request once (important: use forceRefresh true to bypass cache on retry)
+                    return try await fetchPlaces(location: location, radius: radius, maxResults: maxResults, textQuery: textQuery, forceRefresh: true)
+                }
+                
+                // Handle other non-200 errors
+                var errorDetail = "HTTP error \(httpResponse.statusCode)"
+                 if let responseString = String(data: data, encoding: .utf8) {
+                      errorDetail += " - \(responseString)"
+                 }
+                print("Fetch places failed. \(errorDetail)")
+                throw NSError(domain: "Invalid HTTP response", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorDetail])
+            }
+            
+            // --- Attempt Decoding ---
+            do {
+                // Assuming PlacesResponse struct exists and contains `places: [Place]`
+                let placesResponse = try JSONDecoder().decode(PlacesResponse.self, from: data)
+                 print("Successfully decoded /places response.")
+
+                // --- Cache the result AFTER successful fetch and decode ---
+                Task.detached { // Use detached task if caching doesn't need actor context
+                     await DiskCacheService.shared.cache(placesResponse.places, forKey: cacheKey, withExpiration: 3600) // 1 hour
+                     print("Cached places search results.")
+                }
+                
+                // --- Pre-fetch photo URLs AFTER successful fetch and decode ---
+                Task.detached { // Use detached task if prefetching doesn't need actor context
+                     try? await self.prefetchPhotosForPlaces(Array(placesResponse.places.prefix(8)))
+                     print("Initiated photo prefetching for \(min(placesResponse.places.count, 8)) places.")
+                }
+                
+                // --- Return the successfully decoded places ---
+                return placesResponse.places
+
+            } catch let decodeError {
+                print("--- DECODING FAILED for /places response ---")
+                print("Error: \(decodeError)")
+                if let decodingError = decodeError as? DecodingError {
+                     print("Decoding Error Context: \(decodingError)")
+                }
+                print("------------------------------------------")
+                throw decodeError // Re-throw the decoding error
+            }
+            // No code should be after the do-catch block here
         }
-        
-        // Pre-fetch photo URLs for the first visible places
-        Task {
-            try? await self.prefetchPhotosForPlaces(Array(placesResponse.places.prefix(8)))
-        }
-        
-        return placesResponse.places
-    }
 
     nonisolated func fetchReviews(for place: Place, forceRefresh: Bool = false) async throws -> ReviewAnalysisResponse {
         // Generate cache key

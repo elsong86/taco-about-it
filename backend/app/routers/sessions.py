@@ -11,7 +11,7 @@ async def create_session(
     session_service: SessionService = Depends()
 ):
     # Extract app secret from headers
-    app_secret = request.headers.get("X-API-Key")
+    app_secret = request.headers.get("X-Session-Token")
     
     # Validate app secret
     if not app_secret or not session_service.validate_app_secret(app_secret):
